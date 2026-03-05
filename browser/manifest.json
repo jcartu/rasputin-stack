@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Memory Capture Extension",
+  "name": "Alfred's Eye - Second Brain",
   "version": "1.2.0",
   "description": "Intelligent memory capture for your digital life. Stores browsing data in your personal Second Brain.",
   "permissions": [
@@ -12,7 +12,7 @@
   ],
   "host_permissions": [
     "http://localhost:7779/*",
-    "http://YOUR_SERVER_IP:7779/*"
+    "http://10.0.0.1:7779/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -28,7 +28,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Memory Capture",
+    "default_title": "Alfred's Eye",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

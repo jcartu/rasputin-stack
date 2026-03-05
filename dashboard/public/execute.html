@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Rasputin Nexus — Code Sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/shell/shell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/edit/closebrackets.min.js"></script>
+<style>
+/* Topbar */
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px 20px;background:oklch(0.08 0.015 265/0.35);backdrop-filter:blur(10px) saturate(150%);border-bottom:1px solid oklch(0.38 0.04 270/0.15);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+.topbar::-webkit-scrollbar{display:none}
+.topbar-logo{font-size:16px;font-weight:700;background:linear-gradient(135deg,oklch(0.68 0.30 290),oklch(0.78 0.22 195));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;text-decoration:none;font-family:'Space Grotesk',system-ui,sans-serif}
+.topbar-nav{display:flex;gap:6px;margin-left:8px;flex-wrap:nowrap}
+.topbar-nav a{font-size:11.5px;padding:5px 11px;border:1px solid oklch(0.25 0.02 280/0.6);border-radius:20px;transition:all .2s;color:oklch(0.65 0.06 280);text-decoration:none;white-space:nowrap;background:oklch(0.12 0.01 280/0.4);font-family:'Space Grotesk',system-ui,sans-serif}
+.topbar-nav a:hover{color:oklch(0.90 0.15 195);border-color:oklch(0.60 0.15 195/0.6);background:oklch(0.18 0.04 195/0.3);box-shadow:0 0 12px oklch(0.60 0.15 195/0.15);transform:translateY(-1px)}
+.topbar-nav a.active{color:oklch(0.90 0.15 195);border-color:oklch(0.60 0.15 195/0.5);background:oklch(0.18 0.04 195/0.2)}
+.topbar-spacer{flex:1}
+.topbar-lang{display:flex;gap:4px}
+.topbar-lang button{padding:5px 14px;border:1px solid oklch(0.25 0.02 280/0.6);border-radius:6px;background:transparent;color:oklch(0.72 0.012 270);cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;transition:all .15s}
+.topbar-lang button.active{background:oklch(0.75 0.24 145);color:oklch(0.06 0.01 270);border-color:oklch(0.75 0.24 145)}
+.topbar-lang button:hover:not(.active){border-color:oklch(0.78 0.22 195);color:oklch(0.98 0.005 270)}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:oklch(0.06 0.01 270); color:oklch(0.98 0.005 270); font-family:'Space Grotesk',system-ui,sans-serif; height:100vh; display:flex; flex-direction:column; position:relative; }
+/* Animated background - green/amber gradients */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,oklch(0.12 0.06 145/0.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,oklch(0.10 0.04 85/0.2) 0%,transparent 50%);z-index:-1;pointer-events:none;animation:bgShift 20s ease-in-out infinite}
+@keyframes bgShift{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,10px)}}
+a { color:oklch(0.78 0.22 195); text-decoration:none; }
+
+.run-btn { padding:6px 18px; border:none; border-radius:6px; background:oklch(0.75 0.24 145); color:oklch(0.06 0.01 270); cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; transition:all .15s; }
+.run-btn:hover { filter:brightness(1.1); }
+.run-btn:active { transform:scale(0.97); }
+.run-btn.running { background:oklch(0.85 0.20 85); pointer-events:none; }
+.run-btn kbd { font-size:10px; opacity:.7; font-family:'JetBrains Mono',monospace; }
+
+.main { display:flex; flex:1; min-height:0; }
+
+.sidebar { width:260px; background:oklch(0.11 0.02 270); border-right:1px solid oklch(0.25 0.02 280/0.6); display:flex; flex-direction:column; flex-shrink:0; }
+.sidebar-header { padding:12px 14px; font-size:12px; font-weight:600; color:oklch(0.72 0.012 270); text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid oklch(0.25 0.02 280/0.6); display:flex; justify-content:space-between; align-items:center; }
+.sidebar-header button { background:none; border:none; color:oklch(0.72 0.012 270); cursor:pointer; font-size:11px; }
+.sidebar-header button:hover { color:#f87171; }
+.sidebar-list { flex:1; overflow-y:auto; padding:6px; }
+.sidebar-item { padding:8px 10px; border-radius:8px; cursor:pointer; font-size:12px; transition:all .3s; border:1px solid oklch(0.30 0.03 270/0.3); background:oklch(0.11 0.02 270/0.6); backdrop-filter:blur(8px); margin-bottom:4px; }
+.sidebar-item:hover { background:oklch(0.11 0.02 270/0.7); border-color:oklch(0.50 0.10 195/0.4); box-shadow:0 6px 24px oklch(0 0 0/0.3); transform:translateY(-2px); }
+.sidebar-item.active { border-color:oklch(0.78 0.22 195); background:oklch(0.18 0.04 195/0.2); box-shadow:0 4px 16px oklch(0.78 0.22 195/0.3); }
+.sidebar-item .lang { font-size:10px; color:oklch(0.72 0.012 270); margin-bottom:2px; }
+.sidebar-item .preview { color:oklch(0.72 0.012 270); font-family:'JetBrains Mono',monospace; font-size:9px; white-space:pre; overflow:hidden; text-overflow:ellipsis; line-height:1.4; max-height:42px; }
+.sidebar-item .meta { display:flex; justify-content:space-between; margin-top:3px; font-size:10px; color:oklch(0.72 0.012 270); }
+
+.snippets { padding:8px 14px; border-bottom:1px solid oklch(0.25 0.02 280/0.6); }
+.snippets select { width:100%; padding:6px 8px; background:oklch(0.08 0.015 265); border:1px solid oklch(0.25 0.02 280/0.6); border-radius:6px; color:oklch(0.98 0.005 270); font-family:inherit; font-size:12px; cursor:pointer; }
+.snippets select:focus { outline:none; border-color:oklch(0.78 0.22 195); }
+
+.editor-area { flex:1; display:flex; flex-direction:column; min-width:0; }
+.editor-wrap { flex:1; min-height:70vh; position:relative; }
+.editor-placeholder{position:absolute;inset:60px 0 0 60px;pointer-events:none;z-index:5;opacity:0;transition:opacity .3s;color:oklch(0.48 0.01 280);font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8}
+.editor-placeholder.show{opacity:1}
+.editor-placeholder .hint{color:oklch(0.72 0.19 160);font-size:18px;font-weight:500;margin-bottom:16px;font-family:'Space Grotesk',sans-serif}
+.editor-placeholder .examples{margin-top:12px;font-size:12px}
+.editor-placeholder .ex{margin-bottom:4px}
+.editor-placeholder .ex kbd{background:oklch(0.11 0.02 270);padding:2px 6px;border-radius:3px;border:1px solid oklch(0.25 0.02 280/0.6);font-size:11px;margin-right:6px;color:oklch(0.72 0.012 270)}
+.CodeMirror { height:100% !important; background:oklch(0.06 0.01 270) !important; font-family:'JetBrains Mono',monospace !important; font-size:13px !important; color:oklch(0.98 0.005 270) !important; }
+.CodeMirror-gutters { background:oklch(0.11 0.02 270) !important; border-right:1px solid oklch(0.25 0.02 280/0.6) !important; }
+.CodeMirror-linenumber { color:oklch(0.72 0.012 270) !important; }
+.CodeMirror-cursor { border-left-color:oklch(0.78 0.22 195) !important; }
+.CodeMirror-selected { background:oklch(0.11 0.02 270) !important; }
+.CodeMirror-matchingbracket { color:oklch(0.78 0.22 195) !important; text-decoration:underline; }
+.cm-s-default .cm-keyword { color:oklch(0.68 0.30 290) !important; }
+.cm-s-default .cm-string { color:oklch(0.75 0.24 145) !important; }
+.cm-s-default .cm-number { color:oklch(0.85 0.20 85) !important; }
+.cm-s-default .cm-comment { color:oklch(0.72 0.012 270) !important; font-style:italic; }
+.cm-s-default .cm-def { color:oklch(0.78 0.22 195) !important; }
+.cm-s-default .cm-variable { color:oklch(0.98 0.005 270) !important; }
+.cm-s-default .cm-builtin { color:oklch(0.78 0.22 195) !important; }
+.cm-s-default .cm-atom { color:oklch(0.85 0.20 85) !important; }
+
+.output-panel { border-top:1px solid oklch(0.25 0.02 280/0.6); background:oklch(0.11 0.02 270); min-height:180px; max-height:35vh; display:flex; flex-direction:column; }
+.output-tabs{display:flex;gap:4px;padding:8px 14px;border-bottom:1px solid oklch(0.25 0.02 280/0.6);align-items:center}
+.tab-btn{padding:5px 14px;border:1px solid oklch(0.25 0.02 280/0.6);background:transparent;color:oklch(0.72 0.012 270);border-radius:6px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:500;transition:all .15s}
+.tab-btn:hover{border-color:oklch(0.50 0.10 195/0.4);color:var(--text)}
+.tab-btn.active{background:oklch(0.75 0.24 145);color:oklch(0.06 0.01 270);border-color:oklch(0.75 0.24 145)}
+.output-tabs .runtime{margin-left:auto;font-size:11px;color:oklch(0.78 0.22 195);font-family:'JetBrains Mono',monospace}
+/* Sidebar empty state */
+.sidebar-empty{padding:30px 16px;text-align:center;color:oklch(0.72 0.012 270);font-size:12px}
+.sidebar-empty .icon{font-size:28px;margin-bottom:8px;opacity:0.5}
+/* Quick Run & System Info sections */
+.quick-run{padding:8px 16px;border-bottom:1px solid oklch(0.25 0.02 280/0.6);background:oklch(0.08 0.015 265);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.quick-run .label{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:oklch(0.72 0.012 270);font-weight:600;margin-right:4px}
+.quick-card{background:oklch(0.11 0.02 270/0.6);border:1px solid oklch(0.30 0.03 270/0.3);border-radius:6px;padding:5px 12px;backdrop-filter:blur(8px);cursor:pointer;transition:all .3s;font-size:11px;font-weight:500;display:flex;align-items:center;gap:6px}
+.quick-card:hover{border-color:oklch(0.50 0.10 195/0.4);box-shadow:0 4px 16px oklch(0 0 0/0.2);transform:translateY(-1px)}
+.quick-card .icon{font-size:14px}
+.sys-info{padding:6px 16px;font-size:10px;color:oklch(0.72 0.012 270);border-bottom:1px solid oklch(0.25 0.02 280/0.6);background:oklch(0.06 0.01 270/0.8);font-family:'JetBrains Mono',monospace;display:flex;gap:16px;align-items:center}
+.sys-info span{display:flex;align-items:center;gap:4px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.4s ease-out forwards}
+.output-header { padding:8px 14px; font-size:12px; font-weight:600; color:oklch(0.72 0.012 270); display:flex; justify-content:space-between; border-bottom:1px solid oklch(0.25 0.02 280/0.6); flex-shrink:0; }
+.output-header .runtime { color:oklch(0.78 0.22 195); font-family:'JetBrains Mono',monospace; }
+.output-body { flex:1; overflow:auto; padding:10px 14px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6; white-space:pre-wrap; word-break:break-all; }
+.output-body .stdout { color:oklch(0.75 0.24 145); }
+.output-body .stderr { color:#f87171; }
+.output-body .info { color:oklch(0.72 0.012 270); font-style:italic; }
+
+@media (max-width:768px) {
+  .sidebar { display:none; }
+  .main { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">🧠 RASPUTIN NEXUS</a>
+  <div class="topbar-nav">
+    <a href="/" title="Main control center with GPU monitoring, chat, and system metrics">📊 Dashboard</a>
+    <a href="/browser.html" title="Control a headless browser">🌐 Browser</a>
+    <a href="/execute.html" class="active" title="Run code in sandboxed Docker">⚡ Execute</a>
+    <a href="/research.html" title="Deep research via Perplexity">🔬 Research</a>
+    <a href="/playground.html" title="Test prompts against multiple models">🎯 Playground</a>
+    <a href="/council.html" title="Multi-model AI debate consensus">🏛️ Council</a>
+    <a href="/replay.html" title="Step through past sessions">🔄 Replay</a>
+    <a href="/agents.html" title="Monitor and spawn sub-agents">🤖 Agents</a>
+    <a href="/knowledge.html" title="Browse workspace files">📚 Knowledge</a>
+    <a href="/templates.html" title="One-click workflow templates">📋 Templates</a>
+    <a href="/remote.html" title="Remote device management">🖥️ Remote</a>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-lang">
+    <button class="active" data-lang="python">🐍 Python</button>
+    <button data-lang="javascript">🟢 Node.js</button>
+    <button data-lang="bash">🔧 Bash</button>
+  </div>
+  <button class="run-btn" id="runBtn" onclick="runCode()">▶ Run <kbd>Ctrl+Enter</kbd></button>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="sys-info" id="sysInfo">
+      <span>🐍 Python 3.11+</span><span>🟢 Node v18+</span><span>📦 250+ packages</span>
+    </div>
+    <div class="snippets">
+      <select id="snippetSelect" onchange="loadSnippet(this.value)">
+        <option value="">📎 More Examples…</option>
+        <optgroup label="Python">
+          <option value="py_hello">Hello World</option>
+          <option value="py_numpy">NumPy Array</option>
+          <option value="py_pandas">Pandas DataFrame</option>
+          <option value="py_plot">Matplotlib (base64)</option>
+          <option value="py_fibonacci">Fibonacci Generator</option>
+          <option value="py_sympy">Symbolic Math</option>
+        </optgroup>
+        <optgroup label="JavaScript">
+          <option value="js_hello">Hello World</option>
+          <option value="js_fetch">JSON Parse</option>
+          <option value="js_async">Async/Await Demo</option>
+        </optgroup>
+        <optgroup label="Bash">
+          <option value="sh_sysinfo">System Info</option>
+          <option value="sh_files">List Files</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="sidebar-header">
+      History
+      <button onclick="clearHistory()">Clear</button>
+    </div>
+    <div class="sidebar-list" id="historyList"></div>
+  </div>
+
+  <div class="editor-area">
+    <div class="quick-run">
+      <span class="label">Quick run:</span>
+      <div class="quick-card" onclick="loadQuick('hello')">
+        <span class="icon">👋</span>Hello
+      </div>
+      <div class="quick-card" onclick="loadQuick('numpy')">
+        <span class="icon">🔢</span>NumPy
+      </div>
+      <div class="quick-card" onclick="loadQuick('pandas')">
+        <span class="icon">📊</span>Pandas
+      </div>
+      <div class="quick-card" onclick="loadQuick('plot')">
+        <span class="icon">📈</span>Plot
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-placeholder" id="editorPlaceholder">
+        <div class="hint">Start coding — any language, instant execution</div>
+        <div>Type your code or try quick examples below</div>
+        <div class="examples">
+          <div class="ex"><kbd>Ctrl+Enter</kbd> Run code</div>
+          <div class="ex"><kbd>🐍 Python</kbd> NumPy, Pandas, Matplotlib, SymPy</div>
+          <div class="ex"><kbd>🟢 Node.js</kbd> Modern ES6+, async/await</div>
+          <div class="ex"><kbd>🔧 Bash</kbd> Full system access</div>
+        </div>
+      </div>
+      <textarea id="codeEditor"></textarea>
+    </div>
+    <div class="output-panel">
+      <div class="output-tabs">
+        <button class="tab-btn active" data-tab="output">Output</button>
+        <button class="tab-btn" data-tab="errors">Errors</button>
+        <button class="tab-btn" data-tab="charts">Charts</button>
+        <span class="runtime" id="runtimeDisplay"></span>
+      </div>
+      <div class="output-body" id="outputBody">
+        <span class="info">Press Ctrl+Enter or click Run to execute code…</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SNIPPETS = {
+  py_hello: `print("Hello from Rasputin Sandbox! 🚀")
+import sys
+print(f"Python {sys.version}")`,
+  py_numpy: `import numpy as np
+
+a = np.random.randn(3, 3)
+print("Random matrix:")
+print(a)
+print(f"\\nMean: {a.mean():.4f}")
+print(f"Eigenvalues: {np.linalg.eigvals(a).round(4)}")`,
+  py_pandas: `import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],
+    'score': np.random.randint(60, 100, 4),
+    'grade': ['A', 'B', 'A', 'C']
+})
+print(df.to_string(index=False))
+print(f"\\nAverage score: {df['score'].mean():.1f}")`,
+  py_plot: `import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+import base64, io
+
+x = np.linspace(0, 4*np.pi, 200)
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(x, np.sin(x), label='sin(x)', color='#4ade80')
+ax.plot(x, np.cos(x), label='cos(x)', color='#a78bfa')
+ax.set_facecolor('#1a1a2e')
+fig.patch.set_facecolor('#1a1a2e')
+ax.tick_params(colors='#888')
+ax.legend(facecolor='#1a1a2e', edgecolor='#333', labelcolor='#ccc')
+ax.grid(alpha=0.2)
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+print("data:image/png;base64," + base64.b64encode(buf.getvalue()).decode())`,
+  py_fibonacci: `def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
+
+fibs = list(fibonacci(20))
+print(f"First 20 Fibonacci numbers:\\n{fibs}")
+print(f"\\nGolden ratio approximation: {fibs[-1]/fibs[-2]:.10f}")`,
+  py_sympy: `from sympy import *
+
+x = Symbol('x')
+expr = x**3 - 6*x**2 + 11*x - 6
+print(f"Expression: {expr}")
+print(f"Factored:   {factor(expr)}")
+print(f"Roots:      {solve(expr, x)}")
+print(f"Derivative: {diff(expr, x)}")
+print(f"Integral:   {integrate(expr, x)}")`,
+  js_hello: `console.log("Hello from Node.js! 🟢");
+console.log(\`Node \${process.version}\`);
+console.log(\`Platform: \${process.platform} \${process.arch}\`);`,
+  js_fetch: `const data = {
+  users: [
+    { name: "Alice", age: 30 },
+    { name: "Bob", age: 25 },
+  ]
+};
+
+const sorted = data.users.sort((a, b) => a.age - b.age);
+console.log("Sorted by age:");
+sorted.forEach(u => console.log(\`  \${u.name}: \${u.age}\`));`,
+  js_async: `async function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+async function main() {
+  console.log("Starting...");
+  for (let i = 1; i <= 5; i++) {
+    await delay(100);
+    console.log(\`Step \${i}/5 [\${"█".repeat(i)}\${"░".repeat(5-i)}]\`);
+  }
+  console.log("Done! ✅");
+}
+
+main();`,
+  sh_sysinfo: `echo "=== System Info ==="
+uname -a
+echo ""
+echo "=== Memory ==="
+free -h 2>/dev/null || echo "free not available"
+echo ""
+echo "=== Disk ==="
+df -h / 2>/dev/null
+echo ""
+echo "=== Python ==="
+python3 --version
+echo "=== Node ==="
+node --version`,
+  sh_files: `echo "=== Sandbox Directory ==="
+ls -la /sandbox/
+echo ""
+echo "=== Installed Python Packages ==="
+pip list 2>/dev/null | head -20
+echo ""
+echo "=== Node.js Modules ==="
+node -e "console.log(Object.keys(require('module').builtinModules).length + ' built-in modules')"`,
+};
+
+let currentLang = 'python';
+let editor;
+let history = JSON.parse(localStorage.getItem('alfie-exec-history') || '[]');
+let running = false;
+
+const modeMap = { python: 'python', javascript: 'javascript', bash: 'shell' };
+
+document.addEventListener('DOMContentLoaded', () => {
+  editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+    mode: modeMap[currentLang],
+    lineNumbers: true,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    indentUnit: 4,
+    tabSize: 4,
+    indentWithTabs: false,
+    lineWrapping: false,
+    extraKeys: {
+      'Ctrl-Enter': runCode,
+      'Cmd-Enter': runCode,
+      Tab: (cm) => cm.execCommand('indentMore'),
+    },
+  });
+  editor.setValue(SNIPPETS.py_hello);
+  editor.focus();
+  renderHistory();
+  updatePlaceholder();
+  editor.on('change', updatePlaceholder);
+});
+
+// Language selector
+document.querySelectorAll('.topbar-lang button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelector('.topbar-lang .active')?.classList.remove('active');
+    btn.classList.add('active');
+    currentLang = btn.dataset.lang;
+    editor.setOption('mode', modeMap[currentLang]);
+  });
+});
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runCode(); }
+});
+
+function updatePlaceholder() {
+  const placeholder = document.getElementById('editorPlaceholder');
+  if (editor.getValue().trim() === '') {
+    placeholder.classList.add('show');
+  } else {
+    placeholder.classList.remove('show');
+  }
+}
+
+async function runCode() {
+  if (running) return;
+  const code = editor.getValue().trim();
+  if (!code) return;
+
+  running = true;
+  const btn = document.getElementById('runBtn');
+  btn.classList.add('running');
+  btn.innerHTML = '⏳ Running…';
+  document.getElementById('outputBody').innerHTML = '<span class="info">Executing…</span>';
+  document.getElementById('runtimeDisplay').textContent = '';
+
+  try {
+    const resp = await fetch('/api/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ code, language: currentLang, timeout: 30 }),
+    });
+    const data = await resp.json();
+    displayOutput(data);
+    addHistory({ code, language: currentLang, ...data, ts: Date.now() });
+    // Save server-side for export
+    try {
+      const saveResp = await fetch('/api/execute/save', {
+        method: 'POST', headers: {'Content-Type':'application/json'}, credentials: 'include',
+        body: JSON.stringify({ code, language: currentLang, output: data.output, error: data.error, runtime_ms: data.runtime_ms })
+      });
+      const saveData = await saveResp.json();
+      window._lastExecId = saveData.id;
+    } catch(_) {}
+  } catch (e) {
+    document.getElementById('outputBody').innerHTML = `<span class="stderr">Error: ${e.message}</span>`;
+  } finally {
+    running = false;
+    btn.classList.remove('running');
+    btn.innerHTML = '▶ Run <kbd>Ctrl+Enter</kbd>';
+  }
+}
+
+function displayOutput(data) {
+  const body = document.getElementById('outputBody');
+  const rt = document.getElementById('runtimeDisplay');
+  rt.textContent = `${data.runtime_ms}ms · exit ${data.exitCode}`;
+
+  let html = '';
+  if (data.output) {
+    // Check for base64 images
+    const lines = data.output.split('\n');
+    for (const line of lines) {
+      if (line.startsWith('data:image/')) {
+        html += `<img src="${line}" style="max-width:100%;border-radius:6px;margin:8px 0;">`;
+      } else {
+        html += `<span class="stdout">${escapeHtml(line)}\n</span>`;
+      }
+    }
+  }
+  if (data.error) {
+    html += `<span class="stderr">${escapeHtml(data.error)}</span>`;
+  }
+  if (!data.output && !data.error) {
+    html = '<span class="info">No output</span>';
+  }
+  body.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function addHistory(entry) {
+  history.unshift(entry);
+  if (history.length > 50) history = history.slice(0, 50);
+  localStorage.setItem('alfie-exec-history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<div class="sidebar-empty"><div class="icon">⚡</div><div>No execution history yet</div><div style="margin-top:6px;font-size:10px">Run code to see it here</div></div>';
+    return;
+  }
+  list.innerHTML = history.map((h, i) => {
+    const langEmoji = { python: '🐍', javascript: '🟢', bash: '🔧' }[h.language] || '📄';
+    const lines = h.code.trim().split('\n');
+    const preview = lines.slice(0, 3).map(l => l.slice(0, 28)).join('\n');
+    const time = new Date(h.ts).toLocaleTimeString();
+    const status = h.exitCode === 0 ? '✅' : '❌';
+    return `<div class="sidebar-item" onclick="loadHistory(${i})">
+      <div class="lang">${langEmoji} ${h.language} ${status}</div>
+      <div class="preview">${escapeHtml(preview)}${lines.length > 3 ? '...' : ''}</div>
+      <div class="meta"><span>${time}</span><span>${h.runtime_ms}ms</span></div>
+    </div>`;
+  }).join('');
+}
+
+function loadHistory(i) {
+  const h = history[i];
+  if (!h) return;
+  editor.setValue(h.code);
+  currentLang = h.language;
+  document.querySelector('.topbar-lang .active')?.classList.remove('active');
+  document.querySelector(`.topbar-lang button[data-lang="${h.language}"]`)?.classList.add('active');
+  editor.setOption('mode', modeMap[currentLang]);
+  displayOutput(h);
+}
+
+function clearHistory() {
+  if (!confirm('Clear all execution history?')) return;
+  history = [];
+  localStorage.removeItem('alfie-exec-history');
+  renderHistory();
+}
+
+function loadSnippet(key) {
+  if (!key || !SNIPPETS[key]) return;
+  const lang = key.startsWith('py_') ? 'python' : key.startsWith('js_') ? 'javascript' : 'bash';
+  currentLang = lang;
+  document.querySelector('.topbar-lang .active')?.classList.remove('active');
+  document.querySelector(`.topbar-lang button[data-lang="${lang}"]`)?.classList.add('active');
+  editor.setOption('mode', modeMap[lang]);
+  editor.setValue(SNIPPETS[key]);
+  document.getElementById('snippetSelect').value = '';
+  editor.focus();
+}
+
+function loadQuick(type) {
+  const snippets = {hello:'py_hello',numpy:'py_numpy',pandas:'py_pandas',plot:'py_plot'};
+  const key = snippets[type];
+  if(key) loadSnippet(key);
+}
+
+// Fetch system info
+async function fetchSystemInfo(){
+  try{
+    const resp=await fetch('/api/execute/sysinfo', { credentials: 'include' });
+    if(!resp.ok)throw new Error('Failed');
+    const data=await resp.json();
+    const info=document.getElementById('sysInfo');
+    info.innerHTML=`<span>🐍 ${data.python||'Python 3.x'}</span><span>🟢 Node ${data.node||process.version||'v18+'}</span><span>📦 ${data.packages||'250+'} packages</span>`;
+  }catch{
+    const info=document.getElementById('sysInfo');
+    info.innerHTML='<span>🐍 Python 3.11+</span><span>🟢 Node v18+</span><span>📦 NumPy, Pandas, Matplotlib</span>';
+  }
+}
+setTimeout(fetchSystemInfo,500);
+</script>
+</body>
+</html>

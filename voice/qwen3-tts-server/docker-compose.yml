@@ -1,0 +1,30 @@
+# Qwen3-TTS — NVIDIA CUDA on GPU0 (PRO 6000)
+services:
+  qwen3-tts:
+    build: .
+    ports:
+      - "8880:8880"
+    volumes:
+      - ./voice_library:/root/qwen3-tts/voice_library
+      - ./config.yaml:/root/qwen3-tts/config.yaml
+      - models:/root/qwen3-tts/models
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - HF_HOME=/root/qwen3-tts/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8880/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  models:

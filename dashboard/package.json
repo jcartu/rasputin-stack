@@ -1,0 +1,23 @@
+{
+  "name": "alfie-dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "latency-tracker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@qdrant/js-client-rest": "^1.16.2",
+    "cheerio": "^1.2.0",
+    "jsdom": "^28.0.0",
+    "katex": "^0.16.28",
+    "prismjs": "^1.30.0",
+    "ws": "^8.19.0"
+  }
+}

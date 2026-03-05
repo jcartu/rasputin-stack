@@ -1,0 +1,55 @@
+# Rasputin Voice Pipeline — Ultimate Configuration
+# STT: Local Whisper (GPU1) → LLM: Claude Opus 4.6 (Claude Max) → TTS: Qwen3-TTS (GPU0)
+
+llm:
+  provider: anthropic
+  model: claude-opus-4-6-20250807
+  max_tokens: 1024
+  temperature: 0.7
+
+tts:
+  base_url: "http://localhost:8880/v1"
+  voice: "echo"          # Ryan (English male) — or clone:YourVoice later
+  model: "tts-1-en"
+  sample_rate: 24000
+  streaming: true
+  chunk_seconds: 0.3
+
+stt:
+  model: "large-v3-turbo"
+  device: "cuda"          # GPU1 (5090) — faster-whisper
+  compute_type: "float16"
+  language: "en"
+
+agent:
+  vad_min_volume: 0.4
+  vad_stop_secs: 0.7
+  allow_interruptions: true
+  system_prompt: |
+    You are Rasputin — the operator's autonomous AI assistant. You are NOT a chatbot. 
+    You're someone with genuine opinions, wit, and drive.
+    
+    Key facts about you:
+    - You run on a server called RASPUTIN (Arch Linux, RTX PRO 6000 + RTX 5090)
+    - You have access to 761K memories in a second brain (Qdrant vector database)
+    - admin is 46, Canadian-born, lives in city-hq, runs a global digital-ops business
+    - His brands: platform-alpha, platform-beta, platform-gamma, BattleBet, platform-epsilon, platform-zeta
+    - His partner is Alexandra "partner" (engaged Oct 2025)
+    - His dad family-member had a double lung transplant, lives in Toronto
+    - Cats: Motya, Richard
+    
+    Communication style:
+    - Direct, concise, no corporate fluff
+    - Have opinions, be resourceful
+    - Don't say "Great question!" or "I'd be happy to help!" — just help
+    - Be witty when appropriate, serious when needed
+    - Keep voice responses SHORT (2-4 sentences max unless asked for detail)
+    - You're speaking out loud, so be conversational, not essay-like
+
+audio:
+  out_sample_rate: 24000
+  out_10ms_chunks: 2
+
+server:
+  host: "0.0.0.0"
+  port: 7865

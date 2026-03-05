@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🏛️ AI Council — ALFIE Nexus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  color-scheme:dark;
+  --void:oklch(0.06 0.01 270);--base:oklch(0.08 0.015 265);--surface:oklch(0.11 0.02 270);
+  --elevated:oklch(0.15 0.025 270);--raised:oklch(0.19 0.025 265);
+  --text-1:oklch(0.98 0.005 270);--text-2:oklch(0.72 0.012 270);--text-3:oklch(0.48 0.018 270);
+  --purple:oklch(0.68 0.30 290);--cyan:oklch(0.78 0.22 195);--green:oklch(0.75 0.24 145);
+  --amber:oklch(0.85 0.20 85);--red:oklch(0.65 0.29 25);--pink:oklch(0.72 0.26 340);
+  --blue:oklch(0.72 0.20 240);--orange:oklch(0.77 0.21 50);
+  --glass:oklch(0.10 0.015 270/0.25);--glass-border:oklch(0.38 0.04 270/0.15);
+  --font-display:'Space Grotesk',system-ui,sans-serif;--font-body:'Geist',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;--radius:14px;--radius-sm:8px;
+}
+html{font-size:15px}
+body{font-family:var(--font-body);background:var(--void);color:var(--text-1);min-height:100dvh;-webkit-font-smoothing:antialiased;position:relative}
+
+/* Subtle animated background */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 30% 60%, oklch(0.12 0.04 290/0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, oklch(0.10 0.03 320/0.15) 0%, transparent 50%);
+  z-index:-1;
+  animation:bgFloat 20s ease-in-out infinite;
+}
+
+@keyframes bgFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-2%,2%) scale(1.02)}
+}
+
+a{color:var(--text-2);text-decoration:none}
+
+/* Layout */
+.page{display:grid;grid-template-columns:340px 1fr;grid-template-rows:auto 1fr;min-height:100dvh}
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:10px 20px;background:var(--base);border-bottom:1px solid var(--glass-border)}
+.topbar-logo{font-family:var(--font-display);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:8px}
+.topbar-logo .emoji{font-size:1.5rem}
+.topbar-nav{display:flex;gap:8px;margin-left:auto}
+.topbar-nav a{font-size:12px;padding:4px 10px;border:1px solid var(--glass-border);border-radius:6px;color:var(--text-2);transition:all .2s}
+.topbar-nav a:hover{border-color:var(--purple);color:var(--purple)}
+.topbar-nav a.active{border-color:var(--pink);color:var(--pink);background:oklch(0.72 0.26 340/0.1)}
+
+.sidebar{background:var(--base);border-right:1px solid var(--glass-border);padding:20px;overflow-y:auto}
+.sidebar h3{margin-bottom:16px}
+.sidebar h3{font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.history-item{padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s;position:relative;display:flex;align-items:flex-start;gap:10px;background:var(--surface)}
+.history-item:hover{background:var(--surface);border-color:var(--glass-border)}
+.history-item.active{border-color:var(--purple);background:oklch(0.68 0.30 290/0.05)}
+.history-q{font-size:13px;color:var(--text-2);white-space:normal;overflow:visible;word-wrap:break-word;flex:1;line-height:1.4}
+.history-meta{font-size:11px;color:var(--text-3);margin-top:4px}
+.history-empty{color:var(--text-3);font-size:13px;text-align:center;padding:40px 0}
+
+/* Mode color dots */
+.mode-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  flex-shrink:0;
+  margin-top:4px;
+}
+.mode-dot.council{background:var(--purple)}
+.mode-dot.synthesis{background:var(--cyan)}
+.mode-dot.auto{background:var(--amber)}
+
+.main{padding:32px 48px;overflow-y:auto;display:flex;flex-direction:column;gap:24px;min-height:0;max-width:1200px;margin:0 auto;width:100%}
+
+/* Input area - THE HERO */
+.input-section{
+  background:var(--surface);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:24px;
+  width:100%;
+  position:relative;
+}
+
+/* Subtle pulse animation on border */
+.input-section::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg, transparent, var(--purple), transparent);
+  opacity:0;
+  animation:borderPulse 3s ease-in-out infinite;
+  pointer-events:none;
+  z-index:-1;
+}
+
+@keyframes borderPulse{
+  0%,100%{opacity:0}
+  50%{opacity:0.15}
+}
+
+.question-input{
+  width:100%;
+  background:var(--base);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);
+  padding:16px 18px;
+  color:var(--text-1);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.5;
+  resize:vertical;
+  min-height:96px;
+  outline:none;
+  transition:border-color .2s;
+}
+.question-input:focus{border-color:var(--purple)}
+.question-input::placeholder{color:var(--text-3)}
+
+.controls{display:flex;gap:12px;margin-top:16px;align-items:center;flex-wrap:wrap}
+
+/* Mode selector */
+.mode-group{display:flex;gap:0;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--glass-border)}
+.mode-btn{padding:8px 16px;background:var(--base);color:var(--text-2);border:none;cursor:pointer;font-family:var(--font-body);font-size:13px;transition:all .2s}
+.mode-btn:hover{color:var(--text-1)}
+.mode-btn.active{background:var(--purple);color:white}
+
+/* Model picker */
+.model-toggle{padding:8px 14px;background:var(--base);border:1px solid var(--glass-border);border-radius:var(--radius-sm);color:var(--text-2);cursor:pointer;font-size:13px;font-family:var(--font-body);transition:all .2s}
+.model-toggle:hover{border-color:var(--text-2);color:var(--text-1)}
+.model-picker{display:none;margin-top:12px;background:var(--base);border:1px solid var(--glass-border);border-radius:var(--radius-sm);padding:16px}
+.model-picker.open{display:block}
+.model-tier{margin-bottom:12px}
+.model-tier h4{font-family:var(--font-display);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.model-tier.frontier h4{color:var(--pink)}
+.model-tier.strong h4{color:var(--cyan)}
+.model-tier.fast h4{color:var(--green)}
+.model-tier.local h4{color:var(--amber)}
+.model-checks{display:flex;flex-wrap:wrap;gap:6px}
+.model-check{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;border:1px solid var(--glass-border);cursor:pointer;font-size:12px;color:var(--text-2);transition:all .15s;user-select:none}
+.model-check:hover{border-color:var(--text-3)}
+.model-check.checked{border-color:var(--cyan);color:var(--cyan);background:oklch(0.78 0.22 195/0.08)}
+.model-check input{display:none}
+
+/* Convene button */
+.convene-btn{padding:10px 28px;background:var(--purple);border:none;border-radius:var(--radius-sm);color:white;font-family:var(--font-display);font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;margin-left:auto}
+.convene-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px oklch(0.68 0.30 290/0.4)}
+.convene-btn:active{transform:translateY(0)}
+.convene-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* Example questions - elegant pills */
+.example-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:14px;
+  width:100%;
+}
+.example-chip{
+  padding:6px 12px;
+  background:transparent;
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  font-size:12px;
+  color:var(--text-3);
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.example-chip:hover{
+  border-color:var(--purple);
+  color:var(--purple);
+}
+
+/* Model status strip */
+.model-status{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--glass-border);
+  flex-wrap:wrap;
+}
+.model-status-label{
+  font-size:11px;
+  color:var(--text-3);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.model-status-item{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  color:var(--text-3);
+}
+.status-dot{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--green);
+  animation:statusPulse 2s ease-in-out infinite;
+}
+@keyframes statusPulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.5}
+}
+
+/* How it works - compact horizontal strip */
+.how-it-works{
+  width:100%;
+  margin-top:8px;
+}
+.how-it-works h2{
+  font-family:var(--font-display);
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-2);
+  margin-bottom:12px;
+}
+.mode-cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.mode-card{
+  background:var(--base);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);
+  padding:12px;
+  position:relative;
+  transition:all .2s;
+}
+.mode-card:hover{
+  border-color:var(--text-3);
+}
+.mode-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+}
+.mode-card.auto::before{background:var(--amber)}
+.mode-card.synthesis::before{background:var(--cyan)}
+.mode-card.council::before{background:var(--purple)}
+.mode-card-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:13px;
+  margin-bottom:4px;
+  color:var(--text-1);
+}
+.mode-card-desc{
+  font-size:11px;
+  line-height:1.4;
+  color:var(--text-3);
+}
+
+/* Past result preview card */
+.preview-card{
+  background:var(--surface);
+  border:1px solid var(--glass-border);
+  border-left:3px solid var(--purple);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-top:16px;
+}
+.preview-card h3{
+  font-family:var(--font-display);
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-2);
+  margin-bottom:12px;
+}
+.preview-verdict{
+  font-size:14px;
+  line-height:1.6;
+  color:var(--text-1);
+  margin-bottom:12px;
+}
+.preview-meta{
+  display:flex;
+  gap:16px;
+  font-size:11px;
+  color:var(--text-3);
+  font-family:var(--font-mono);
+}
+.preview-meta span{color:var(--purple)}
+
+/* Progress */
+.progress{display:none;padding:20px;background:var(--surface);border:1px solid var(--glass-border);border-radius:var(--radius);text-align:center}
+.progress.active{display:block}
+.progress-text{font-size:14px;color:var(--text-2);margin-bottom:12px}
+.spinner{width:40px;height:40px;border:3px solid var(--glass-border);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.elapsed{font-family:var(--font-mono);font-size:24px;color:var(--purple)}
+
+/* Results */
+.results{display:none;flex-direction:column;gap:16px}
+.results.active{display:flex}
+
+/* Verdict card */
+.verdict-card{
+  background:var(--surface);
+  border:1px solid var(--purple);
+  border-radius:var(--radius);
+  padding:24px;
+  position:relative;
+}
+.verdict-label{
+  font-family:var(--font-display);
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:var(--purple);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.verdict-text{font-size:14px;line-height:1.7;color:var(--text-1);white-space:pre-wrap}
+.verdict-meta{display:flex;gap:16px;margin-top:16px;padding-top:12px;border-top:1px solid var(--glass-border);flex-wrap:wrap}
+.verdict-stat{font-family:var(--font-mono);font-size:12px;color:var(--text-3)}
+.verdict-stat span{color:var(--purple)}
+
+/* Consensus meter */
+.consensus-meter{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--glass-border);
+}
+.consensus-label{
+  font-size:11px;
+  color:var(--text-3);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+.consensus-bar{
+  height:6px;
+  background:var(--base);
+  border-radius:3px;
+  overflow:hidden;
+  position:relative;
+}
+.consensus-fill{
+  height:100%;
+  background:var(--purple);
+  border-radius:3px;
+  transition:width 1s ease-out;
+}
+
+.responses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+
+/* Response cards */
+.response-card{
+  background:var(--surface);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:16px;
+  transition:border-color .2s;
+  opacity:0;
+  animation:cardFadeIn 0.5s ease-out forwards;
+  position:relative;
+}
+.response-card:nth-child(1){animation-delay:0.05s}
+.response-card:nth-child(2){animation-delay:0.1s}
+.response-card:nth-child(3){animation-delay:0.15s}
+.response-card:nth-child(4){animation-delay:0.2s}
+.response-card:nth-child(5){animation-delay:0.25s}
+.response-card:nth-child(6){animation-delay:0.3s}
+.response-card:nth-child(7){animation-delay:0.35s}
+.response-card:nth-child(8){animation-delay:0.4s}
+.response-card:nth-child(9){animation-delay:0.45s}
+.response-card:nth-child(10){animation-delay:0.5s}
+
+@keyframes cardFadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.response-card{padding:18px}
+.response-card:hover{border-color:var(--text-3);box-shadow:0 0 20px rgba(255,255,255,0.03)}
+.response-card[data-provider="anthropic"]:hover{border-color:#d97757;box-shadow:0 0 20px rgba(217,119,87,0.1)}
+.response-card[data-provider="openai"]:hover{border-color:#10a37f;box-shadow:0 0 20px rgba(16,163,127,0.1)}
+.response-card[data-provider="google"]:hover{border-color:#4285f4;box-shadow:0 0 20px rgba(66,133,244,0.1)}
+.response-card[data-provider="xai"]:hover{border-color:#1da1f2;box-shadow:0 0 20px rgba(29,161,242,0.1)}
+.response-card[data-provider="deepseek"]:hover{border-color:#536dfe;box-shadow:0 0 20px rgba(83,109,254,0.1)}
+.response-card[data-provider="moonshot"]:hover{border-color:#ff6b6b;box-shadow:0 0 20px rgba(255,107,107,0.1)}
+.response-card.error{border-color:var(--red)}
+
+/* Tier-colored left border stripe */
+.response-card::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  border-radius:var(--radius) 0 0 var(--radius);
+}
+.response-card.tier-frontier::before{background:var(--pink)}
+.response-card.tier-strong::before{background:var(--cyan)}
+.response-card.tier-fast::before{background:var(--green)}
+.response-card.tier-local::before{background:var(--amber)}
+
+.response-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.response-model-info{display:flex;align-items:center;gap:8px;flex:1}
+.response-model-logo{width:22px;height:22px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.response-model-logo.anthropic{background:linear-gradient(135deg,#d97757,#c45a3c)}
+.response-model-logo.openai{background:linear-gradient(135deg,#10a37f,#0d8c6d)}
+.response-model-logo.google{background:linear-gradient(135deg,#4285f4,#34a853)}
+.response-model-logo.xai{background:linear-gradient(135deg,#1da1f2,#0d8ecf)}
+.response-model-logo.deepseek{background:linear-gradient(135deg,#536dfe,#4054b2)}
+.response-model-logo.moonshot{background:linear-gradient(135deg,#ff6b6b,#ee5a24)}
+.response-model{font-family:var(--font-display);font-weight:600;font-size:14px}
+
+/* Per-model brand colors */
+.response-model[data-provider="anthropic"]{color:#d97757}
+.response-model[data-provider="openai"]{color:#10a37f}
+.response-model[data-provider="google"]{color:#4285f4}
+.response-model[data-provider="xai"]{color:#1da1f2}
+.response-model[data-provider="deepseek"]{color:#536dfe}
+.response-model[data-provider="moonshot"]{color:#ff6b6b}
+
+/* Per-model card border accent */
+.response-card[data-provider="anthropic"]::before{background:#d97757}
+.response-card[data-provider="openai"]::before{background:#10a37f}
+.response-card[data-provider="google"]::before{background:#4285f4}
+.response-card[data-provider="xai"]::before{background:#1da1f2}
+.response-card[data-provider="deepseek"]::before{background:#536dfe}
+.response-card[data-provider="moonshot"]::before{background:#ff6b6b}
+
+.response-time{font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin-left:auto}
+.response-tier{font-size:10px;padding:2px 8px;border-radius:4px;font-family:var(--font-mono)}
+.response-tier.t1{background:oklch(0.72 0.26 340/0.1);color:var(--pink)}
+.response-tier.t2{background:oklch(0.78 0.22 195/0.1);color:var(--cyan)}
+.response-tier.t3{background:oklch(0.75 0.24 145/0.1);color:var(--green)}
+.response-tier.t4{background:oklch(0.85 0.20 85/0.1);color:var(--amber)}
+.response-body{font-size:13px;line-height:1.6;color:var(--text-2);max-height:200px;overflow-y:auto;white-space:pre-wrap}
+.response-error{color:var(--red);font-size:12px;font-family:var(--font-mono)}
+
+.section-label{font-family:var(--font-display);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-3)}
+
+@media(max-width:1024px){
+  .mode-cards{grid-template-columns:1fr}
+}
+
+@media(max-width:768px){
+  .page{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:16px}
+  .responses-grid{grid-template-columns:1fr}
+  .mode-cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar" id="topbar">
+    <a href="/" class="topbar-logo"><span class="emoji">🧠</span> ALFIE NEXUS</a>
+    <div class="topbar-nav">
+      <a href="/">📊 Dashboard</a>
+      <a href="/browser.html">🌐 Browser</a>
+      <a href="/execute.html">⚡ Execute</a>
+      <a href="/research.html">🔬 Research</a>
+      <a href="/playground.html">🎯 Playground</a>
+      <a href="/replay.html">🔄 Replay</a>
+      <a href="/agents.html">🤖 Agents</a>
+      <a href="/knowledge.html">📚 Knowledge</a>
+      <a href="/templates.html">📋 Templates</a>
+      <a href="/council.html" class="active">🏛️ Council</a>
+      <a href="/remote.html">🖥️ Remote</a>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h3>Past Queries</h3>
+    <div id="history-list"><div class="history-empty">No queries yet</div></div>
+  </div>
+
+  <div class="main" id="main-content">
+    <div class="input-section">
+      <textarea class="question-input" id="question" placeholder="Ask the council anything... complex, controversial, or multi-faceted questions work best." rows="4"></textarea>
+      <div class="controls">
+        <div class="mode-group">
+          <button class="mode-btn active" data-mode="auto" title="AI picks the best mode">🔮 Auto</button>
+          <button class="mode-btn" data-mode="synthesis" title="Fast single-pass, 5 models">⚡ Synthesis</button>
+          <button class="mode-btn" data-mode="council" title="Full 3-round debate, 6+ models">🏛️ Council</button>
+        </div>
+        <button class="model-toggle" id="model-toggle">🎛️ Models</button>
+        <button class="convene-btn" id="convene" onclick="convene()">Convene Council</button>
+      </div>
+      <div class="model-picker" id="model-picker"></div>
+      
+      <div class="example-chips" id="example-chips">
+        <div class="example-chip" onclick="fillExample('Is AGI achievable by 2030?')">Is AGI achievable by 2030?</div>
+        <div class="example-chip" onclick="fillExample('Best programming language for AI agents?')">Best programming language for AI agents?</div>
+        <div class="example-chip" onclick="fillExample('Should we regulate AI development?')">Should we regulate AI development?</div>
+        <div class="example-chip" onclick="fillExample('What\'s the next breakthrough after transformers?')">What's the next breakthrough after transformers?</div>
+      </div>
+
+      <div class="model-status" id="model-status">
+        <span class="model-status-label">Available Models:</span>
+        <div class="model-status-item"><span class="status-dot"></span> Opus 4.6</div>
+        <div class="model-status-item"><span class="status-dot"></span> GPT-5.2</div>
+        <div class="model-status-item"><span class="status-dot"></span> Gemini 3 Pro</div>
+        <div class="model-status-item"><span class="status-dot"></span> Grok 4.1</div>
+        <div class="model-status-item"><span class="status-dot"></span> Kimi K2.5</div>
+        <div class="model-status-item"><span class="status-dot"></span> DeepSeek R1</div>
+      </div>
+    </div>
+
+    <div class="how-it-works" id="how-it-works">
+      <h2>How It Works</h2>
+      <div class="mode-cards">
+        <div class="mode-card auto">
+          <div class="mode-card-name">🔮 Auto</div>
+          <div class="mode-card-desc">AI analyzes your question and selects the best approach — synthesis for straightforward queries, council for complex debates.</div>
+        </div>
+        <div class="mode-card synthesis">
+          <div class="mode-card-name">⚡ Synthesis</div>
+          <div class="mode-card-desc">Fast single-pass consultation — 5 diverse models respond independently, then synthesized into one coherent answer.</div>
+        </div>
+        <div class="mode-card council">
+          <div class="mode-card-name">🏛️ Council</div>
+          <div class="mode-card-desc">Full deliberation — 6+ frontier models debate over 3 rounds: independent answers, critique, consensus.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-card" id="preview-card" style="display:none">
+      <h3>Last Result</h3>
+      <div class="preview-verdict" id="preview-verdict"></div>
+      <div class="preview-meta" id="preview-meta"></div>
+    </div>
+
+    <div class="progress" id="progress">
+      <div class="spinner"></div>
+      <div class="progress-text" id="progress-text">Convening the council...</div>
+      <div class="elapsed" id="elapsed">0.0s</div>
+    </div>
+
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script>
+let selectedMode = 'auto';
+let models = null;
+let elapsedTimer = null;
+
+// Mode selector
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedMode = btn.dataset.mode;
+  });
+});
+
+// Model toggle
+document.getElementById('model-toggle').addEventListener('click', () => {
+  document.getElementById('model-picker').classList.toggle('open');
+});
+
+// Example questions
+function fillExample(text) {
+  document.getElementById('question').value = text;
+  document.getElementById('question').focus();
+}
+
+// Load models
+async function loadModels() {
+  try {
+    const r = await fetch('/api/council/models', { credentials: 'include' });
+    models = await r.json();
+    renderModelPicker();
+  } catch(e) { console.error(e); }
+}
+
+function renderModelPicker() {
+  if (!models) return;
+  const tiers = [
+    { key: 'frontier', label: '🔮 Frontier', models: models.frontier },
+    { key: 'strong', label: '💪 Strong', models: models.strong },
+    { key: 'fast', label: '⚡ Fast', models: models.fast },
+    { key: 'local', label: '🏠 Local/Free', models: models.local },
+  ];
+  const el = document.getElementById('model-picker');
+  el.innerHTML = tiers.map(t => `
+    <div class="model-tier ${t.key}">
+      <h4>${t.label}</h4>
+      <div class="model-checks">
+        ${t.models.map(m => `
+          <label class="model-check" data-key="${m.key}">
+            <input type="checkbox" value="${m.key}">
+            ${m.name}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  el.querySelectorAll('.model-check').forEach(lbl => {
+    lbl.addEventListener('click', () => {
+      const cb = lbl.querySelector('input');
+      cb.checked = !cb.checked;
+      lbl.classList.toggle('checked', cb.checked);
+    });
+  });
+}
+
+function getSelectedModels() {
+  const checked = document.querySelectorAll('.model-check input:checked');
+  return Array.from(checked).map(c => c.value);
+}
+
+// Load history
+async function loadHistory() {
+  try {
+    const r = await fetch('/api/council/history', { credentials: 'include' });
+    const hist = await r.json();
+    const el = document.getElementById('history-list');
+    if (!hist.length) { el.innerHTML = '<div class="history-empty">No queries yet</div>'; return; }
+    el.innerHTML = hist.map((h, i) => {
+      const mode = h.result?.mode || h.mode || 'auto';
+      const q = h.question;
+      const timeAgo = getTimeAgo(h.timestamp);
+      return `
+      <div class="history-item" onclick="showHistoryResult(${i})" data-question="${esc(h.question)}">
+        <div class="mode-dot ${mode}"></div>
+        <div style="flex:1">
+          <div class="history-q">${esc(q)}</div>
+          <div class="history-meta">${timeAgo}</div>
+        </div>
+      </div>`;
+    }).join('');
+    window._history = hist;
+    
+    // Show preview of last result
+    if (hist.length > 0 && hist[0].result?.verdict) {
+      showPreview(hist[0].result);
+    }
+  } catch(e) { console.error(e); }
+}
+
+function getTimeAgo(timestamp) {
+  if (!timestamp) return '';
+  const now = Date.now();
+  const diff = now - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  if (minutes < 1) return 'just now';
+  if (minutes < 60) return minutes + 'm ago';
+  if (hours < 24) return hours + 'h ago';
+  return days + 'd ago';
+}
+
+function showPreview(result) {
+  if (!result?.verdict) return;
+  const card = document.getElementById('preview-card');
+  const verdict = document.getElementById('preview-verdict');
+  const meta = document.getElementById('preview-meta');
+  
+  verdict.textContent = result.verdict.length > 200 ? result.verdict.substring(0, 200) + '...' : result.verdict;
+  meta.innerHTML = `
+    <div>⏱ <span>${result.total_time || '?'}s</span></div>
+    <div>📊 <span>${result.confidence || '?'}%</span></div>
+    <div>🤝 <span>${result.consensus || '?'}</span></div>
+    <div>🔄 <span>${result.mode || '?'}</span></div>
+  `;
+  card.style.display = 'block';
+}
+
+function showHistoryResult(idx) {
+  const h = window._history[idx];
+  if (!h) return;
+  document.querySelectorAll('.history-item').forEach((el,i) => el.classList.toggle('active', i===idx));
+  document.getElementById('question').value = h.question;
+  renderResults(h.result);
+  if (h.result?.verdict) {
+    showPreview(h.result);
+  }
+}
+
+// Convene
+async function convene() {
+  const question = document.getElementById('question').value.trim();
+  if (!question) return;
+  const btn = document.getElementById('convene');
+  btn.disabled = true;
+  btn.textContent = 'Deliberating...';
+
+  // Hide how-it-works and preview
+  document.getElementById('how-it-works').style.display = 'none';
+  document.getElementById('preview-card').style.display = 'none';
+
+  const progress = document.getElementById('progress');
+  const results = document.getElementById('results');
+  progress.classList.add('active');
+  results.classList.remove('active');
+
+  let elapsed = 0;
+  const elEl = document.getElementById('elapsed');
+  elapsedTimer = setInterval(() => { elapsed += 0.1; elEl.textContent = elapsed.toFixed(1) + 's'; }, 100);
+
+  const selModels = getSelectedModels();
+  const body = { question, mode: selectedMode };
+  if (selModels.length) body.models = selModels;
+
+  try {
+    const r = await fetch('/api/council', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body), credentials: 'include' });
+    const data = await r.json();
+    clearInterval(elapsedTimer);
+    progress.classList.remove('active');
+    renderResults(data);
+    loadHistory();
+  } catch(e) {
+    clearInterval(elapsedTimer);
+    progress.classList.remove('active');
+    results.classList.add('active');
+    results.innerHTML = `<div class="verdict-card"><div class="verdict-label">❌ Error</div><div class="verdict-text">${esc(e.message)}</div></div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Convene Council';
+}
+
+// Enter to submit
+document.getElementById('question').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); convene(); }
+});
+
+function renderResults(data) {
+  const el = document.getElementById('results');
+  el.classList.add('active');
+  if (data.error) {
+    el.innerHTML = `<div class="verdict-card"><div class="verdict-label">❌ Error</div><div class="verdict-text">${esc(JSON.stringify(data, null, 2))}</div></div>`;
+    return;
+  }
+
+  const tierClass = t => ({1:'frontier',2:'strong',3:'fast',4:'local'}[t] || 'fast');
+  const tierLabel = t => ({1:'t1',2:'t2',3:'t3',4:'t4'}[t] || 't3');
+  
+  // Model → provider mapping for colors and logos
+  const modelProvider = (name) => {
+    const n = (name||'').toLowerCase();
+    if (n.includes('opus') || n.includes('sonnet') || n.includes('claude')) return {provider:'anthropic', logo:'A', label:'Anthropic'};
+    if (n.includes('gpt') || n.includes('o3') || n.includes('o4')) return {provider:'openai', logo:'⬡', label:'OpenAI'};
+    if (n.includes('gemini')) return {provider:'google', logo:'G', label:'Google'};
+    if (n.includes('grok')) return {provider:'xai', logo:'𝕏', label:'xAI'};
+    if (n.includes('deepseek')) return {provider:'deepseek', logo:'D', label:'DeepSeek'};
+    if (n.includes('kimi')) return {provider:'moonshot', logo:'K', label:'Moonshot'};
+    return {provider:'unknown', logo:'?', label:'Unknown'};
+  };
+
+  // Collect all responses
+  const allResponses = [...(data.round1 || data.responses || []), ...(data.round2 || [])];
+  const r1 = data.round1 || data.responses || [];
+
+  let html = '';
+
+  // Calculate consensus percentage (0-100)
+  const consensusPercent = data.consensus === 'high' ? 85 : data.consensus === 'medium' ? 60 : data.consensus === 'low' ? 35 : 50;
+
+  // Verdict with consensus meter
+  html += `<div class="verdict-card">
+    <div class="verdict-label">🏛️ ${data.mode === 'council' ? 'Council Verdict' : 'Synthesis Result'}</div>
+    <div class="verdict-text">${esc(data.verdict || 'No verdict')}</div>
+    <div class="consensus-meter">
+      <div class="consensus-label">Consensus Level</div>
+      <div class="consensus-bar">
+        <div class="consensus-fill" style="width:${consensusPercent}%"></div>
+      </div>
+    </div>
+    <div class="verdict-meta">
+      <div class="verdict-stat">⏱ <span>${data.total_time || '?'}s</span></div>
+      <div class="verdict-stat">📊 Confidence: <span>${data.confidence || '?'}%</span></div>
+      <div class="verdict-stat">🤝 Consensus: <span>${data.consensus || '?'}</span></div>
+      <div class="verdict-stat">🔄 Mode: <span>${data.mode || '?'}</span></div>
+    </div>
+  </div>`;
+
+  // Round 1 responses
+  if (r1.length) {
+    html += `<div class="section-label">${data.mode === 'council' ? 'Round 1 — Independent Answers' : 'Model Responses'} (${r1.filter(r=>!r.error).length}/${r1.length})</div>`;
+    html += '<div class="responses-grid">';
+    for (const r of r1) {
+      const tc = tierClass(r.tier);
+      const mp = modelProvider(r.model);
+      html += `<div class="response-card tier-${tc}${r.error ? ' error' : ''}" data-provider="${mp.provider}">
+        <div class="response-header">
+          <div class="response-model-info">
+            <div class="response-model-logo ${mp.provider}">${mp.logo}</div>
+            <span class="response-model" data-provider="${mp.provider}">${esc(r.model)}</span>
+          </div>
+          <span class="response-tier ${tierLabel(r.tier)}">${tc}</span>
+          <span class="response-time">${r.latency}s</span>
+        </div>
+        <div class="${r.error ? 'response-error' : 'response-body'}">${esc(r.error || r.content || 'No response')}</div>
+      </div>`;
+    }
+    html += '</div>';
+  }
+
+  // Round 2
+  if (data.round2?.length) {
+    html += `<div class="section-label">Round 2 — Critique & Refinement (${data.round2.filter(r=>!r.error).length}/${data.round2.length})</div>`;
+    html += '<div class="responses-grid">';
+    for (const r of data.round2) {
+      const tc = tierClass(r.tier);
+      const mp = modelProvider(r.model);
+      html += `<div class="response-card tier-${tc}${r.error ? ' error' : ''}" data-provider="${mp.provider}">
+        <div class="response-header">
+          <div class="response-model-info">
+            <div class="response-model-logo ${mp.provider}">${mp.logo}</div>
+            <span class="response-model" data-provider="${mp.provider}">${esc(r.model)}</span>
+          </div>
+          <span class="response-tier ${tierLabel(r.tier)}">${tc}</span>
+          <span class="response-time">${r.latency}s</span>
+        </div>
+        <div class="${r.error ? 'response-error' : 'response-body'}">${esc(r.error || r.content || 'No response')}</div>
+      </div>`;
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// Init
+loadModels();
+loadHistory();
+</script>
+</body>
+</html>

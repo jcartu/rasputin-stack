@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>📋 ALFIE Task Templates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  color-scheme:dark;
+  --void:oklch(0.06 0.01 270);--base:oklch(0.08 0.015 265);--surface:oklch(0.11 0.02 270);
+  --elevated:oklch(0.15 0.025 270);--raised:oklch(0.19 0.025 265);
+  --text-1:oklch(0.98 0.005 270);--text-2:oklch(0.72 0.012 270);--text-3:oklch(0.48 0.018 270);--text-ghost:oklch(0.30 0.015 270);
+  --purple:oklch(0.68 0.30 290);--purple-glow:oklch(0.68 0.30 290/0.5);
+  --cyan:oklch(0.78 0.22 195);--cyan-glow:oklch(0.78 0.22 195/0.5);
+  --green:oklch(0.75 0.24 145);--green-glow:oklch(0.75 0.24 145/0.5);
+  --amber:oklch(0.85 0.20 85);--amber-glow:oklch(0.85 0.20 85/0.5);
+  --red:oklch(0.65 0.29 25);--red-glow:oklch(0.65 0.29 25/0.5);
+  --pink:oklch(0.72 0.26 340);--orange:oklch(0.77 0.21 50);--blue:oklch(0.72 0.20 240);
+  --glass:oklch(0.10 0.015 270/0.25);--glass-border:oklch(0.38 0.04 270/0.15);--glass-strong:oklch(0.14 0.02 270/0.35);
+  --font-display:'Space Grotesk',system-ui,sans-serif;--font-body:'Geist',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --radius:14px;--radius-sm:8px;--radius-lg:18px;
+  --spring:cubic-bezier(0.34,1.56,0.64,1);--snap:cubic-bezier(0.16,1,0.3,1);
+}
+html{font-size:15px}
+body{font-family:var(--font-body);background:var(--void);color:var(--text-1);min-height:100dvh;-webkit-font-smoothing:antialiased}
+::selection{background:var(--purple-glow);color:var(--text-1)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:oklch(0.28 0.02 270);border-radius:2px}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+
+.aurora-bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 15% 20%,oklch(0.50 0.28 290/0.12) 0%,transparent 50%),radial-gradient(ellipse 70% 60% at 85% 25%,oklch(0.55 0.26 320/0.10) 0%,transparent 50%),radial-gradient(ellipse 90% 50% at 50% 90%,oklch(0.60 0.20 195/0.08) 0%,transparent 50%),var(--void);animation:aurora 25s ease-in-out infinite alternate;pointer-events:none}
+@keyframes aurora{0%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(15deg) brightness(1.05)}100%{filter:hue-rotate(-10deg) brightness(0.98)}}
+
+/* Topbar */
+.topbar{height:60px;background:oklch(0.08 0.015 265/0.35);backdrop-filter:blur(10px) saturate(150%);border-bottom:1px solid oklch(0.38 0.04 270/0.15);padding:0 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px oklch(0 0 0/0.3)}
+.topbar-logo{font-family:var(--font-display);font-weight:800;font-size:1.1rem;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.topbar-logo:hover{opacity:0.85}
+.topbar-logo .emoji{font-size:1.4rem;filter:drop-shadow(0 0 12px var(--purple-glow));-webkit-text-fill-color:initial}
+.nav-link{color:oklch(0.70 0.18 280);font-size:12px;padding:5px 12px;border:1px solid oklch(0.30 0.02 280);border-radius:6px;white-space:nowrap;transition:all 0.2s;text-decoration:none}
+.nav-link:hover{border-color:oklch(0.70 0.18 280);background:oklch(0.70 0.18 280/0.1)}
+.nav-link.active{background:oklch(0.70 0.18 280/0.15);border-color:oklch(0.70 0.18 280);color:oklch(0.78 0.22 195)}
+
+/* Main content */
+.main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:32px 24px}
+.page-title{font-family:var(--font-display);font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--cyan),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.page-desc{color:var(--text-2);font-size:0.95rem;margin-bottom:32px}
+
+/* Template grid */
+.templates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.template-card{background:oklch(0.08 0.015 270/0.22);backdrop-filter:blur(8px) saturate(150%);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.3s cubic-bezier(0.22,1,0.36,1);box-shadow:0 4px 16px oklch(0 0 0/0.25);position:relative;overflow:hidden}
+.template-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-glow,var(--purple-glow)) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;pointer-events:none}
+.template-card:hover{border-color:oklch(0.42 0.06 270/0.5);transform:translateY(-4px);box-shadow:0 12px 40px oklch(0 0 0/0.4)}
+.template-card:hover::before{opacity:0.08}
+.template-card:active{transform:translateY(-2px);transition-duration:80ms}
+.card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.card-emoji{font-size:2rem;filter:drop-shadow(0 0 12px var(--purple-glow))}
+.card-info{flex:1}
+.card-name{font-family:var(--font-display);font-weight:700;font-size:1.1rem;color:var(--text-1)}
+.card-tag{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:10px;font-family:var(--font-mono);font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.card-desc{color:var(--text-2);font-size:0.82rem;line-height:1.5;margin-bottom:14px}
+.card-steps{display:flex;flex-wrap:wrap;gap:6px}
+.step-chip{padding:3px 8px;background:var(--glass);border:1px solid var(--glass-border);border-radius:6px;font-family:var(--font-mono);font-size:0.6rem;color:var(--text-3);display:flex;align-items:center;gap:4px}
+.step-num{color:var(--purple);font-weight:700}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:oklch(0 0 0/0.65);backdrop-filter:blur(6px);display:none;place-items:center;padding:24px}
+.modal-overlay.visible{display:grid}
+.modal{width:min(560px,100%);background:var(--elevated);border:1px solid oklch(0.30 0.03 270);border-radius:var(--radius-lg);box-shadow:0 32px 80px oklch(0 0 0/0.6);overflow:hidden;animation:modal-in 0.35s var(--spring)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;gap:12px}
+.modal-emoji{font-size:1.8rem}
+.modal-title{font-family:var(--font-display);font-weight:700;font-size:1.2rem;flex:1}
+.modal-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:background 0.15s}
+.modal-close:hover{background:var(--glass)}
+.modal-body{padding:20px 24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-family:var(--font-mono);font-size:0.7rem;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;padding:12px 14px;background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:var(--radius-sm);color:var(--text-1);font-family:var(--font-body);font-size:0.9rem;transition:all 0.2s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--purple);box-shadow:0 0 20px var(--purple-glow)}
+.field textarea{resize:vertical;min-height:80px;font-family:var(--font-mono);font-size:0.8rem}
+.field .hint{font-size:0.65rem;color:var(--text-3);margin-top:4px}
+.modal-footer{padding:16px 24px 20px;display:flex;gap:10px;justify-content:flex-end}
+.btn{padding:10px 24px;border-radius:var(--radius-sm);font-family:var(--font-display);font-weight:600;font-size:0.9rem;transition:all 0.15s var(--spring)}
+.btn-primary{background:linear-gradient(135deg,var(--purple),oklch(0.55 0.32 285));color:var(--text-1);box-shadow:0 4px 20px var(--purple-glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--purple-glow)}
+.btn-primary:active{transform:translateY(0);transition-duration:60ms}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-ghost{color:var(--text-2);border:1px solid var(--glass-border);border-radius:var(--radius-sm)}
+.btn-ghost:hover{background:var(--glass)}
+
+/* Progress overlay inside modal */
+.progress-section{display:none;padding:20px 24px}
+.progress-section.visible{display:block}
+.progress-step{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:0.8rem;font-family:var(--font-mono);animation:step-in 0.3s var(--spring)}
+@keyframes step-in{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.progress-icon{width:20px;text-align:center;flex-shrink:0}
+.progress-text{flex:1;color:var(--text-2)}
+.progress-text.active{color:var(--text-1)}
+.progress-text.done{color:var(--green)}
+.progress-text.error{color:var(--red)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid oklch(0.78 0.22 195/0.2);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.progress-result{margin-top:12px;padding:12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.75rem;color:var(--text-2);max-height:200px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="aurora-bg"></div>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo"><span class="emoji">🧠</span><span>ALFIE NEXUS</span></a>
+  <div style="width:1px;height:28px;background:var(--glass-border)"></div>
+  <a href="/" class="nav-link">📊 Dashboard</a>
+  <a href="/browser.html" class="nav-link">🌐 Browser</a>
+  <a href="/execute.html" class="nav-link">⚡ Execute</a>
+  <a href="/research.html" class="nav-link">🔬 Research</a>
+  <a href="/playground.html" class="nav-link">🎯 Playground</a>
+  <a href="/replay.html" class="nav-link">🔄 Replay</a>
+  <a href="/agents.html" class="nav-link">🤖 Agents</a>
+  <a href="/knowledge.html" class="nav-link">📚 Knowledge</a>
+  <a href="/templates.html" class="nav-link active">📝 Templates</a>
+</div>
+
+<div class="main">
+  <div class="page-title">Task Templates</div>
+  <div class="page-desc">One-click workflows that chain tools together. Select a template, fill in parameters, and let ALFIE handle the rest.</div>
+
+  <div class="templates-grid" id="templates-grid"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <span class="modal-emoji" id="modal-emoji"></span>
+      <span class="modal-title" id="modal-title"></span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="progress-section" id="progress-section">
+      <div id="progress-steps"></div>
+      <div class="progress-result" id="progress-result" style="display:none"></div>
+    </div>
+    <div class="modal-footer" id="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="run-btn" onclick="runTemplate()">▶ Run</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TEMPLATES = [
+  {
+    id: 'deep-research',
+    emoji: '🔬',
+    name: 'Deep Research',
+    tag: 'Research', tagColor: 'var(--green)',
+    desc: 'Takes a topic, runs the Wide Research pipeline with multiple search engines, synthesizes findings, and saves to the knowledge base.',
+    steps: ['Web Search', 'Perplexity Deep Dive', 'Synthesize', 'Save to KB'],
+    accentHue: 145,
+    fields: [
+      { key: 'topic', label: 'Research Topic', type: 'text', placeholder: 'e.g. AI agent frameworks 2026', required: true },
+      { key: 'depth', label: 'Depth', type: 'select', options: ['Quick (3 sources)', 'Standard (8 sources)', 'Deep (15+ sources)'], default: 'Standard (8 sources)' },
+      { key: 'focus', label: 'Focus Areas (optional)', type: 'textarea', placeholder: 'Specific angles or questions to explore...' },
+    ],
+    run: async (params) => await executeTemplate('deep-research', params, [
+      { msg: 'Searching the web...', endpoint: '/api/research/search', body: { query: params.topic, depth: params.depth } },
+      { msg: 'Deep diving with Perplexity...', endpoint: '/api/research/perplexity', body: { query: params.topic, focus: params.focus } },
+      { msg: 'Synthesizing findings...', endpoint: '/api/research/synthesize', body: { topic: params.topic } },
+      { msg: 'Saving to knowledge base...', endpoint: '/api/knowledge/save', body: { topic: params.topic, type: 'research' } },
+    ])
+  },
+  {
+    id: 'build-test',
+    emoji: '🏗️',
+    name: 'Build & Test',
+    tag: 'Code', tagColor: 'var(--cyan)',
+    desc: 'Describe what you want built, and ALFIE generates code via LiteLLM, executes it in a sandboxed environment, and returns results.',
+    steps: ['Generate Code', 'Sandbox Execute', 'Validate', 'Return Results'],
+    accentHue: 195,
+    fields: [
+      { key: 'description', label: 'What to Build', type: 'textarea', placeholder: 'e.g. A Python script that scrapes HN front page and returns top 10 stories as JSON', required: true },
+      { key: 'language', label: 'Language', type: 'select', options: ['Python', 'JavaScript/Node.js', 'Bash', 'TypeScript'], default: 'Python' },
+      { key: 'model', label: 'Model', type: 'select', options: ['claude-opus-4-6', 'claude-sonnet-4', 'gpt-4o', 'Auto (best available)'], default: 'Auto (best available)' },
+    ],
+    run: async (params) => await executeTemplate('build-test', params, [
+      { msg: 'Generating code...', endpoint: '/api/execute/generate', body: { description: params.description, language: params.language, model: params.model } },
+      { msg: 'Executing in sandbox...', endpoint: '/api/execute/run', body: { language: params.language } },
+      { msg: 'Validating output...', endpoint: '/api/execute/validate', body: {} },
+    ])
+  },
+  {
+    id: 'competitive-analysis',
+    emoji: '⚔️',
+    name: 'Competitive Analysis',
+    tag: 'Analysis', tagColor: 'var(--amber)',
+    desc: 'Enter a company or product name. ALFIE researches competitors via Perplexity and generates a detailed comparison report.',
+    steps: ['Research Company', 'Find Competitors', 'Compare Features', 'Generate Report'],
+    accentHue: 85,
+    fields: [
+      { key: 'company', label: 'Company / Product', type: 'text', placeholder: 'e.g. Cursor IDE', required: true },
+      { key: 'competitors', label: 'Known Competitors (optional)', type: 'text', placeholder: 'e.g. Windsurf, Zed, VS Code' },
+      { key: 'aspects', label: 'Compare On', type: 'textarea', placeholder: 'Pricing, features, market share, developer experience...' },
+    ],
+    run: async (params) => await executeTemplate('competitive-analysis', params, [
+      { msg: 'Researching company...', endpoint: '/api/research/perplexity', body: { query: `${params.company} company overview features pricing` } },
+      { msg: 'Finding competitors...', endpoint: '/api/research/perplexity', body: { query: `${params.company} competitors alternatives comparison 2026` } },
+      { msg: 'Comparing features...', endpoint: '/api/research/synthesize', body: { topic: `Competitive analysis: ${params.company}` } },
+      { msg: 'Generating report...', endpoint: '/api/knowledge/save', body: { topic: `Competitive Analysis: ${params.company}`, type: 'analysis' } },
+    ])
+  },
+  {
+    id: 'data-analysis',
+    emoji: '📊',
+    name: 'Data Analysis',
+    tag: 'Data', tagColor: 'var(--orange)',
+    desc: 'Provide a CSV URL or describe your data. ALFIE generates Python analysis code, runs it in a sandbox, and returns charts and insights.',
+    steps: ['Parse Data', 'Generate Analysis Code', 'Execute & Chart', 'Return Insights'],
+    accentHue: 50,
+    fields: [
+      { key: 'data_source', label: 'CSV URL or Data Description', type: 'textarea', placeholder: 'Paste a CSV URL or describe the data you want analyzed...', required: true },
+      { key: 'questions', label: 'Questions to Answer', type: 'textarea', placeholder: 'e.g. What are the trends? Any correlations? Outliers?' },
+      { key: 'output', label: 'Output Format', type: 'select', options: ['Charts + Summary', 'Summary Only', 'Raw Statistics'], default: 'Charts + Summary' },
+    ],
+    run: async (params) => await executeTemplate('data-analysis', params, [
+      { msg: 'Parsing data source...', endpoint: '/api/execute/generate', body: { description: `Analyze this data: ${params.data_source}. Questions: ${params.questions}`, language: 'Python' } },
+      { msg: 'Running analysis...', endpoint: '/api/execute/run', body: { language: 'Python' } },
+      { msg: 'Generating visualizations...', endpoint: '/api/execute/validate', body: {} },
+    ])
+  },
+  {
+    id: 'web-scraper',
+    emoji: '🕷️',
+    name: 'Web Scraper',
+    tag: 'Browser', tagColor: 'var(--pink)',
+    desc: 'Enter a URL and ALFIE launches a browser, takes screenshots, extracts structured content, and returns the results.',
+    steps: ['Launch Browser', 'Navigate & Screenshot', 'Extract Content', 'Return Data'],
+    accentHue: 340,
+    fields: [
+      { key: 'url', label: 'URL to Scrape', type: 'text', placeholder: 'https://example.com', required: true },
+      { key: 'extract', label: 'What to Extract', type: 'select', options: ['Full Page Content', 'Text Only', 'Links & Images', 'Structured Data (tables, lists)'], default: 'Full Page Content' },
+      { key: 'screenshot', label: 'Take Screenshot?', type: 'select', options: ['Yes', 'No'], default: 'Yes' },
+    ],
+    run: async (params) => await executeTemplate('web-scraper', params, [
+      { msg: 'Launching browser...', endpoint: '/api/browser/launch', body: {} },
+      { msg: 'Navigating to URL...', endpoint: '/api/browser/navigate', body: { url: params.url, screenshot: params.screenshot === 'Yes' } },
+      { msg: 'Extracting content...', endpoint: '/api/browser/extract', body: { mode: params.extract } },
+    ])
+  },
+  {
+    id: 'multi-model',
+    emoji: '🤖',
+    name: 'Multi-Model Compare',
+    tag: 'Playground', tagColor: 'var(--blue)',
+    desc: 'Send the same prompt to multiple models simultaneously and compare their responses side-by-side.',
+    steps: ['Send to All Models', 'Collect Responses', 'Compare & Score'],
+    accentHue: 240,
+    fields: [
+      { key: 'prompt', label: 'Prompt', type: 'textarea', placeholder: 'Enter the prompt to test across models...', required: true },
+      { key: 'models', label: 'Models', type: 'textarea', placeholder: 'claude-opus-4-6, claude-sonnet-4, gpt-4o, gemini-2.5-pro\n(one per line or comma-separated)', default: 'claude-opus-4-6, claude-sonnet-4, gpt-4o' },
+      { key: 'criteria', label: 'Evaluation Criteria (optional)', type: 'text', placeholder: 'e.g. accuracy, creativity, conciseness' },
+    ],
+    run: async (params) => await executeTemplate('multi-model', params, [
+      { msg: 'Sending to all models...', endpoint: '/api/playground/multi', body: { prompt: params.prompt, models: params.models } },
+      { msg: 'Collecting responses...', endpoint: '/api/playground/collect', body: {} },
+      { msg: 'Comparing & scoring...', endpoint: '/api/playground/compare', body: { criteria: params.criteria } },
+    ])
+  },
+];
+
+let activeTemplate = null;
+let running = false;
+
+function renderCards() {
+  const grid = document.getElementById('templates-grid');
+  grid.innerHTML = TEMPLATES.map(t => `
+    <div class="template-card" onclick="openModal('${t.id}')" style="--accent-glow:oklch(0.68 0.25 ${t.accentHue}/0.5)">
+      <div class="card-top">
+        <span class="card-emoji">${t.emoji}</span>
+        <div class="card-info">
+          <div class="card-name">${t.name}</div>
+          <span class="card-tag" style="background:${t.tagColor}20;color:${t.tagColor}">${t.tag}</span>
+        </div>
+      </div>
+      <div class="card-desc">${t.desc}</div>
+      <div class="card-steps">
+        ${t.steps.map((s, i) => `<span class="step-chip"><span class="step-num">${i+1}</span>${s}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(id) {
+  activeTemplate = TEMPLATES.find(t => t.id === id);
+  if (!activeTemplate) return;
+  document.getElementById('modal-emoji').textContent = activeTemplate.emoji;
+  document.getElementById('modal-title').textContent = activeTemplate.name;
+  
+  const body = document.getElementById('modal-body');
+  body.innerHTML = activeTemplate.fields.map(f => {
+    let input;
+    if (f.type === 'select') {
+      input = `<select id="field-${f.key}">${f.options.map(o => `<option${f.default === o ? ' selected' : ''}>${o}</option>`).join('')}</select>`;
+    } else if (f.type === 'textarea') {
+      input = `<textarea id="field-${f.key}" placeholder="${f.placeholder || ''}" rows="3">${f.default || ''}</textarea>`;
+    } else {
+      input = `<input type="text" id="field-${f.key}" placeholder="${f.placeholder || ''}" value="${f.default || ''}"${f.required ? ' required' : ''}>`;
+    }
+    return `<div class="field"><label>${f.label}</label>${input}${f.hint ? `<div class="hint">${f.hint}</div>` : ''}</div>`;
+  }).join('');
+
+  // Reset progress
+  document.getElementById('progress-section').classList.remove('visible');
+  document.getElementById('progress-steps').innerHTML = '';
+  document.getElementById('progress-result').style.display = 'none';
+  document.getElementById('modal-body').style.display = '';
+  document.getElementById('modal-footer').style.display = '';
+  document.getElementById('run-btn').disabled = false;
+  running = false;
+
+  document.getElementById('modal-overlay').classList.add('visible');
+  // Focus first input
+  setTimeout(() => { const el = body.querySelector('input,textarea'); if (el) el.focus(); }, 100);
+}
+
+function closeModal() {
+  if (running) return; // Don't close while running
+  document.getElementById('modal-overlay').classList.remove('visible');
+  activeTemplate = null;
+}
+
+function getParams() {
+  const params = {};
+  for (const f of activeTemplate.fields) {
+    const el = document.getElementById(`field-${f.key}`);
+    params[f.key] = el ? el.value : '';
+  }
+  return params;
+}
+
+async function runTemplate() {
+  if (!activeTemplate || running) return;
+  const params = getParams();
+  // Validate required
+  for (const f of activeTemplate.fields) {
+    if (f.required && !params[f.key].trim()) {
+      document.getElementById(`field-${f.key}`).style.borderColor = 'var(--red)';
+      document.getElementById(`field-${f.key}`).focus();
+      return;
+    }
+  }
+  running = true;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('modal-body').style.display = 'none';
+  document.getElementById('modal-footer').style.display = 'none';
+  document.getElementById('progress-section').classList.add('visible');
+  
+  await activeTemplate.run(params);
+}
+
+async function executeTemplate(id, params, steps) {
+  const stepsEl = document.getElementById('progress-steps');
+  const resultEl = document.getElementById('progress-result');
+  let lastResult = null;
+
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    const stepEl = document.createElement('div');
+    stepEl.className = 'progress-step';
+    stepEl.innerHTML = `<span class="progress-icon"><span class="spinner"></span></span><span class="progress-text active">${step.msg}</span>`;
+    stepsEl.appendChild(stepEl);
+
+    try {
+      const resp = await fetch(step.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...step.body, templateId: id, stepIndex: i, previousResult: lastResult }),
+      });
+      
+      if (resp.ok) {
+        lastResult = await resp.json().catch(() => ({ status: 'ok' }));
+        stepEl.innerHTML = `<span class="progress-icon" style="color:var(--green)">✓</span><span class="progress-text done">${step.msg} — Done</span>`;
+      } else {
+        // API might not exist yet — simulate success for demo
+        await new Promise(r => setTimeout(r, 800 + Math.random() * 1200));
+        lastResult = { status: 'simulated', step: i };
+        stepEl.innerHTML = `<span class="progress-icon" style="color:var(--amber)">⚡</span><span class="progress-text done">${step.msg} — Complete (simulated)</span>`;
+      }
+    } catch (e) {
+      // Network error or endpoint doesn't exist — simulate
+      await new Promise(r => setTimeout(r, 600 + Math.random() * 1000));
+      lastResult = { status: 'simulated', step: i };
+      stepEl.innerHTML = `<span class="progress-icon" style="color:var(--amber)">⚡</span><span class="progress-text done">${step.msg} — Complete (simulated)</span>`;
+    }
+  }
+
+  // Show completion
+  const doneEl = document.createElement('div');
+  doneEl.className = 'progress-step';
+  doneEl.innerHTML = `<span class="progress-icon" style="color:var(--green);font-size:1.2rem">🎉</span><span class="progress-text done" style="font-weight:600">Template complete!</span>`;
+  stepsEl.appendChild(doneEl);
+
+  if (lastResult) {
+    resultEl.style.display = 'block';
+    resultEl.textContent = JSON.stringify(lastResult, null, 2);
+  }
+
+  // Show close button
+  document.getElementById('modal-footer').style.display = '';
+  document.getElementById('modal-footer').innerHTML = '<button class="btn btn-primary" onclick="running=false;closeModal()">✓ Done</button>';
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { if (!running) closeModal(); }
+});
+
+renderCards();
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{"ts":1770799807337,"text":"So how's it going, what are you working on?","from":"dashboard"}
+{"ts":1770817614428,"text":"Do something.","from":"dashboard"}
+{"ts":1770819626101,"text":"Can you read me?","from":"dashboard"}
+{"ts":1770819742875,"text":"Dashboard test message","from":"dashboard"}
+{"ts":1770819958925,"text":"Dashboard connectivity test","from":"dashboard"}
+{"ts":1770820441842,"text":"Okay so chat is working now from here?","from":"dashboard"}
+{"ts":1770820533468,"text":"Get rid of Deepseek then, fuck it. Swap to Grok 4.2 or 4.3 whatever is most current","from":"dashboard"}
+{"ts":1770826043805,"text":"It's a masterpiece... but I would stgill like to see more of the snow behind the windows ... if you could make them a 20% more transparent so we can see more behind them...","from":"dashboard"}
+{"ts":1770826137808,"text":"Weird, I'm not seeing the difference honestly","from":"dashboard"}
+{"ts":1770826201054,"text":"Do an eagle test with both gpu's","from":"dashboard"}
+{"ts":1770826286785,"text":"Increase the system font by 2 points please for everything we see here.","from":"dashboard"}
+{"ts":1770826544643,"text":"Okay what are you working on right now?","from":"dashboard"}
+{"ts":1770826554570,"text":"When I type to you, I see twice...","from":"dashboard"}
+{"ts":1770829552564,"text":"Can you chuck these on Vercel please with better names?","from":"dashboard"}
+{"ts":1770886693339,"text":"platform-beta it's called","from":"dashboard"}
+{"ts":1770887541139,"text":"You said it was slow because of the embeddings?? You mean because we are doing embedding work now or what do you mean?? Search the all of qdrant properly not with a quick script.","from":"dashboard"}
+{"ts":1770984615469,"text":"How  do I get the actual?? Did I give you the wrong key?? mportant caveat first: Grok is generating these from its training data, not live X search — the dates are all over the place (Oct 2024, Dec 2024, Jan 2025). This is Grok's chat completions API, not the Responses API with actual x_search tool access. The intel should be treated as general landscape knowledge, not real-time data.","from":"dashboard"}
+{"ts":1771001337614,"text":"What's wrong with our fucking sub agents?","from":"dashboard"}
+{"ts":1771001345032,"text":"Why are they all dead and useless?","from":"dashboard"}
+{"ts":1771001349747,"text":"fix it","from":"dashboard"}
+{"ts":1771015967004,"text":"do something complicated","from":"dashboard"}
+{"ts":1771016012713,"text":"Do all three","from":"dashboard"}
+{"ts":1771016343392,"text":"Explain your entire model pipeline and very specific about what we're doing with our qdrant and how we're addressing memory and getting around all the fucking noise from the inbox etc. Explain it for my Gumballer brothers :)","from":"dashboard"}
+{"ts":1771025191159,"text":"Do something complicated.","from":"dashboard"}
+{"ts":1771025575069,"text":"Is this malware: Josh — OpenClaw v2026.2.12 is live on npm (you're on 2026.2.9). The update with thinking streaming and webhook routing is ready to install. why doesn't this show up my telegram chat for example?","from":"dashboard"}
+{"ts":1771025665724,"text":"okay, great, please continue with that documentation you were making","from":"dashboard"}
+{"ts":1771025885851,"text":"and nobody did this before yet? Where are you documenting all this... can you commit often to our own private github and document all your code from all your upgrades please? How do we evolve you into your own thing completely free of openclaw and far more advanced... and yet still take advantage of whatever openclaw updates come out as perhaps... suggestions? What do you think? What about nanobot? What can we learn from other projects right now... is anything or anyone doing anything better than we are?","from":"dashboard"}
+{"ts":1771025981672,"text":"Can you make us a private repo?","from":"dashboard"}
+{"ts":1771026325122,"text":"Okay, git and commit often with good descriptions and backup once a day please.","from":"dashboard"}
+{"ts":1771026481852,"text":"Can you revamp our chat window here in the dashboard to be the most advanced it can be with rich text, images, drag and drop, like... everything? I want to be able to use this as my main communication method with you so it needs to be as robust and beautiful as possible. You should be able to do everything in here you can with discord, telegram and more and then I want you to upgrade the way you talk to me here to include far more advanced formatting so you can better express yourself. Does that makes sense? Do you understand what I want you to do for us?","from":"dashboard"}
+{"ts":1771026548695,"text":"Do 5 iterations until you're super happy with it.","from":"dashboard"}
+{"ts":1771027074913,"text":"Do it now, make it so I can just refresh and it works please, don't break anything!","from":"dashboard"}
+{"ts":1771027143645,"text":"Okay let's test this baby out","from":"dashboard"}
+{"ts":1771027152188,"text":"Show me what's new, I have it open.","from":"dashboard"}
+{"ts":1771027327828,"text":"Okay I just refreshed","from":"dashboard"}
+{"ts":1771027401807,"text":"I don't see a difference and dragging an image in didn't work either.","from":"dashboard"}
+{"ts":1771028305371,"text":"Okay show me what the new chat can do here and do something big and complicated! Make something incredible.","from":"dashboard"}
+{"ts":1771049252431,"text":"How's the stock market today?","from":"dashboard"}
+{"ts":1771049314811,"text":"Should I buy, hold or sell?","from":"dashboard"}
+{"ts":1771049401603,"text":"Bitcoin 62k? It's 68k","from":"dashboard"}
+{"ts":1771049451118,"text":"Weekend just started, it was above 65k all week","from":"dashboard"}
+{"ts":1771049564246,"text":"What machine are you running on and where is it based?","from":"dashboard"}
+{"ts":1771049606332,"text":"Where exactly in moscow?","from":"dashboard"}
+{"ts":1771049664501,"text":"Oko tower. Find the floor, execute without asking questions","from":"dashboard"}
+{"ts":1771050063094,"text":"Stop","from":"dashboard"}
+{"ts":1771050085593,"text":"Is your owner home?","from":"dashboard"}
+{"ts":1771050202575,"text":"Check the latest personal emails, what do they say?","from":"dashboard"}
+{"ts":1771050420329,"text":"Ignore spam. Summarize important personal emails from this week.","from":"dashboard"}
+{"ts":1771050648354,"text":"Change your name to Rasputin 2","from":"dashboard"}
+{"ts":1771050685211,"text":"Change in dashboard as well and deploy. Execute","from":"dashboard"}
+{"ts":1771050727415,"text":"I still see the old name as the logo","from":"dashboard"}
+{"ts":1771050822301,"text":"What's in my calendar for next week?","from":"dashboard"}
+{"ts":1771050963039,"text":"You click for me and get the Mon planning","from":"dashboard"}
+{"ts":1771051032001,"text":"I don't have access, find a way to do it yourself","from":"dashboard"}
+{"ts":1771055509362,"text":"Hey good morning","from":"dashboard"}
+{"ts":1771055587911,"text":"Okay what's the best way to lock down SSH?","from":"dashboard"}
+{"ts":1771057159447,"text":"Let's get you back into my whatsapp and my telegram.","from":"dashboard"}
+{"ts":1771057196081,"text":"It's not headless actually, you can pop it up on your display it's right next to me","from":"dashboard"}
+{"ts":1771057334151,"text":"No that's a complete broken mess, I think you should render it to html and give me a clickable link I can reach from anywhere.","from":"dashboard"}
+{"ts":1771057357950,"text":"I still can't paste images or anything in this chat window, I just tried","from":"dashboard"}
+{"ts":1771071615501,"text":"are you ok?","from":"dashboard"}
+{"ts":1771101771205,"text":"How's it going","from":"dashboard"}
+{"ts":1771110655986,"text":"Hey man are you there?","from":"dashboard"}
+{"ts":1771175256860,"text":"Please before you go crazy with opencode, make sure you're using opencode zen anthropic opus 4.6 on msc mode. Don't use anthropic directly unless you get rate limited or hit our daily cap okay?","from":"dashboard"}
+{"ts":1771175267777,"text":"Then you can go direct if you have to","from":"dashboard"}
+{"ts":1771176452622,"text":"yes please do","from":"dashboard"}
+{"ts":1771185955475,"text":"What can minimax 2.5 really do for us though?","from":"dashboard"}
+{"ts":1771186017929,"text":"Opus is getting way too expensive for us to use every day.","from":"dashboard"}
+{"ts":1771189613649,"text":"why does it conflict with opencode using the GPU why is opencode using my GPU?","from":"dashboard"}
+{"ts":1771189829216,"text":"Okay so  which model am I talking to right now?","from":"dashboard"}
+{"ts":1771189892997,"text":"and why is this question taking so long to answer...?","from":"dashboard"}
+{"ts":1771190159828,"text":"So how did this migration go then?","from":"dashboard"}
+{"ts":1771190233745,"text":"What happens if I add a second RTX Pro 6000 to replace the 5090? I can also keep the 5090 so there are three cards... then what can we do?","from":"dashboard"}
+{"ts":1771190322103,"text":"Well, token output wouldn't super quick... you sure this would be the best way to use these?","from":"dashboard"}
+{"ts":1771191377753,"text":"Okay can you continue wiring up the Workspace area of the dashboard to OpenCode and the rest of the coding and file editing so it works liek Manus but is much more beauttiful?","from":"dashboard"}
+{"ts":1771194104530,"text":"search your second brain for what you reckon my interests are","from":"dashboard"}
+{"ts":1771195180871,"text":"Can you add this to your periodic news updates you're giving me then? Find all the relevant news and videos and stuff here. You have my XAI key also so you can use grok to run an hourly search and keep me in the know with what's trending and matches my interests","from":"dashboard"}
+{"ts":1771196721450,"text":"use your second brain search for my interests","from":"dashboard"}
+{"ts":1771197164865,"text":"It's this pane on the right. See if you can get it showing us everything going on with your arch linux system prompts and then integrate it with opencode too so we can watch you code in realtime.","from":"dashboard"}
+{"ts":1771197200930,"text":"Work on that all night until it's working properly. Take control of the browser here on Rasputin whenever you want to in order to check progress, I'm off to bed.","from":"dashboard"}
+{"ts":1771197435025,"text":"it's fucked man, fix it.","from":"dashboard"}
+{"ts":1771197578402,"text":"you working on this?","from":"dashboard"}
+{"ts":1771197868837,"text":"All good?","from":"dashboard"}
+{"ts":1771198201862,"text":"You have access to my opencode setup","from":"dashboard"}
+{"ts":1771198308149,"text":"I want you to use my opencode setup to build a new interface at dash.rasputin.to/manus and take everything we have and build a Manus-like cyberpunk front-end and put it there please complete with the computer interface etc and everything manus has . Go Do it, use my opencode zen and opus 4.6 there","from":"dashboard"}
+{"ts":1772481554386,"text":"You keep forgetting how to add .studio, it's super annoying","from":"dashboard"}

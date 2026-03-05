@@ -1,4 +1,4 @@
-// Memory Capture - Background Service Worker
+// Alfred's Eye - Background Service Worker
 // Handles memory capture and storage
 
 const CONFIG = {
@@ -20,7 +20,7 @@ class MemoryCapture {
   }
 
   init() {
-    console.log('[MemCapture] Background service starting...');
+    console.log('[Alfred] Background service starting...');
     
     // Set up periodic flush
     setInterval(() => this.flushQueue(), CONFIG.FLUSH_INTERVAL);
@@ -50,7 +50,7 @@ class MemoryCapture {
       }
     });
 
-    console.log('[MemCapture] Background service initialized');
+    console.log('[Alfred] Background service initialized');
   }
 
   async handleMessage(message, sender, sendResponse) {
@@ -80,7 +80,7 @@ class MemoryCapture {
           sendResponse({ success: false, error: 'Unknown action' });
       }
     } catch (error) {
-      console.error('[MemCapture] Message handling error:', error);
+      console.error('[Alfred] Message handling error:', error);
       sendResponse({ success: false, error: error.message });
     }
   }
@@ -88,7 +88,7 @@ class MemoryCapture {
   async queueCapture(data) {
     // Skip sensitive pages
     if (this.isSensitiveUrl(data.url)) {
-      console.log('[MemCapture] Skipping sensitive page:', data.url);
+      console.log('[Alfred] Skipping sensitive page:', data.url);
       return;
     }
 
@@ -110,7 +110,7 @@ class MemoryCapture {
       this.flushQueue();
     }
 
-    console.log(`[MemCapture] Queued capture (${this.captureQueue.length} in queue)`);
+    console.log(`[Alfred] Queued capture (${this.captureQueue.length} in queue)`);
   }
 
   async flushQueue() {
@@ -127,9 +127,9 @@ class MemoryCapture {
       // Save updated queue
       await this.saveToStorage();
       
-      console.log(`[MemCapture] Sent batch of ${batch.length} memories`);
+      console.log(`[Alfred] Sent batch of ${batch.length} memories`);
     } catch (error) {
-      console.error('[MemCapture] Batch send error:', error);
+      console.error('[Alfred] Batch send error:', error);
       // Put items back in queue for retry
       this.captureQueue.unshift(...batch);
     } finally {
@@ -169,7 +169,7 @@ class MemoryCapture {
       return await response.json();
     } catch (error) {
       if (attempt < CONFIG.RETRY_ATTEMPTS) {
-        console.log(`[MemCapture] Request failed, retrying (${attempt}/${CONFIG.RETRY_ATTEMPTS})...`);
+        console.log(`[Alfred] Request failed, retrying (${attempt}/${CONFIG.RETRY_ATTEMPTS})...`);
         await this.delay(CONFIG.RETRY_DELAY * attempt);
         return this.makeRequest(url, options, attempt + 1);
       }
@@ -181,10 +181,10 @@ class MemoryCapture {
     try {
       const response = await this.makeRequest(`${CONFIG.SERVER_URL}/health`);
       this.serverStatus = response.status === 'ok' ? 'online' : 'offline';
-      console.log(`[MemCapture] Server status: ${this.serverStatus}`);
+      console.log(`[Alfred] Server status: ${this.serverStatus}`);
     } catch (error) {
       this.serverStatus = 'offline';
-      console.error('[MemCapture] Server check failed:', error);
+      console.error('[Alfred] Server check failed:', error);
     }
   }
 
@@ -195,7 +195,7 @@ class MemoryCapture {
       );
       return response.results || [];
     } catch (error) {
-      console.error('[MemCapture] Search error:', error);
+      console.error('[Alfred] Search error:', error);
       return [];
     }
   }
@@ -221,7 +221,7 @@ class MemoryCapture {
     const storage = await chrome.storage.local.get(['captureQueue', 'captureCount']);
     this.captureQueue = storage.captureQueue || [];
     this.captureCount = storage.captureCount || 0;
-    console.log(`[MemCapture] Loaded ${this.captureQueue.length} items from queue`);
+    console.log(`[Alfred] Loaded ${this.captureQueue.length} items from queue`);
   }
 
   handleTabComplete(tab) {
@@ -242,7 +242,7 @@ class MemoryCapture {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           files: ['content.js']
-        }).catch(err => console.log('[MemCapture] Script injection failed:', err));
+        }).catch(err => console.log('[Alfred] Script injection failed:', err));
       }
     });
   }

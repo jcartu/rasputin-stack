@@ -1,0 +1,396 @@
+{
+  "id": "research-1771231248246-jl5oai",
+  "question": "What is quantum computing",
+  "status": "error",
+  "progress": {
+    "step": 4,
+    "totalSteps": 5,
+    "stepName": "error",
+    "details": "aborted"
+  },
+  "queries": [
+    "quantum computing definition basic principles qubits superposition",
+    "quantum computing technical architecture quantum gates error correction",
+    "quantum computing breakthroughs 2024 recent advances developments",
+    "expert analysis quantum computing future potential limitations challenges",
+    "practical applications quantum computing industry cryptography drug discovery"
+  ],
+  "searchMode": "searxng",
+  "sources": [
+    {
+      "url": "https://www.ibm.com/think/topics/quantum-computing",
+      "title": "What Is Quantum Computing? | IBM",
+      "description": "To understand quantum computing, ... information it holds into a state of superposition, which represents a combination of all possible configurations of the qubit....",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Quantum_computing",
+      "title": "Quantum computing - Wikipedia",
+      "description": "The basic unit of information in quantum computing, the qubit (or \"quantum bit\"), serves the same function as the bit in ordinary or \"classical\" computing. However, unlike a classical bit, which can be in one of two states (a binary), a qubit can exi",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://quantum.microsoft.com/en-us/insights/education/concepts/superposition",
+      "title": "Microsoft Quantum | Superposition",
+      "description": "Because classical bits can be in ... this, etc.” In contrast, because a qubit can be in a superposition of 0 and 1, the quantum computer can perform multiple computations in parallel by processing all possible states of the qubits at once....",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "done",
+      "textLength": 2125,
+      "source": "searxng"
+    },
+    {
+      "url": "https://oqc.tech/what-is-quantum-computing-guide/",
+      "title": "What is quantum computing? - OQC",
+      "description": "... basic principles behind quantum computers: superposition, and entanglement. The resource is aimed at making key ideas accessible to give ...",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "done",
+      "textLength": 1323,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.qcshub.org/quantum-computing.html",
+      "title": "Introduction to quantum computing | QCS Hub",
+      "description": "Whereas in a classical computer, a \"bit\" (the most basic unit of information) must have the value of either 0 or 1, a quantum bit (or \"qubit\") can be 0, 1, or ...",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.mckinsey.com/featured-insights/mckinsey-explainers/what-is-quantum-computing",
+      "title": "What is quantum computing? - McKinsey",
+      "description": "Quantum computers, on the other hand, can explore many paths in parallel through superposition. Additionally, qubits can interact with one ...",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "error",
+      "textLength": 0,
+      "error": "timeout",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.spinquanta.com/news-detail/quantum-superposition-explained",
+      "title": "Quantum Superposition Explained: How Qubits Do More | SpinQ",
+      "description": "In superposition, a qubit exists in a probabilistic blend of both 0 and 1. The moment you measure the qubit, it collapses into one of the two states. Until then, it holds the potential for either outcome—enabling vastly more powerful data processing.",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.law.ac.uk/resources/blog/what-is-quantum-computing/",
+      "title": "What is quantum computing? | The University of Law",
+      "description": "Qubits can be 0 and 1 at the same time. This is known as superposition and means a quantum computer can process many possible solutions ...",
+      "query": "quantum computing definition basic principles qubits superposition",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 500",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.ibm.com/quantum/blog/large-scale-ftqc",
+      "title": "IBM lays out clear path to fault-tolerant quantum computing | IBM Quantum Computing Blog",
+      "description": "We apply T gates by creating special states called “magic states” on helper qubits, then we entangle these qubits into our circuits with Clifford gates. We also need to be able to read out the logical qubits — for this, we use a tool called the decod",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Quantum_error_correction",
+      "title": "Quantum error correction - Wikipedia",
+      "description": "In 2022, research at University of Engineering and Technology Lahore demonstrated error cancellation by inserting single-qubit Z-axis rotation gates into strategically chosen locations of the superconductor quantum circuits. The scheme has been shown",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.quantinuum.com/glossary-item/quantum-error-correction",
+      "title": "Quantum Error Correction - Quantinuum",
+      "description": "Effective quantum error correction allows quantum computers to execute algorithms of higher complexity or greater circuit depth. Many proposals exist for the ...",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "done",
+      "textLength": 1208,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.inria.fr/en/quantum-computing-unprecedented-architecture",
+      "title": "Quantum computing: an unprecedented architecture to eliminate ...",
+      "description": "The solution could reside in the correction of errors by exploiting qubit redundancy in error-correcting codes. As it is highly unlikely for a ...",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://en-documents.research.global.fujitsu.com/quantum-computing-architecture/",
+      "title": "Unique quantum computing architecture - Fujitsu Research Portal",
+      "description": "In conventional FTQC architecture, quantum computing is performed by a combination of four error-corrected basic quantum gates, one of which requires a large ...",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://cacm.acm.org/news/error-control-begins-to-shape-quantum-architectures/",
+      "title": "Error Control Begins to Shape Quantum Architectures",
+      "description": "The same core principle works for quantum computers, but with one key difference: the error correction must take account of the subtle changes ...",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.quandela.com/resources/blog/correcting-errors-with-an-efficient-use-of-qubits/",
+      "title": "Correcting errors with an efficient use of qubits - Quandela",
+      "description": "Fault tolerance represents a critical milestone in quantum computing. No matter the architecture you explore, current quantum computers are ...",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.preprints.org/manuscript/202509.2149/v1",
+      "title": "Quantum Error Correction and Fault-Tolerant Computing: Recent Progress in Codes, Decoders, and Architectures[v1] | Preprints.org",
+      "description": "Quantum error correction (QEC) represents the cornerstone technology for realizing fault-tolerant quantum computing, addressing the fundamental challenge of quantum state decoherence in noisy intermediate-scale quantum (NISQ) devices. This comprehens",
+      "query": "quantum computing technical architecture quantum gates error correction",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    },
+    {
+      "url": "https://microtime.com/quantum-computing-in-2024-breakthroughs-challenges-and-what-lies-ahead/",
+      "title": "Quantum Computing: Breakthroughs, Challenges & What's Ahead",
+      "description": "In 2024, researchers have made notable advancements in error correction techniques, which are essential for stabilizing qubits and reducing the errors that occur during quantum computations.",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.networkworld.com/article/3618098/10-quantum-computing-milestones-of-2024.html",
+      "title": "10 quantum computing milestones | Network World",
+      "description": "The company outlined a three-year roadmap that calls for a computer with 10 logical qubits in 2024, 30 in 2025 using “magic state distillation,” and 100 logical qubits by 2026.",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://izonemedia360.blog/latest-breakthroughs-in-quantum-computing-2024/",
+      "title": "Latest Breakthroughs in Quantum Computing 2024: Powerful Advances Explained -",
+      "description": "Protein folding simulations are now faster, with quantum drug simulation tools reducing evaluation times by up to 60%. Neutral atom QPUs and quantum-enhanced algorithms improve quantum chemical accuracy, enabling better prediction of molecular ...",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-year-of-quantum-from-concept-to-reality-in-2025",
+      "title": "The Year of Quantum: From concept to reality in 2025",
+      "description": "Notable recent advancements from large companies include the suppression of error rates relative to the number of qubits; the development of multiple high-fidelity qubits; and substantial reductions in the cost of quantum error correction.",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "error",
+      "textLength": 0,
+      "error": "timeout",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.technewsworld.com/story/quantum-computing-remains-experimental-despite-2024-advances-forrester-179514.html",
+      "title": "Quantum Computing Remains Experimental Despite 2024 Advances: Forrester",
+      "description": "Researchers are now developing quantum neural networks, quantum support vector machines, and quantum algorithms for complex tasks like image and natural language processing. “These advancements ...",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.firstignite.com/exploring-the-latest-quantum-computing-advancements-in-2024/",
+      "title": "Quantum Computing 2024: AI, Innovation & Research Trends",
+      "description": "Researchers are making significant strides in increasing qubit counts and improving coherence times, enabling more complex and powerful quantum systems. Advancements in quantum software and programming frameworks will enhance the accessibility ...",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://thequantuminsider.com/2024/12/25/its-starting-to-look-a-lot-like-quantum-unwrap-the-top-10-quantum-research-stories-of-2024/",
+      "title": "It's Starting to Look A Lot Like Quantum: Unwrap the Top 10 Quantum Research Stories of 2024",
+      "description": "It provides a foundation for advancing quantum and AI technologies, with future directions including scaling to more complex linguistic tasks and further development of quantum hardware. Researchers from Pasqal, Qubit Pharmaceuticals, and Sorbonne Un",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://issamezz.com/latest-breakthroughs-in-quantum-computing-2024/",
+      "title": "Latest Breakthroughs in Quantum Computing 2024: The Shift from Theory to Tangible Progress",
+      "description": "Discover the latest breakthroughs in quantum computing 2024, from Google's Willow chip to Harvard's 48-logical-qubit processor, pushing error correction and real-world utility closer than ever.",
+      "query": "quantum computing breakthroughs 2024 recent advances developments",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.plainconcepts.com/quantum-computing-potential-challenges/",
+      "title": "Quantum Computing: Potential and Challenges aheadPlain Concepts",
+      "description": "... Despite remarkable advances, ... reliability for the time being.Due to their fragility, qubit interconnection, decoherence, and external noise, quantum systems are prone to errors....",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.mdpi.com/2624-960X/6/4/39",
+      "title": "Quantum Computing: Navigating the Future of Computation, Challenges, and Technological Breakthroughs",
+      "description": "The field is highly collaborative and recent developments such as superconducting qubits with increased scaling, reduced error rates, and improved cryogenic infrastructure, trapped-ion qubits with high-fidelity gates and reduced control hardware comp",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/tech-forward/potential-and-challenges-of-quantum-computing-hardware-technologies",
+      "title": "Potential and challenges of quantum computing hardware technologies",
+      "description": "Through a review of several hundred research publications on qubit technologies, we identified six key considerations—and challenges—to evaluate for each qubit technology. Fidelity at scale. Fidelity is intimately connected to quantum computing’s def",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "error",
+      "textLength": 0,
+      "error": "timeout",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/insights/topics/emerging-technologies/quantum-computing-futures.html",
+      "title": "Quantum computing futures | Deloitte Insights",
+      "description": "These methods informed the scenario analysis, whereby Deloitte identified the highest impact and highest uncertainty drivers to inform two axes of uncertainty, forming the basis for the four scenarios, opportunity versus risk analysis, and critical a",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://journals.aps.org/prper/abstract/10.1103/md6x-pfrr",
+      "title": "Do we have a quantum computer? Expert perspectives on current state and future prospects | Phys. Rev. Phys. Educ. Res.",
+      "description": "It’s the most fundamental change to our way of doing computation since the development of [classical] computers and transistors.” · Educator 3 also emphasized expansive thinking beyond quantum advantage on Shor’s factoring algorithm, stressing that s",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    },
+    {
+      "url": "https://mitsloan.mit.edu/ideas-made-to-matter/quantum-computing-what-leaders-need-to-know-now",
+      "title": "Quantum computing: What leaders need to know now | MIT Sloan",
+      "description": "The technology is also expensive, given that the systems require intricate cooling technologies to shield the qubits. The skills gap is another problem: Subject-matter experts are hard to come by outside of research and academic circles.",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://quantumzeitgeist.com/quantum-computing-future-2025-2035/",
+      "title": "Quantum Computing Future - 6 Alternative Views Of The Quantum Future Post 2025",
+      "description": "This creates seemingly contradictory requirements for isolation and accessibility that may represent fundamental physical limitations rather than engineering challenges. Error correction requirements compound the quantum memory challenge exponentiall",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/quantum-science-and-technology/articles/10.3389/frqst.2025.1723319/full",
+      "title": "Frontiers | Quantum computing: foundations, algorithms, and emerging applications",
+      "description": "Yet substantial challenges remain: decoherence, error correction, scaling, environmental and physical constraints, and software reliability (Preskill, 2018; Dalzell, 2023; Chae et al., 2024; IBM Quantum, 2025).",
+      "query": "expert analysis quantum computing future potential limitations challenges",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.bluequbit.io/quantum-computing-use-cases",
+      "title": "14 Quantum Computing Use Cases That Will Reshape the Future",
+      "description": "For example, it can improve cryptography through quantum-secure encryption. It can also speed up drug discovery by simulating molecular interactions and improve machine learning models by optimizing neural networks.",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://study-online.sussex.ac.uk/news-and-events/quantum-computing-technology-applications",
+      "title": "Real-world quantum computing technology applications",
+      "description": "From materials science and drug discovery to finance and logistics, quantum innovations are moving from theory and research laboratories into practical ...",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.scquantum.org/about/quantum-computing-applications-8-real-world-use-cases-2026",
+      "title": "Quantum Computing Applications: 8 Real-World Use Cases in 2026",
+      "description": "Discover how quantum computing is revolutionizing cryptography, drug discovery, logistics, finance & more. Real examples and future outlook inside.",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.spinquanta.com/news-detail/practical-quantum-computing",
+      "title": "Is Practical Quantum Computing Here? Discover the Truth! | SpinQ",
+      "description": "While fully-fledged quantum computers ... data more secure in the future. 2. Drug Discovery and Healthcare: Quantum computing can help simulate complex molecules and biochemical reactions at an unprecedented scale....",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://arxiv.org/html/2408.13479v5",
+      "title": "Quantum-machine-assisted Drug Discovery",
+      "description": "The integration of federated learning approaches with distributed quantum computing suggests a powerful framework for collaborative drug discovery. Local quantum processors could perform molecular simulations and property predictions while maintainin",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://meetiqm.com/blog/integrating-classical-and-quantum-computing-innovations-and-practical-applications/",
+      "title": "Integrating Classical and Quantum Computing",
+      "description": "Integrating Classical and Quantum Computing: Innovations and Practical Applications ... For industries ranging from cryptography and drug ...",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11416048/",
+      "title": "Revolutionizing Healthcare: The Emerging Role of Quantum Computing in Enhancing Medical Technology and Treatment - PMC",
+      "description": "For instance, algorithms like Shor's, which is used for factoring large numbers, and Grover's, which enhances database search capabilities, could dramatically speed up tasks ranging from securing patient data with advanced cryptographic measures to s",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.bcg.com/capabilities/digital-technology-data/emerging-technologies/quantum-computing",
+      "title": "Quantum Computing Use Cases and Business Applications | BCG",
+      "description": "this technology is showing promising rewards—drug discovery, climate change, and finance are just some of the areas that can benefit from early advances ...",
+      "query": "practical applications quantum computing industry cryptography drug discovery",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    }
+  ],
+  "synthesis": "",
+  "keyFindings": [],
+  "error": "aborted",
+  "startedAt": 1771231248246,
+  "completedAt": 1771231408741,
+  "duration": 160495
+}

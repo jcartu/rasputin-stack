@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎯 Rasputin Nexus — Prompt Playground Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-primary:#0a0e27;--bg-secondary:#141B2D;--bg-tertiary:#1e2538;--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--text-muted:#808080;--accent-primary:#00ffff;--accent-secondary:#ff00ff;--card-bg:rgba(20,27,45,0.8);--card-border:rgba(0,255,255,0.2);--success:#10b981;--warning:#f59e0b;--error:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box;transition:background-color .3s,color .3s,border-color .3s}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(138,43,226,0.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(0,255,255,0.1) 0%,transparent 50%);z-index:-1;pointer-events:none}
+.layout{display:grid;grid-template-columns:280px 1fr;grid-template-rows:auto 1fr;height:100vh}
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:12px 24px;background:var(--bg-secondary);border-bottom:1px solid var(--card-border)}
+.logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--accent-secondary),var(--accent-primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar-nav{display:flex;gap:8px;margin-left:auto}
+.topbar-nav a{padding:6px 14px;border-radius:6px;text-decoration:none;color:var(--text-secondary);font-size:13px;border:1px solid transparent;transition:all .2s}
+.topbar-nav a:hover{color:var(--accent-primary);border-color:var(--accent-primary);background:rgba(0,255,255,0.1)}
+.sidebar{background:var(--bg-secondary);border-right:1px solid var(--card-border);overflow-y:auto;padding:20px}
+.sidebar h3{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px;font-weight:600}
+.sidebar-btn{width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--card-border);border-radius:8px;color:var(--text-primary);font-size:13px;cursor:pointer;margin-bottom:8px;text-align:left;font-family:inherit;display:flex;align-items:center;gap:8px}
+.sidebar-btn:hover{background:rgba(0,255,255,0.1);border-color:var(--accent-primary)}
+.sidebar-btn.active{background:rgba(0,255,255,0.2);border-color:var(--accent-primary)}
+.prompt-list{display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto}
+.prompt-item{padding:10px;background:var(--bg-tertiary);border:1px solid var(--card-border);border-radius:6px;cursor:pointer;font-size:12px}
+.prompt-item:hover{border-color:var(--accent-primary);background:rgba(0,255,255,0.05)}
+.prompt-item-name{font-weight:600;margin-bottom:3px}
+.prompt-item-meta{color:var(--text-muted);font-size:10px}
+.main{padding:24px;overflow-y:auto}
+.section{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:20px;margin-bottom:20px;backdrop-filter:blur(10px)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent-primary)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);margin-bottom:6px;font-weight:600}
+.form-control{width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--card-border);border-radius:8px;color:var(--text-primary);font-family:'JetBrains Mono',monospace;font-size:13px}
+textarea.form-control{resize:vertical;min-height:100px;line-height:1.6}
+.form-control:focus{outline:none;border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(0,255,255,0.1)}
+.input-group{display:flex;gap:8px}
+.input-group .form-control{flex:1}
+.btn{padding:10px 20px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--accent-secondary),var(--accent-primary));color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,255,255,0.3)}
+.btn-secondary{background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--card-border)}
+.btn-secondary:hover{background:rgba(0,255,255,0.1);border-color:var(--accent-primary)}
+.btn-danger{background:var(--error);color:#fff}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.model-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.model-chip{padding:6px 14px;border-radius:16px;font-size:12px;font-family:'JetBrains Mono',monospace;cursor:pointer;border:1px solid var(--card-border);background:var(--bg-tertiary);color:var(--text-secondary);transition:all .2s}
+.model-chip.selected{background:var(--accent-primary);color:#000;border-color:var(--accent-primary)}
+.model-chip:hover{border-color:var(--accent-primary)}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px;margin-top:20px}
+.result-card{background:var(--bg-secondary);border:1px solid var(--card-border);border-radius:10px;overflow:hidden}
+.result-header{padding:12px 16px;background:var(--bg-tertiary);border-bottom:1px solid var(--card-border);display:flex;align-items:center;justify-content:space-between}
+.result-model{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent-primary)}
+.result-meta{display:flex;gap:12px;font-size:11px;color:var(--text-muted)}
+.result-body{padding:16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;max-height:400px;overflow-y:auto;white-space:pre-wrap}
+.version-list{display:flex;flex-direction:column;gap:8px}
+.version-item{padding:12px;background:var(--bg-tertiary);border:1px solid var(--card-border);border-radius:8px;cursor:pointer}
+.version-item:hover{border-color:var(--accent-primary);background:rgba(0,255,255,0.05)}
+.version-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.version-id{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent-primary)}
+.version-date{font-size:10px;color:var(--text-muted)}
+.version-metrics{display:flex;gap:16px;font-size:11px;color:var(--text-secondary)}
+.version-prompt{font-size:11px;color:var(--text-secondary);margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.stat-card{background:var(--bg-tertiary);border:1px solid var(--card-border);border-radius:8px;padding:14px;text-align:center}
+.stat-value{font-size:24px;font-weight:700;color:var(--accent-primary);margin-bottom:4px}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.comparison-side{background:var(--bg-tertiary);border:1px solid var(--card-border);border-radius:10px;padding:16px}
+.comparison-header{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--accent-primary)}
+.diff-text{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6}
+.diff-added{background:rgba(16,185,129,0.2);color:var(--success)}
+.diff-removed{background:rgba(239,68,68,0.2);color:var(--error);text-decoration:line-through}
+.empty-state{text-align:center;padding:40px;color:var(--text-muted)}
+.empty-icon{font-size:48px;margin-bottom:16px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--card-border);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.badge-success{background:rgba(16,185,129,0.2);color:var(--success)}
+.badge-warning{background:rgba(245,158,11,0.2);color:var(--warning)}
+.badge-error{background:rgba(239,68,68,0.2);color:var(--error)}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <div class="topbar">
+    <div class="logo">🎯 PROMPT PLAYGROUND PRO</div>
+    <div class="topbar-nav">
+      <a href="/playground.html">Basic View</a>
+      <a href="/">Dashboard</a>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h3>Actions</h3>
+    <button class="sidebar-btn active" onclick="showView('test')">
+      ▶ Test Prompt
+    </button>
+    <button class="sidebar-btn" onclick="showView('versions')">
+      📚 Version History
+    </button>
+    <button class="sidebar-btn" onclick="showView('compare')">
+      🔄 Compare Versions
+    </button>
+    <button class="sidebar-btn" onclick="showView('stats')">
+      📊 Statistics
+    </button>
+
+    <h3 style="margin-top:24px">Saved Prompts</h3>
+    <div class="prompt-list" id="promptList">
+      <div class="empty-state" style="padding:20px">
+        <div style="font-size:24px;margin-bottom:8px">📝</div>
+        <div style="font-size:11px">No saved prompts yet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main" id="mainContent">
+    <!-- Test Prompt View -->
+    <div id="view-test">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🧪 Test Prompt</div>
+        </div>
+
+        <div class="form-group">
+          <label>Prompt Name (for saving)</label>
+          <input type="text" class="form-control" id="promptName" placeholder="My Awesome Prompt">
+        </div>
+
+        <div class="form-group">
+          <label>Prompt Text</label>
+          <textarea class="form-control" id="promptText" rows="4" placeholder="Enter your prompt here...">Explain quantum entanglement in simple terms</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Description (optional)</label>
+          <input type="text" class="form-control" id="promptDesc" placeholder="What this prompt does...">
+        </div>
+
+        <div class="form-group">
+          <label>Models to Test</label>
+          <div class="model-chips" id="modelChips">
+            <div style="color:var(--text-muted);font-size:12px">Loading models...</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <button class="btn btn-primary" id="runBtn" onclick="runTest()">
+            ▶ Run Test
+          </button>
+          <button class="btn btn-secondary" onclick="savePrompt()">
+            💾 Save Prompt
+          </button>
+          <div style="margin-left:auto;font-size:11px;color:var(--text-muted)" id="statusText"></div>
+        </div>
+      </div>
+
+      <div class="section" id="resultsSection" style="display:none">
+        <div class="section-header">
+          <div class="section-title">📊 Results</div>
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+      </div>
+    </div>
+
+    <!-- Version History View -->
+    <div id="view-versions" style="display:none">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📚 Version History</div>
+        </div>
+        <div id="versionList">
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <div>Select a prompt from the sidebar to view versions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compare View -->
+    <div id="view-compare" style="display:none">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🔄 Compare Versions</div>
+        </div>
+        <div class="input-group" style="margin-bottom:20px">
+          <select class="form-control" id="compareV1">
+            <option>Select version 1...</option>
+          </select>
+          <select class="form-control" id="compareV2">
+            <option>Select version 2...</option>
+          </select>
+          <button class="btn btn-primary" onclick="compareVersions()">Compare</button>
+        </div>
+        <div id="comparisonResult"></div>
+      </div>
+    </div>
+
+    <!-- Stats View -->
+    <div id="view-stats" style="display:none">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📊 Statistics</div>
+        </div>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-value" id="stat-prompts">0</div>
+            <div class="stat-label">Total Prompts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-versions">0</div>
+            <div class="stat-label">Total Versions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-results">0</div>
+            <div class="stat-label">Test Results</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-avg">0</div>
+            <div class="stat-label">Avg Versions/Prompt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let allModels = [];
+let selectedModels = new Set();
+let prompts = [];
+let currentPromptId = null;
+let lastResults = null;
+
+// Popular models to pre-select
+const popular = ['claude-sonnet-4-20250514', 'gpt-4o', 'gemini/gemini-2.5-flash'];
+
+async function loadModels() {
+  try {
+    const r = await fetch('/api/playground/models', { credentials: 'include' });
+    const d = await r.json();
+    allModels = d.models || [];
+    const container = document.getElementById('modelChips');
+    container.innerHTML = '';
+    
+    if (!allModels.length) {
+      container.innerHTML = '<span style="color:var(--error)">No models found</span>';
+      return;
+    }
+    
+    allModels.forEach(m => {
+      const chip = document.createElement('div');
+      chip.className = 'model-chip';
+      chip.textContent = m.id;
+      if (popular.includes(m.id)) {
+        chip.classList.add('selected');
+        selectedModels.add(m.id);
+      }
+      chip.onclick = () => {
+        if (selectedModels.has(m.id)) {
+          selectedModels.delete(m.id);
+          chip.classList.remove('selected');
+        } else {
+          selectedModels.add(m.id);
+          chip.classList.add('selected');
+        }
+      };
+      container.appendChild(chip);
+    });
+  } catch (e) {
+    document.getElementById('modelChips').innerHTML = `<span style="color:var(--error)">Error: ${e.message}</span>`;
+  }
+}
+
+async function loadPrompts() {
+  try {
+    const r = await fetch('/api/prompts', { credentials: 'include' });
+    const d = await r.json();
+    prompts = d.prompts || [];
+    
+    const container = document.getElementById('promptList');
+    if (prompts.length === 0) {
+      container.innerHTML = '<div class="empty-state" style="padding:20px"><div style="font-size:24px;margin-bottom:8px">📝</div><div style="font-size:11px">No saved prompts yet</div></div>';
+      return;
+    }
+    
+    container.innerHTML = '';
+    prompts.forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'prompt-item';
+      item.innerHTML = `
+        <div class="prompt-item-name">${p.name}</div>
+        <div class="prompt-item-meta">${p.versionCount} versions • Updated ${new Date(p.updatedAt).toLocaleDateString()}</div>
+      `;
+      item.onclick = () => selectPrompt(p.id);
+      container.appendChild(item);
+    });
+  } catch (e) {
+    console.error('Failed to load prompts:', e);
+  }
+}
+
+function selectPrompt(promptId) {
+  currentPromptId = promptId;
+  loadPromptVersions(promptId);
+}
+
+async function loadPromptVersions(promptId) {
+  try {
+    const r = await fetch(`/api/prompts/${promptId}`, { credentials: 'include' });
+    const d = await r.json();
+    const prompt = d.prompt;
+    
+    // Load into test form
+    document.getElementById('promptName').value = prompt.name;
+    document.getElementById('promptDesc').value = prompt.description;
+    if (prompt.versions.length > 0) {
+      document.getElementById('promptText').value = prompt.versions[prompt.versions.length - 1].prompt;
+    }
+    
+    // Show versions in version history view
+    const container = document.getElementById('versionList');
+    if (prompt.versions.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><div>No versions yet</div></div>';
+      return;
+    }
+    
+    container.innerHTML = '<div class="version-list"></div>';
+    const list = container.querySelector('.version-list');
+    prompt.versions.reverse().forEach(v => {
+      const item = document.createElement('div');
+      item.className = 'version-item';
+      item.innerHTML = `
+        <div class="version-item-header">
+          <div class="version-id">${v.versionId}</div>
+          <div class="version-date">${new Date(v.timestamp).toLocaleString()}</div>
+        </div>
+        <div class="version-metrics">
+          <span>⚡ ${Math.round(v.metrics.avgLatency || 0)}ms</span>
+          <span>🔢 ${Math.round(v.metrics.avgTokens || 0)} tok</span>
+          <span>💰 $${(v.metrics.avgCost || 0).toFixed(4)}</span>
+          <span>📝 ${v.results.length} results</span>
+        </div>
+        <div class="version-prompt">${v.prompt}</div>
+      `;
+      item.onclick = () => loadVersion(v.versionId);
+      list.appendChild(item);
+    });
+    
+    // Populate compare dropdowns
+    populateCompareDropdowns(prompt.versions);
+  } catch (e) {
+    console.error('Failed to load prompt versions:', e);
+  }
+}
+
+function loadVersion(versionId) {
+  // Load version into test form
+  fetch(`/api/versions/${versionId}`, { credentials: 'include' })
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('promptText').value = d.version.prompt;
+      document.getElementById('promptName').value = d.prompt.name;
+      document.getElementById('promptDesc').value = d.prompt.description;
+      
+      // Show results if available
+      if (d.version.results && d.version.results.length > 0) {
+        displayResults(d.version.results);
+      }
+      
+      showView('test');
+    });
+}
+
+function populateCompareDropdowns(versions) {
+  const v1 = document.getElementById('compareV1');
+  const v2 = document.getElementById('compareV2');
+  
+  v1.innerHTML = '<option value="">Select version 1...</option>';
+  v2.innerHTML = '<option value="">Select version 2...</option>';
+  
+  versions.forEach(v => {
+    const opt1 = document.createElement('option');
+    opt1.value = v.versionId;
+    opt1.textContent = `${v.versionId} (${new Date(v.timestamp).toLocaleDateString()})`;
+    v1.appendChild(opt1);
+    
+    const opt2 = opt1.cloneNode(true);
+    v2.appendChild(opt2);
+  });
+}
+
+async function runTest() {
+  const prompt = document.getElementById('promptText').value.trim();
+  if (!prompt) {
+    alert('Enter a prompt');
+    return;
+  }
+  if (selectedModels.size === 0) {
+    alert('Select at least one model');
+    return;
+  }
+  
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Running...';
+  document.getElementById('statusText').textContent = 'Running tests...';
+  
+  try {
+    const r = await fetch('/api/playground', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        prompt,
+        models: [...selectedModels],
+        temperature: 0.7,
+        maxTokens: 1024
+      })
+    });
+    
+    const d = await r.json();
+    if (d.error) {
+      alert('Error: ' + d.error);
+      return;
+    }
+    
+    lastResults = d.results;
+    displayResults(d.results);
+    document.getElementById('statusText').textContent = `✅ Completed ${d.results.length} tests`;
+  } catch (e) {
+    alert('Request failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '▶ Run Test';
+  }
+}
+
+function displayResults(results) {
+  const container = document.getElementById('resultsGrid');
+  const section = document.getElementById('resultsSection');
+  section.style.display = 'block';
+  container.innerHTML = '';
+  
+  results.forEach(res => {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    
+    const timeColor = res.elapsed < 3000 ? 'var(--success)' : res.elapsed < 10000 ? 'var(--warning)' : 'var(--error)';
+    
+    card.innerHTML = `
+      <div class="result-header">
+        <div class="result-model">${res.model}</div>
+        <div class="result-meta">
+          <span style="color:${timeColor}">${(res.elapsed / 1000).toFixed(1)}s</span>
+          ${res.usage?.total_tokens ? `<span>${res.usage.total_tokens} tok</span>` : ''}
+          ${res.error ? '<span style="color:var(--error)">❌ Error</span>' : ''}
+        </div>
+      </div>
+      <div class="result-body">${res.error && !res.text ? `Error: ${res.error}` : res.text}</div>
+    `;
+    
+    container.appendChild(card);
+  });
+}
+
+async function savePrompt() {
+  const name = document.getElementById('promptName').value.trim();
+  const prompt = document.getElementById('promptText').value.trim();
+  const description = document.getElementById('promptDesc').value.trim();
+  
+  if (!name || !prompt) {
+    alert('Need prompt name and text');
+    return;
+  }
+  
+  try {
+    const r = await fetch('/api/prompts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ name, prompt, description })
+    });
+    
+    const d = await r.json();
+    if (d.success) {
+      document.getElementById('statusText').textContent = d.isDuplicate ? '✅ Already saved' : '✅ Saved new version';
+      
+      // Save results if we have them
+      if (lastResults && d.versionId) {
+        await fetch('/api/prompts/results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ versionId: d.versionId, results: lastResults })
+        });
+      }
+      
+      loadPrompts();
+      loadStats();
+    } else {
+      alert('Error: ' + (d.message || d.error));
+    }
+  } catch (e) {
+    alert('Failed to save: ' + e.message);
+  }
+}
+
+async function compareVersions() {
+  const v1 = document.getElementById('compareV1').value;
+  const v2 = document.getElementById('compareV2').value;
+  
+  if (!v1 || !v2) {
+    alert('Select two versions to compare');
+    return;
+  }
+  
+  try {
+    const r = await fetch(`/api/prompts/compare/${v1}/${v2}`, { credentials: 'include' });
+    const d = await r.json();
+    
+    if (!d.success) {
+      alert('Error: ' + d.message);
+      return;
+    }
+    
+    const container = document.getElementById('comparisonResult');
+    const comp = d.comparison;
+    
+    container.innerHTML = `
+      <div class="comparison">
+        <div class="comparison-side">
+          <div class="comparison-header">${comp.version1.id}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">
+            ${new Date(comp.version1.timestamp).toLocaleString()}
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:12px;font-size:11px">
+            <span>⚡ ${Math.round(comp.version1.metrics.avgLatency)}ms</span>
+            <span>🔢 ${Math.round(comp.version1.metrics.avgTokens)} tok</span>
+            <span>💰 $${comp.version1.metrics.avgCost.toFixed(4)}</span>
+          </div>
+          <div class="diff-text">${comp.version1.prompt}</div>
+        </div>
+        <div class="comparison-side">
+          <div class="comparison-header">${comp.version2.id}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">
+            ${new Date(comp.version2.timestamp).toLocaleString()}
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:12px;font-size:11px">
+            <span>⚡ ${Math.round(comp.version2.metrics.avgLatency)}ms</span>
+            <span>🔢 ${Math.round(comp.version2.metrics.avgTokens)} tok</span>
+            <span>💰 $${comp.version2.metrics.avgCost.toFixed(4)}</span>
+          </div>
+          <div class="diff-text">${comp.version2.prompt}</div>
+        </div>
+      </div>
+      
+      <div style="margin-top:20px;padding:16px;background:var(--bg-tertiary);border-radius:8px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px">Performance Delta</div>
+        <div style="display:flex;gap:20px;font-size:12px">
+          <span>⚡ Latency: ${comp.metricsComparison.latencyDelta > 0 ? '+' : ''}${Math.round(comp.metricsComparison.latencyDelta)}ms</span>
+          <span>🔢 Tokens: ${comp.metricsComparison.tokensDelta > 0 ? '+' : ''}${Math.round(comp.metricsComparison.tokensDelta)}</span>
+          <span>💰 Cost: ${comp.metricsComparison.costDelta > 0 ? '+$' : '-$'}${Math.abs(comp.metricsComparison.costDelta).toFixed(4)}</span>
+          <span>🔗 Similarity: ${(comp.diff.similarity * 100).toFixed(1)}%</span>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    alert('Comparison failed: ' + e.message);
+  }
+}
+
+async function loadStats() {
+  try {
+    const r = await fetch('/api/prompts/stats', { credentials: 'include' });
+    const d = await r.json();
+    
+    document.getElementById('stat-prompts').textContent = d.totalPrompts || 0;
+    document.getElementById('stat-versions').textContent = d.totalVersions || 0;
+    document.getElementById('stat-results').textContent = d.totalResults || 0;
+    document.getElementById('stat-avg').textContent = d.avgVersionsPerPrompt || 0;
+  } catch (e) {
+    console.error('Failed to load stats:', e);
+  }
+}
+
+function showView(viewName) {
+  ['test', 'versions', 'compare', 'stats'].forEach(v => {
+    document.getElementById('view-' + v).style.display = v === viewName ? 'block' : 'none';
+  });
+  
+  document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  if (viewName === 'stats') loadStats();
+  if (viewName === 'versions' && currentPromptId) loadPromptVersions(currentPromptId);
+}
+
+// Initialize
+loadModels();
+loadPrompts();
+loadStats();
+</script>
+
+</body>
+</html>

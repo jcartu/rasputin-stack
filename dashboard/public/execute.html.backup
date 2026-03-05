@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALFIE Nexus — Code Sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/shell/shell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/edit/closebrackets.min.js"></script>
+<style>
+:root {
+  --bg: oklch(0.13 0.01 260);
+  --bg2: oklch(0.16 0.01 260);
+  --bg3: oklch(0.20 0.01 260);
+  --border: oklch(0.28 0.01 260);
+  --text: oklch(0.90 0.01 260);
+  --text2: oklch(0.65 0.01 260);
+  --accent: oklch(0.72 0.18 160);
+  --accent2: oklch(0.65 0.20 280);
+  --red: oklch(0.65 0.20 25);
+  --green: oklch(0.72 0.18 150);
+  --yellow: oklch(0.80 0.15 85);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Space Grotesk',system-ui,sans-serif; height:100vh; display:flex; flex-direction:column; }
+a { color:var(--accent); text-decoration:none; }
+
+.topbar { display:flex; align-items:center; gap:12px; padding:10px 20px; background:oklch(0.08 0.015 265/0.35); backdrop-filter:blur(10px) saturate(150%); border-bottom:1px solid oklch(0.38 0.04 270/0.15); flex-shrink:0; position:sticky; top:0; z-index:100; }
+.topbar-logo { font-size:16px; font-weight:700; background:linear-gradient(135deg,oklch(0.68 0.30 290),oklch(0.78 0.22 195)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; white-space:nowrap; text-decoration:none; }
+.topbar-logo:hover { opacity:0.85; }
+.topbar-divider { width:1px; height:20px; background:oklch(0.38 0.04 270/0.2); }
+.topbar-nav-link { color:oklch(0.70 0.18 280); font-size:12px; text-decoration:none; padding:5px 12px; border:1px solid oklch(0.30 0.02 280); border-radius:6px; white-space:nowrap; transition:all .2s; }
+.topbar-nav-link:hover { border-color:oklch(0.70 0.18 280); background:oklch(0.70 0.18 280/0.1); }
+.topbar-nav-link.active { background:oklch(0.70 0.18 280/0.15); border-color:oklch(0.70 0.18 280); color:oklch(0.78 0.22 195); }
+.topbar-spacer { flex:1; }
+.topbar-lang { display:flex; gap:4px; }
+.topbar-lang button { padding:5px 14px; border:1px solid var(--border); border-radius:6px; background:transparent; color:var(--text2); cursor:pointer; font-family:inherit; font-size:12px; font-weight:500; transition:all .15s; }
+.topbar-lang button.active { background:var(--accent); color:oklch(0.13 0.01 260); border-color:var(--accent); }
+.topbar-lang button:hover:not(.active) { border-color:var(--accent); color:var(--text); }
+
+.run-btn { padding:6px 18px; border:none; border-radius:6px; background:var(--accent); color:oklch(0.13 0.01 260); cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; transition:all .15s; }
+.run-btn:hover { filter:brightness(1.1); }
+.run-btn:active { transform:scale(0.97); }
+.run-btn.running { background:var(--yellow); pointer-events:none; }
+.run-btn kbd { font-size:10px; opacity:.7; font-family:'JetBrains Mono',monospace; }
+
+.main { display:flex; flex:1; min-height:0; }
+
+.sidebar { width:260px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.sidebar-header { padding:12px 14px; font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.sidebar-header button { background:none; border:none; color:var(--text2); cursor:pointer; font-size:11px; }
+.sidebar-header button:hover { color:var(--red); }
+.sidebar-list { flex:1; overflow-y:auto; padding:6px; }
+.sidebar-item { padding:8px 10px; border-radius:6px; cursor:pointer; font-size:12px; transition:background .1s; border:1px solid transparent; margin-bottom:2px; }
+.sidebar-item:hover { background:var(--bg3); }
+.sidebar-item.active { border-color:var(--accent); background:var(--bg3); }
+.sidebar-item .lang { font-size:10px; color:var(--text2); margin-bottom:2px; }
+.sidebar-item .preview { color:var(--text2); font-family:'JetBrains Mono',monospace; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sidebar-item .meta { display:flex; justify-content:space-between; margin-top:3px; font-size:10px; color:var(--text2); }
+
+.snippets { padding:8px 14px; border-bottom:1px solid var(--border); }
+.snippets select { width:100%; padding:6px 8px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:inherit; font-size:12px; cursor:pointer; }
+.snippets select:focus { outline:none; border-color:var(--accent); }
+
+.editor-area { flex:1; display:flex; flex-direction:column; min-width:0; }
+.editor-wrap { flex:1; min-height:0; position:relative; }
+.CodeMirror { height:100% !important; background:var(--bg) !important; font-family:'JetBrains Mono',monospace !important; font-size:13px !important; color:var(--text) !important; }
+.CodeMirror-gutters { background:var(--bg2) !important; border-right:1px solid var(--border) !important; }
+.CodeMirror-linenumber { color:var(--text2) !important; }
+.CodeMirror-cursor { border-left-color:var(--accent) !important; }
+.CodeMirror-selected { background:oklch(0.30 0.05 260) !important; }
+.CodeMirror-matchingbracket { color:var(--accent) !important; text-decoration:underline; }
+.cm-s-default .cm-keyword { color:oklch(0.72 0.18 310) !important; }
+.cm-s-default .cm-string { color:var(--green) !important; }
+.cm-s-default .cm-number { color:var(--yellow) !important; }
+.cm-s-default .cm-comment { color:var(--text2) !important; font-style:italic; }
+.cm-s-default .cm-def { color:oklch(0.75 0.15 220) !important; }
+.cm-s-default .cm-variable { color:var(--text) !important; }
+.cm-s-default .cm-builtin { color:var(--accent) !important; }
+.cm-s-default .cm-atom { color:var(--yellow) !important; }
+
+.output-panel { border-top:1px solid var(--border); background:var(--bg2); min-height:150px; max-height:40vh; display:flex; flex-direction:column; }
+.output-header { padding:8px 14px; font-size:12px; font-weight:600; color:var(--text2); display:flex; justify-content:space-between; border-bottom:1px solid var(--border); flex-shrink:0; }
+.output-header .runtime { color:var(--accent); font-family:'JetBrains Mono',monospace; }
+.output-body { flex:1; overflow:auto; padding:10px 14px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6; white-space:pre-wrap; word-break:break-all; }
+.output-body .stdout { color:var(--green); }
+.output-body .stderr { color:var(--red); }
+.output-body .info { color:var(--text2); font-style:italic; }
+
+@media (max-width:768px) {
+  .sidebar { display:none; }
+  .main { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">🧠 ALFIE NEXUS</a>
+  <div class="topbar-divider"></div>
+  <a href="/" class="topbar-nav-link">📊 Dashboard</a>
+  <a href="/browser.html" class="topbar-nav-link">🌐 Browser</a>
+  <a href="/execute.html" class="topbar-nav-link active">⚡ Execute</a>
+  <a href="/research.html" class="topbar-nav-link">🔬 Research</a>
+  <a href="/playground.html" class="topbar-nav-link">🎯 Playground</a>
+  <a href="/replay.html" class="topbar-nav-link">🔄 Replay</a>
+  <a href="/agents.html" class="topbar-nav-link">🤖 Agents</a>
+  <a href="/knowledge.html" class="topbar-nav-link">📚 Knowledge</a>
+  <a href="/templates.html" class="topbar-nav-link">📝 Templates</a>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-lang">
+    <button class="active" data-lang="python">Python</button>
+    <button data-lang="javascript">JavaScript</button>
+    <button data-lang="bash">Bash</button>
+  </div>
+  <button class="run-btn" id="runBtn" onclick="runCode()">
+    ▶ Run <kbd>Ctrl+Enter</kbd>
+  </button>
+  <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;margin-left:8px" onclick="exportExecution()">📥 Export</button>
+  <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer" onclick="shareExecution()">🔗 Share</button>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="snippets">
+      <select id="snippetSelect" onchange="loadSnippet(this.value)">
+        <option value="">📎 Example Snippets…</option>
+        <optgroup label="Python">
+          <option value="py_hello">Hello World</option>
+          <option value="py_numpy">NumPy Array</option>
+          <option value="py_pandas">Pandas DataFrame</option>
+          <option value="py_plot">Matplotlib (base64)</option>
+          <option value="py_fibonacci">Fibonacci Generator</option>
+          <option value="py_sympy">Symbolic Math</option>
+        </optgroup>
+        <optgroup label="JavaScript">
+          <option value="js_hello">Hello World</option>
+          <option value="js_fetch">JSON Parse</option>
+          <option value="js_async">Async/Await Demo</option>
+        </optgroup>
+        <optgroup label="Bash">
+          <option value="sh_sysinfo">System Info</option>
+          <option value="sh_files">List Files</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="sidebar-header">
+      History
+      <button onclick="clearHistory()">Clear</button>
+    </div>
+    <div class="sidebar-list" id="historyList"></div>
+  </div>
+
+  <div class="editor-area">
+    <div class="editor-wrap">
+      <textarea id="codeEditor"></textarea>
+    </div>
+    <div class="output-panel">
+      <div class="output-header">
+        <span>Output</span>
+        <span class="runtime" id="runtimeDisplay"></span>
+      </div>
+      <div class="output-body" id="outputBody">
+        <span class="info">Press Ctrl+Enter or click Run to execute code…</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SNIPPETS = {
+  py_hello: `print("Hello from ALFIE Sandbox! 🚀")
+import sys
+print(f"Python {sys.version}")`,
+  py_numpy: `import numpy as np
+
+a = np.random.randn(3, 3)
+print("Random matrix:")
+print(a)
+print(f"\\nMean: {a.mean():.4f}")
+print(f"Eigenvalues: {np.linalg.eigvals(a).round(4)}")`,
+  py_pandas: `import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],
+    'score': np.random.randint(60, 100, 4),
+    'grade': ['A', 'B', 'A', 'C']
+})
+print(df.to_string(index=False))
+print(f"\\nAverage score: {df['score'].mean():.1f}")`,
+  py_plot: `import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+import base64, io
+
+x = np.linspace(0, 4*np.pi, 200)
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(x, np.sin(x), label='sin(x)', color='#4ade80')
+ax.plot(x, np.cos(x), label='cos(x)', color='#a78bfa')
+ax.set_facecolor('#1a1a2e')
+fig.patch.set_facecolor('#1a1a2e')
+ax.tick_params(colors='#888')
+ax.legend(facecolor='#1a1a2e', edgecolor='#333', labelcolor='#ccc')
+ax.grid(alpha=0.2)
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+print("data:image/png;base64," + base64.b64encode(buf.getvalue()).decode())`,
+  py_fibonacci: `def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
+
+fibs = list(fibonacci(20))
+print(f"First 20 Fibonacci numbers:\\n{fibs}")
+print(f"\\nGolden ratio approximation: {fibs[-1]/fibs[-2]:.10f}")`,
+  py_sympy: `from sympy import *
+
+x = Symbol('x')
+expr = x**3 - 6*x**2 + 11*x - 6
+print(f"Expression: {expr}")
+print(f"Factored:   {factor(expr)}")
+print(f"Roots:      {solve(expr, x)}")
+print(f"Derivative: {diff(expr, x)}")
+print(f"Integral:   {integrate(expr, x)}")`,
+  js_hello: `console.log("Hello from Node.js! 🟢");
+console.log(\`Node \${process.version}\`);
+console.log(\`Platform: \${process.platform} \${process.arch}\`);`,
+  js_fetch: `const data = {
+  users: [
+    { name: "Alice", age: 30 },
+    { name: "Bob", age: 25 },
+  ]
+};
+
+const sorted = data.users.sort((a, b) => a.age - b.age);
+console.log("Sorted by age:");
+sorted.forEach(u => console.log(\`  \${u.name}: \${u.age}\`));`,
+  js_async: `async function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+async function main() {
+  console.log("Starting...");
+  for (let i = 1; i <= 5; i++) {
+    await delay(100);
+    console.log(\`Step \${i}/5 [\${"█".repeat(i)}\${"░".repeat(5-i)}]\`);
+  }
+  console.log("Done! ✅");
+}
+
+main();`,
+  sh_sysinfo: `echo "=== System Info ==="
+uname -a
+echo ""
+echo "=== Memory ==="
+free -h 2>/dev/null || echo "free not available"
+echo ""
+echo "=== Disk ==="
+df -h / 2>/dev/null
+echo ""
+echo "=== Python ==="
+python3 --version
+echo "=== Node ==="
+node --version`,
+  sh_files: `echo "=== Sandbox Directory ==="
+ls -la /sandbox/
+echo ""
+echo "=== Installed Python Packages ==="
+pip list 2>/dev/null | head -20
+echo ""
+echo "=== Node.js Modules ==="
+node -e "console.log(Object.keys(require('module').builtinModules).length + ' built-in modules')"`,
+};
+
+let currentLang = 'python';
+let editor;
+let history = JSON.parse(localStorage.getItem('alfie-exec-history') || '[]');
+let running = false;
+
+const modeMap = { python: 'python', javascript: 'javascript', bash: 'shell' };
+
+document.addEventListener('DOMContentLoaded', () => {
+  editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+    mode: modeMap[currentLang],
+    lineNumbers: true,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    indentUnit: 4,
+    tabSize: 4,
+    indentWithTabs: false,
+    lineWrapping: false,
+    extraKeys: {
+      'Ctrl-Enter': runCode,
+      'Cmd-Enter': runCode,
+      Tab: (cm) => cm.execCommand('indentMore'),
+    },
+  });
+  editor.setValue(SNIPPETS.py_hello);
+  editor.focus();
+  renderHistory();
+});
+
+// Language selector
+document.querySelectorAll('.topbar-lang button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelector('.topbar-lang .active').classList.remove('active');
+    btn.classList.add('active');
+    currentLang = btn.dataset.lang;
+    editor.setOption('mode', modeMap[currentLang]);
+  });
+});
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runCode(); }
+});
+
+async function runCode() {
+  if (running) return;
+  const code = editor.getValue().trim();
+  if (!code) return;
+
+  running = true;
+  const btn = document.getElementById('runBtn');
+  btn.classList.add('running');
+  btn.innerHTML = '⏳ Running…';
+  document.getElementById('outputBody').innerHTML = '<span class="info">Executing…</span>';
+  document.getElementById('runtimeDisplay').textContent = '';
+
+  try {
+    const resp = await fetch('/api/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, language: currentLang, timeout: 30 }),
+    });
+    const data = await resp.json();
+    displayOutput(data);
+    addHistory({ code, language: currentLang, ...data, ts: Date.now() });
+    // Save server-side for export
+    try {
+      const saveResp = await fetch('/api/execute/save', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ code, language: currentLang, output: data.output, error: data.error, runtime_ms: data.runtime_ms })
+      });
+      const saveData = await saveResp.json();
+      window._lastExecId = saveData.id;
+    } catch(_) {}
+  } catch (e) {
+    document.getElementById('outputBody').innerHTML = `<span class="stderr">Error: ${e.message}</span>`;
+  } finally {
+    running = false;
+    btn.classList.remove('running');
+    btn.innerHTML = '▶ Run <kbd>Ctrl+Enter</kbd>';
+  }
+}
+
+function displayOutput(data) {
+  const body = document.getElementById('outputBody');
+  const rt = document.getElementById('runtimeDisplay');
+  rt.textContent = `${data.runtime_ms}ms · exit ${data.exitCode}`;
+
+  let html = '';
+  if (data.output) {
+    // Check for base64 images
+    const lines = data.output.split('\n');
+    for (const line of lines) {
+      if (line.startsWith('data:image/')) {
+        html += `<img src="${line}" style="max-width:100%;border-radius:6px;margin:8px 0;">`;
+      } else {
+        html += `<span class="stdout">${escapeHtml(line)}\n</span>`;
+      }
+    }
+  }
+  if (data.error) {
+    html += `<span class="stderr">${escapeHtml(data.error)}</span>`;
+  }
+  if (!data.output && !data.error) {
+    html = '<span class="info">No output</span>';
+  }
+  body.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function addHistory(entry) {
+  history.unshift(entry);
+  if (history.length > 50) history = history.slice(0, 50);
+  localStorage.setItem('alfie-exec-history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text2);font-size:12px">No executions yet</div>';
+    return;
+  }
+  list.innerHTML = history.map((h, i) => {
+    const langEmoji = { python: '🐍', javascript: '🟢', bash: '🔧' }[h.language] || '📄';
+    const preview = h.code.split('\n')[0].slice(0, 40);
+    const time = new Date(h.ts).toLocaleTimeString();
+    const status = h.exitCode === 0 ? '✅' : '❌';
+    return `<div class="sidebar-item" onclick="loadHistory(${i})">
+      <div class="lang">${langEmoji} ${h.language} ${status}</div>
+      <div class="preview">${escapeHtml(preview)}</div>
+      <div class="meta"><span>${time}</span><span>${h.runtime_ms}ms</span></div>
+    </div>`;
+  }).join('');
+}
+
+function loadHistory(i) {
+  const h = history[i];
+  if (!h) return;
+  editor.setValue(h.code);
+  currentLang = h.language;
+  document.querySelector('.topbar-lang .active').classList.remove('active');
+  document.querySelector(`.topbar-lang button[data-lang="${h.language}"]`).classList.add('active');
+  editor.setOption('mode', modeMap[currentLang]);
+  displayOutput(h);
+}
+
+function clearHistory() {
+  history = [];
+  localStorage.removeItem('alfie-exec-history');
+  renderHistory();
+}
+
+function loadSnippet(key) {
+  if (!key || !SNIPPETS[key]) return;
+  const lang = key.startsWith('py_') ? 'python' : key.startsWith('js_') ? 'javascript' : 'bash';
+  currentLang = lang;
+  document.querySelector('.topbar-lang .active').classList.remove('active');
+  document.querySelector(`.topbar-lang button[data-lang="${lang}"]`).classList.add('active');
+  editor.setOption('mode', modeMap[lang]);
+  editor.setValue(SNIPPETS[key]);
+  document.getElementById('snippetSelect').value = '';
+  editor.focus();
+}
+
+function exportExecution() {
+  if (!window._lastExecId) { alert('Run some code first'); return; }
+  window.open('/api/export/execution/' + window._lastExecId, '_blank');
+}
+function shareExecution() {
+  if (!window._lastExecId) { alert('Run some code first'); return; }
+  fetch('/api/share', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({type:'execution',id:window._lastExecId}) })
+    .then(r=>r.json()).then(d=>{
+      const url = location.origin + d.url;
+      navigator.clipboard.writeText(url).then(()=>alert('Share link copied: '+url)).catch(()=>prompt('Share link:',url));
+    }).catch(e=>alert('Share failed: '+e.message));
+}
+</script>
+</body>
+</html>

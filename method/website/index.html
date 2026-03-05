@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The operator Method — Decoupled Compaction for AI Agent Systems</title>
+  <meta name="description" content="The operator Method: a decoupled compaction architecture that eliminates agent blocking during context compression. 20x faster. 100% fidelity. $0 cost.">
+  <meta name="author" content="the operator">
+
+  <!-- OG -->
+  <meta property="og:title" content="The operator Method — Decoupled Compaction for AI Agent Systems">
+  <meta property="og:description" content="Eliminate 6-minute agent silences with decoupled compaction. Benchmark data across 10 models.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://operator.rasputin.studio">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================
+     NAVIGATION
+     ============================================ -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 64 64" width="24" height="24">
+        <rect width="64" height="64" rx="14" fill="#0a0a0f"/>
+        <path d="M 44 18 A 18 18 0 1 0 44 46" fill="none" stroke="url(#nav-g)" stroke-width="5" stroke-linecap="round"/>
+        <defs><linearGradient id="nav-g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs>
+      </svg>
+      operator METHOD
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#triad">Method</a></li>
+      <li><a href="#benchmark">Benchmark</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#plugin">Plugin</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-gradient-orb orb-blue"></div>
+  <div class="hero-gradient-orb orb-amber"></div>
+
+  <div class="hero-content container">
+    <div class="hero-badge reveal">
+      <span class="dot"></span>
+      Research Preview
+    </div>
+
+    <h1 class="hero-title reveal reveal-delay-1">
+      <span class="gradient-text">The operator Method</span>
+    </h1>
+
+    <p class="hero-subtitle reveal reveal-delay-2">Decoupled Compaction for AI Agent Systems</p>
+    <p class="hero-author reveal reveal-delay-2">By the operator</p>
+
+    <div class="hero-stats reveal reveal-delay-3">
+      <div class="hero-stat">
+        <div class="hero-stat-value blue" data-counter data-target="20" data-suffix="x">0x</div>
+        <div class="hero-stat-label">Faster</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value amber" data-counter data-target="100" data-suffix="%">0%</div>
+        <div class="hero-stat-label">Fidelity</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value green" data-counter data-target="0" data-prefix="$" data-suffix="">$0</div>
+        <div class="hero-stat-label">Cost (Local)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     THE PROBLEM
+     ============================================ -->
+<section id="problem">
+  <div class="container">
+    <div class="section-label reveal">01 — The Problem</div>
+
+    <p class="problem-quote reveal reveal-delay-1">
+      "When AI agents think, they go silent. For 6 minutes. Every time."
+    </p>
+
+    <div class="section-subtitle reveal reveal-delay-2" style="margin-bottom: 48px;">
+      Context compaction — the process of summarizing an agent's conversation history to free up token space —
+      happens on the same inference thread as the conversation itself. When compaction triggers,
+      the agent stops responding. The user stares at a spinner. For up to 6 minutes.
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-container reveal reveal-delay-2">
+      <div style="font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.05em;">STANDARD COMPACTION TIMELINE</div>
+      <div class="timeline-bar">
+        <div class="timeline-segment active" style="width: 15%;">
+          💬 Chat
+        </div>
+        <div class="timeline-segment blocked" style="width: 55%;">
+          <div class="blocked-pattern"></div>
+          🔒 Blocked — Compacting (6 min)
+        </div>
+        <div class="timeline-segment active" style="width: 15%;">
+          💬 Chat
+        </div>
+        <div class="timeline-segment blocked" style="width: 15%;">
+          <div class="blocked-pattern"></div>
+          🔒 …
+        </div>
+      </div>
+      <div class="timeline-labels">
+        <span style="width: 15%">Active</span>
+        <span style="width: 55%">⚠️ Agent Unresponsive</span>
+        <span style="width: 15%">Active</span>
+        <span style="width: 15%">Blocked</span>
+      </div>
+    </div>
+
+    <!-- Before / After -->
+    <div class="comparison-grid">
+      <div class="comparison-card before reveal reveal-delay-1">
+        <div class="comparison-card-label">
+          <span style="color: var(--red);">●</span> Before — Inline Compaction
+        </div>
+        <h4>Coupled to conversation</h4>
+        <p>Compaction runs on the main agent thread, blocking all user interaction until complete.</p>
+        <div class="stat-big" data-counter data-target="379" data-suffix="s">0s</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Worst-case blocking time (Opus 4.6)</p>
+      </div>
+
+      <div class="comparison-card after reveal reveal-delay-2">
+        <div class="comparison-card-label">
+          <span style="color: var(--green);">●</span> After — The operator Method
+        </div>
+        <h4>Fully decoupled</h4>
+        <p>Compaction runs asynchronously in a background process. Agent never stops responding.</p>
+        <div class="stat-big" data-counter data-target="0" data-suffix="s">0s</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Zero blocking time — always responsive</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     THE QUALITY TRIAD
+     ============================================ -->
+<section id="triad">
+  <div class="container">
+    <div class="section-label reveal">02 — The Method</div>
+    <h2 class="section-title reveal reveal-delay-1">The Quality Triad</h2>
+    <p class="section-subtitle reveal reveal-delay-2">
+      Compaction quality isn't a single metric. It's the intersection of three competing forces —
+      and getting all three right requires rethinking the architecture entirely.
+    </p>
+
+    <div class="triad-grid">
+      <div class="glass-card triad-card reveal reveal-delay-1">
+        <div class="icon-ring">⚡</div>
+        <h3>Speed</h3>
+        <p>How fast can compaction complete? From 20 seconds (Gemini 3 Flash) to 6+ minutes (Opus). Every second is a second your user waits.</p>
+      </div>
+
+      <div class="glass-card triad-card reveal reveal-delay-2">
+        <div class="icon-ring">🎯</div>
+        <h3>Fidelity</h3>
+        <p>How much context is preserved? Losing even 5% of key facts means the agent forgets critical details — decisions, preferences, context.</p>
+      </div>
+
+      <div class="glass-card triad-card reveal reveal-delay-3">
+        <div class="icon-ring">💰</div>
+        <h3>Efficiency</h3>
+        <p>What does it cost? Cloud models range from $0.003 to $0.61 per compaction. Local models cost nothing — but can they match quality?</p>
+      </div>
+    </div>
+
+    <!-- Key Insight -->
+    <div class="insight-banner reveal">
+      <div class="insight-text">"Compaction is infrastructure, not conversation."</div>
+      <div class="insight-sub">It should run in the background like garbage collection — invisible, automatic, non-blocking.</div>
+    </div>
+
+    <!-- Feedback Loop -->
+    <div class="reveal" style="margin-top: 64px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h3 style="font-size: 1.1rem; color: var(--text-dim); font-weight: 500;">The Vicious Cycle of Inline Compaction</h3>
+      </div>
+      <div class="feedback-loop">
+        <div class="loop-step">Bigger summary<br><span style="font-family: var(--mono); font-size: 0.75rem; color: var(--amber);">more tokens</span></div>
+        <div class="loop-arrow">→</div>
+        <div class="loop-step">More context used<br><span style="font-family: var(--mono); font-size: 0.75rem; color: var(--amber);">per message</span></div>
+        <div class="loop-arrow">→</div>
+        <div class="loop-step">Sooner compaction<br><span style="font-family: var(--mono); font-size: 0.75rem; color: var(--amber);">triggers earlier</span></div>
+        <div class="loop-arrow">→</div>
+        <div class="loop-step">More frequent blocking<br><span style="font-family: var(--mono); font-size: 0.75rem; color: var(--red);">↻ repeat</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     THE BENCHMARK
+     ============================================ -->
+<section id="benchmark">
+  <div class="container">
+    <div class="section-label reveal">03 — The Benchmark</div>
+    <h2 class="section-title reveal reveal-delay-1">Model Comparison</h2>
+    <p class="section-subtitle reveal reveal-delay-2">
+      We tested 10 models across the quality triad — speed, fidelity, and cost.
+      Bubble size represents summary length (information density).
+    </p>
+
+    <!-- Charts -->
+    <div class="charts-grid reveal reveal-delay-2" style="margin-top: 48px;">
+      <div class="chart-container">
+        <h3>⏱ Compaction Time by Model</h3>
+        <div class="chart-wrapper">
+          <canvas id="timeChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3>🎯 Quality vs Speed</h3>
+        <div class="chart-wrapper">
+          <canvas id="scatterChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters & Sort -->
+    <div class="reveal" style="margin-top: 56px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div class="benchmark-controls">
+        <button class="btn-filter active" data-filter="all">All Models</button>
+        <button class="btn-filter" data-filter="cloud">☁️ Cloud</button>
+        <button class="btn-filter" data-filter="local">🖥 Local</button>
+      </div>
+      <div>
+        <select id="sortMetric" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-dim); padding: 8px 16px; border-radius: 100px; font-family: var(--font); font-size: 0.85rem; cursor: pointer;">
+          <option value="time">Sort by Time</option>
+          <option value="quality">Sort by Quality</option>
+          <option value="cost">Sort by Cost</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Model Cards -->
+    <div class="model-cards-grid">
+
+      <!-- Gemini 3 Flash -->
+      <div class="model-card cloud reveal" data-category="cloud" data-time="20.4" data-quality="92.9" data-cost="0.003">
+        <div class="model-card-header">
+          <div class="model-card-name">Gemini 3 Flash</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">20.4s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.003</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">71</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">6,909</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>92.9%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill high" data-width="92.9"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gemini 3 Pro -->
+      <div class="model-card cloud reveal reveal-delay-1" data-category="cloud" data-time="38.3" data-quality="92.9" data-cost="0.051">
+        <div class="model-card-header">
+          <div class="model-card-name">Gemini 3 Pro</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">38.3s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.051</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">81</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">8,825</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>92.9%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill high" data-width="92.9"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gemini 2.0 Flash -->
+      <div class="model-card cloud reveal reveal-delay-2" data-category="cloud" data-time="42.2" data-quality="96.4" data-cost="0.006">
+        <div class="model-card-header">
+          <div class="model-card-name">Gemini 2.0 Flash</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">42.2s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.006</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">198</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">29,822</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>96.4%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill high" data-width="96.4"></div>
+          </div>
+        </div>
+        <div class="sweet-spot-badge">★ Sweet Spot</div>
+      </div>
+
+      <!-- Gemini 2.5 Flash -->
+      <div class="model-card cloud reveal reveal-delay-3" data-category="cloud" data-time="64.2" data-quality="100" data-cost="0.012">
+        <div class="model-card-header">
+          <div class="model-card-name">Gemini 2.5 Flash</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">64.2s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.012</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">332</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">46,255</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>100.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill full" data-width="100"></div>
+          </div>
+        </div>
+        <div class="sweet-spot-badge">★ Sweet Spot</div>
+      </div>
+
+      <!-- Gemini 2.5 Pro -->
+      <div class="model-card cloud reveal" data-category="cloud" data-time="117.7" data-quality="100" data-cost="0.151">
+        <div class="model-card-header">
+          <div class="model-card-name">Gemini 2.5 Pro</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">117.7s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.151</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">298</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">41,584</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>100.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill full" data-width="100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sonnet 4.6 (No Thinking) -->
+      <div class="model-card cloud reveal reveal-delay-1" data-category="cloud" data-time="189.0" data-quality="100" data-cost="0.179">
+        <div class="model-card-header">
+          <div class="model-card-name">Sonnet 4.6 (No Thinking)</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">189.0s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.179</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">192</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">23,170</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>100.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill full" data-width="100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sonnet 4.6 (Thinking) -->
+      <div class="model-card cloud reveal reveal-delay-2" data-category="cloud" data-time="227.1" data-quality="85.0" data-cost="0.16">
+        <div class="model-card-header">
+          <div class="model-card-name">Sonnet 4.6 (Thinking)</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">227.1s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value">$0.160</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">~200</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">25,856</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>85.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill mid" data-width="85"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opus 4.6 (Thinking) -->
+      <div class="model-card cloud reveal reveal-delay-3" data-category="cloud" data-time="379.2" data-quality="95.0" data-cost="0.61">
+        <div class="model-card-header">
+          <div class="model-card-name">Opus 4.6 (Thinking)</div>
+          <div class="model-card-badge cloud">Cloud</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">379.2s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value highlight">$0.610</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">~250</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">42,662</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>95.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill high" data-width="95"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qwen 3 Coder 30B — SWEET SPOT LOCAL ⭐ -->
+      <div class="model-card local sweet-spot reveal" data-category="local" data-time="104.0" data-quality="100.0" data-cost="0">
+        <div class="model-card-status"></div>
+        <div class="model-card-header">
+          <div class="model-card-name">Qwen 3 Coder 30B ⭐</div>
+          <div class="model-card-badge local">Local — RTX 5090</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value" style="color: var(--green);">104.0s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value" style="color: var(--green);">$0.00</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">310</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">44,267</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>100.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill perfect" data-width="100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qwen 2.5 72B -->
+      <div class="model-card local reveal reveal-delay-1" data-category="local" data-time="528.7" data-quality="100.0" data-cost="0">
+        <div class="model-card-status"></div>
+        <div class="model-card-header">
+          <div class="model-card-name">Qwen 2.5 72B</div>
+          <div class="model-card-badge local">Local — RTX PRO 6000</div>
+        </div>
+        <div class="model-card-stats">
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Time</span>
+            <span class="model-card-stat-value">528.7s</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Cost</span>
+            <span class="model-card-stat-value" style="color: var(--green);">$0.00</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Items</span>
+            <span class="model-card-stat-value">305</span>
+          </div>
+          <div class="model-card-stat">
+            <span class="model-card-stat-label">Chars</span>
+            <span class="model-card-stat-value">43,596</span>
+          </div>
+        </div>
+        <div class="model-card-quality">
+          <div class="quality-label">
+            <span>Key Facts</span>
+            <span>100.0%</span>
+          </div>
+          <div class="quality-bar-bg">
+            <div class="quality-bar-fill perfect" data-width="100"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /model-cards-grid -->
+  </div>
+</section>
+
+<!-- ============================================
+     THE ARCHITECTURE
+     ============================================ -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label reveal">04 — The Architecture</div>
+    <h2 class="section-title reveal reveal-delay-1">How Decoupled Compaction Works</h2>
+    <p class="section-subtitle reveal reveal-delay-2">
+      The operator Method separates compaction from the conversation loop entirely.
+      A background process handles summarization while the agent continues responding in real-time.
+    </p>
+
+    <!-- Arch Diagram -->
+    <div class="arch-diagram reveal reveal-delay-2">
+      <div class="arch-node">
+        <div class="arch-node-icon">💬</div>
+        <div class="arch-node-label">Agent Session</div>
+        <div class="arch-node-desc">Handles user messages</div>
+      </div>
+
+      <div class="arch-arrow">→</div>
+
+      <div class="arch-node" style="border-color: rgba(245, 158, 11, 0.2);">
+        <div class="arch-node-icon">📡</div>
+        <div class="arch-node-label">Compaction Hook</div>
+        <div class="arch-node-desc">Intercepts threshold trigger</div>
+      </div>
+
+      <div class="arch-arrow">→</div>
+
+      <div class="arch-node" style="border-color: rgba(34, 197, 94, 0.2);">
+        <div class="arch-node-icon">⚡</div>
+        <div class="arch-node-label">Background Worker</div>
+        <div class="arch-node-desc">Runs compaction async</div>
+      </div>
+
+      <div class="arch-arrow">→</div>
+
+      <div class="arch-node" style="border-color: rgba(59, 130, 246, 0.3);">
+        <div class="arch-node-icon">💾</div>
+        <div class="arch-node-label">Summary Store</div>
+        <div class="arch-node-desc">Hot-swaps on next turn</div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="arch-features">
+      <div class="glass-card arch-feature reveal reveal-delay-1">
+        <h4>🔌 Plugin Architecture</h4>
+        <p>Drop-in plugin for OpenClaw. No changes to the core agent loop. Install, configure, forget.</p>
+      </div>
+      <div class="glass-card arch-feature reveal reveal-delay-2">
+        <h4>🔄 Model Agnostic</h4>
+        <p>Use any model for compaction — fast cloud models, free local models, or a mix. The agent model stays independent.</p>
+      </div>
+      <div class="glass-card arch-feature reveal reveal-delay-3">
+        <h4>📊 Quality Metrics</h4>
+        <p>Built-in quality scoring compares summaries against the original context. Track fidelity over time.</p>
+      </div>
+    </div>
+
+    <!-- Code Snippet -->
+    <div class="code-snippet-section reveal" style="margin-top: 56px;">
+      <h3 style="font-size: 1.1rem; color: var(--text-dim); margin-bottom: 16px; font-weight: 500;">The Compaction Hook</h3>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-dot"></span>
+          <span class="code-block-dot"></span>
+          <span class="code-block-dot"></span>
+          <span class="code-block-title">compaction-hook.ts</span>
+        </div>
+        <pre><code><span class="cm">// The operator Method — Decoupled Compaction Hook</span>
+<span class="kw">export const</span> <span class="var">compactionPlugin</span> = {
+  <span class="prop">name</span>: <span class="str">'operator-compaction'</span>,
+
+  <span class="fn">onCompactionNeeded</span>(<span class="var">context</span>) {
+    <span class="cm">// Instead of blocking the agent thread...</span>
+    <span class="kw">const</span> <span class="var">worker</span> = <span class="fn">spawnBackground</span>({
+      <span class="prop">model</span>: context.<span class="prop">compactionModel</span>,
+      <span class="prop">messages</span>: context.<span class="prop">conversationHistory</span>,
+      <span class="prop">systemPrompt</span>: context.<span class="prop">summaryPrompt</span>,
+    });
+
+    <span class="cm">// Agent continues responding immediately</span>
+    <span class="var">worker</span>.<span class="fn">on</span>(<span class="str">'complete'</span>, (<span class="var">summary</span>) => {
+      context.<span class="fn">hotSwapSummary</span>(<span class="var">summary</span>);
+      context.<span class="fn">emit</span>(<span class="str">'compaction:done'</span>, {
+        <span class="prop">model</span>: <span class="var">worker</span>.<span class="prop">model</span>,
+        <span class="prop">time</span>: <span class="var">worker</span>.<span class="prop">elapsed</span>,
+        <span class="prop">quality</span>: <span class="fn">scoreQuality</span>(<span class="var">summary</span>),
+      });
+    });
+
+    <span class="kw">return</span> { <span class="prop">blocking</span>: <span class="kw">false</span> };
+  },
+};</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     THE PLUGIN
+     ============================================ -->
+<section id="plugin">
+  <div class="container">
+    <div class="section-label reveal">05 — The Plugin</div>
+    <h2 class="section-title reveal reveal-delay-1">Get Started</h2>
+    <p class="section-subtitle reveal reveal-delay-2">
+      The operator Compaction plugin is available for OpenClaw. Install it, configure your preferred compaction model,
+      and never experience blocking compaction again.
+    </p>
+
+    <div class="plugin-grid reveal reveal-delay-2">
+      <!-- Install Steps -->
+      <div>
+        <div class="install-steps">
+          <div class="install-step">
+            <div class="install-step-num">1</div>
+            <div class="install-step-content">
+              <h4>Install the plugin</h4>
+              <p>Add to your OpenClaw configuration:</p>
+              <p style="margin-top: 8px;"><code>openclaw plugin add operator-compaction</code></p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="install-step-num">2</div>
+            <div class="install-step-content">
+              <h4>Choose your compaction model</h4>
+              <p>Pick based on your triad priorities. We recommend <code>gemini-2.5-flash</code> for the best balance.</p>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="install-step-num">3</div>
+            <div class="install-step-content">
+              <h4>Enable background mode</h4>
+              <p>Set <code>decoupled: true</code> in your compaction config. That's it.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Config Options -->
+        <div class="config-options" style="margin-top: 40px;">
+          <h4 style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 16px; font-weight: 500;">Configuration Options</h4>
+          <div class="config-option">
+            <span class="config-option-name">compactionModel</span>
+            <span class="config-option-desc">Model used for summarization</span>
+          </div>
+          <div class="config-option">
+            <span class="config-option-name">decoupled</span>
+            <span class="config-option-desc">Enable background compaction</span>
+          </div>
+          <div class="config-option">
+            <span class="config-option-name">qualityThreshold</span>
+            <span class="config-option-desc">Minimum key fact retention %</span>
+          </div>
+          <div class="config-option">
+            <span class="config-option-name">fallbackModel</span>
+            <span class="config-option-desc">Retry model if quality fails</span>
+          </div>
+          <div class="config-option">
+            <span class="config-option-name">localEndpoint</span>
+            <span class="config-option-desc">URL for local model inference</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config Code Block -->
+      <div>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-dot"></span>
+            <span class="code-block-dot"></span>
+            <span class="code-block-dot"></span>
+            <span class="code-block-title">openclaw.json</span>
+          </div>
+          <pre><code>{
+  <span class="prop">"plugins"</span>: {
+    <span class="prop">"operator-compaction"</span>: {
+      <span class="prop">"enabled"</span>: <span class="kw">true</span>,
+      <span class="prop">"decoupled"</span>: <span class="kw">true</span>,
+
+      <span class="cm">// Pick your compaction model</span>
+      <span class="prop">"compactionModel"</span>: <span class="str">"gemini-2.5-flash"</span>,
+
+      <span class="cm">// Minimum quality before accepting</span>
+      <span class="prop">"qualityThreshold"</span>: <span class="num">0.95</span>,
+
+      <span class="cm">// Fallback if primary fails quality</span>
+      <span class="prop">"fallbackModel"</span>: <span class="str">"gemini-2.5-pro"</span>,
+
+      <span class="cm">// For local models (optional)</span>
+      <span class="prop">"localEndpoint"</span>: <span class="str">"http://localhost:11434"</span>,
+
+      <span class="cm">// Background worker config</span>
+      <span class="prop">"worker"</span>: {
+        <span class="prop">"maxConcurrent"</span>: <span class="num">2</span>,
+        <span class="prop">"timeoutMs"</span>: <span class="num">300000</span>,
+        <span class="prop">"retryOnFailure"</span>: <span class="kw">true</span>
+      }
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer>
+  <div class="container footer-content">
+    <div class="footer-brand">
+      Built on <strong>Rasputin</strong> — Powered by <strong>OpenClaw</strong>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/openclaw" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://docs.openclaw.ai" target="_blank" rel="noopener">OpenClaw Docs</a>
+      <a href="https://rasputin.studio" target="_blank" rel="noopener">Rasputin</a>
+    </div>
+    <div class="footer-copy">© 2026 the operator</div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="script.js"></script>
+
+</body>
+</html>

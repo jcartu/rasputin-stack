@@ -1,0 +1,351 @@
+{
+  "id": "research-1771228152653-idakp6",
+  "question": "Find out which model stack I should be running right now locally for OpenClaw given I have two RTX Pro 6000 Blackwells",
+  "status": "error",
+  "progress": {
+    "step": 4,
+    "totalSteps": 5,
+    "stepName": "error",
+    "details": "LiteLLM timeout (180s)"
+  },
+  "queries": [
+    "OpenClaw framework definition requirements local deployment guide",
+    "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+    "best LLM models for local inference RTX 6000 GPU 2024",
+    "OpenClaw compatible model stack multi-GPU setup recommendations",
+    "large language model deployment 48GB VRAM optimal configuration expert analysis"
+  ],
+  "searchMode": "perplexity",
+  "sources": [
+    {
+      "url": "https://emergent.sh/learn/what-is-openclaw",
+      "title": "https://emergent.sh/learn/what-is-openclaw",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.zscaler.com/blogs/product-insights/guide-openclaw-and-securing-it-zscaler",
+      "title": "https://www.zscaler.com/blogs/product-insights/guide-openclaw-and-securing-it-zscaler",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://milvus.io/blog/openclaw-formerly-clawdbot-moltbot-explained-a-complete-guide-to-the-autonomous-ai-agent.md",
+      "title": "https://milvus.io/blog/openclaw-formerly-clawdbot-moltbot-explained-a-complete-guide-to-the-autonomous-ai-agent.md",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.westmonroe.com/insights/openclaw-ai",
+      "title": "https://www.westmonroe.com/insights/openclaw-ai",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://ppaolo.substack.com/p/openclaw-system-architecture-overview",
+      "title": "https://ppaolo.substack.com/p/openclaw-system-architecture-overview",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=bSiMSSeno9g",
+      "title": "https://www.youtube.com/watch?v=bSiMSSeno9g",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.turingcollege.com/blog/openclaw",
+      "title": "https://www.turingcollege.com/blog/openclaw",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.crowdstrike.com/en-us/blog/what-security-teams-need-to-know-about-openclaw-ai-super-agent/",
+      "title": "https://www.crowdstrike.com/en-us/blog/what-security-teams-need-to-know-about-openclaw-ai-super-agent/",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.sophos.com/en-us/blog/the-openclaw-experiment-is-a-warning-shot-for-enterprise-ai-security",
+      "title": "https://www.sophos.com/en-us/blog/the-openclaw-experiment-is-a-warning-shot-for-enterprise-ai-security",
+      "description": "",
+      "query": "OpenClaw framework definition requirements local deployment guide",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/workstation-datasheet-blackwell-rtx-pro6000-x-nvidia-us-3519208-web.pdf",
+      "title": "https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/workstation-datasheet-blackwell-rtx-pro6000-x-nvidia-us-3519208-web.pdf",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.pny.com/nvidia-rtx-pro-6000-blackwell",
+      "title": "https://www.pny.com/nvidia-rtx-pro-6000-blackwell",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000-family/",
+      "title": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000-family/",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://blog.us.fixstars.com/what-kind-of-gpu-is-the-nvidia-rtx-pro-6000-blackwell-max-q/",
+      "title": "https://blog.us.fixstars.com/what-kind-of-gpu-is-the-nvidia-rtx-pro-6000-blackwell-max-q/",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/NVIDIA-RTX-Blackwell-PRO-GPU-Architecture-v1.0.pdf",
+      "title": "https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/NVIDIA-RTX-Blackwell-PRO-GPU-Architecture-v1.0.pdf",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000/",
+      "title": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000/",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell GPU specifications VRAM memory technical details",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://bizon-tech.com/blog/best-gpu-llm-training-inference",
+      "title": "https://bizon-tech.com/blog/best-gpu-llm-training-inference",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://jarvislabs.ai/ai-faqs/which-models-can-i-run-on-an-nvidia-rtx-6000-ada-gpu",
+      "title": "https://jarvislabs.ai/ai-faqs/which-models-can-i-run-on-an-nvidia-rtx-6000-ada-gpu",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://mer.vin/2024/04/best-nvidia-gpus-for-llms/",
+      "title": "https://mer.vin/2024/04/best-nvidia-gpus-for-llms/",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.databasemart.com/blog/best-gpus-for-ai-and-deep-learning-2025",
+      "title": "https://www.databasemart.com/blog/best-gpus-for-ai-and-deep-learning-2025",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://docs.nvidia.com/nim/large-language-models/latest/support-matrix.html",
+      "title": "https://docs.nvidia.com/nim/large-language-models/latest/support-matrix.html",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.pugetsystems.com/labs/articles/llm-inference-professional-gpu-performance/",
+      "title": "https://www.pugetsystems.com/labs/articles/llm-inference-professional-gpu-performance/",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference",
+      "title": "https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference",
+      "description": "",
+      "query": "best LLM models for local inference RTX 6000 GPU 2024",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://clawctl.com/blog/openclaw-gpu-local-inference-setup",
+      "title": "https://clawctl.com/blog/openclaw-gpu-local-inference-setup",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://yu-wenhao.com/en/blog/2026-02-01-openclaw-deploy-cost-guide/",
+      "title": "https://yu-wenhao.com/en/blog/2026-02-01-openclaw-deploy-cost-guide/",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://gist.github.com/yalexx/f29100babb7f31ae6c794b3d0c80983e",
+      "title": "https://gist.github.com/yalexx/f29100babb7f31ae6c794b3d0c80983e",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/en-us/geforce/news/open-claw-rtx-gpu-dgx-spark-guide/",
+      "title": "https://www.nvidia.com/en-us/geforce/news/open-claw-rtx-gpu-dgx-spark-guide/",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://vertu.com/ai-tools/how-to-run-openclaw-with-kimi-k2-5-for-free-complete-guide-for-local-setup-and-vps-deployment/",
+      "title": "https://vertu.com/ai-tools/how-to-run-openclaw-with-kimi-k2-5-for-free-complete-guide-for-local-setup-and-vps-deployment/",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Kyvh5G_BUxo",
+      "title": "https://www.youtube.com/watch?v=Kyvh5G_BUxo",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.tweaktown.com/articles/11328/openclaw-the-ai-agent-that-actually-does-stuff-a-reflection/index.html",
+      "title": "https://www.tweaktown.com/articles/11328/openclaw-the-ai-agent-that-actually-does-stuff-a-reflection/index.html",
+      "description": "",
+      "query": "OpenClaw compatible model stack multi-GPU setup recommendations",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://dev.to/simplr_sh/general-recommended-vram-guidelines-for-llms-4ef3",
+      "title": "https://dev.to/simplr_sh/general-recommended-vram-guidelines-for-llms-4ef3",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.flowhunt.io/blog/large-language-models-gpu-requirements/",
+      "title": "https://www.flowhunt.io/blog/large-language-models-gpu-requirements/",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://uvation.com/articles/vram-in-large-language-models-optimizing-with-nvidia-h100-vram-gpus",
+      "title": "https://uvation.com/articles/vram-in-large-language-models-optimizing-with-nvidia-h100-vram-gpus",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.runpod.io/articles/guides/gpu-memory-management-for-large-language-models-optimization-strategies-for-production-deployment",
+      "title": "https://www.runpod.io/articles/guides/gpu-memory-management-for-large-language-models-optimization-strategies-for-production-deployment",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.microcenter.com/site/mc-news/article/best-local-llms-8gb-16gb-32gb-memory-guide.aspx",
+      "title": "https://www.microcenter.com/site/mc-news/article/best-local-llms-8gb-16gb-32gb-memory-guide.aspx",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://forum.level1techs.com/t/96gb-ram-on-48gb-vram/220606",
+      "title": "https://forum.level1techs.com/t/96gb-ram-on-48gb-vram/220606",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://apxml.com/posts/how-to-calculate-vram-requirements-for-an-llm",
+      "title": "https://apxml.com/posts/how-to-calculate-vram-requirements-for-an-llm",
+      "description": "",
+      "query": "large language model deployment 48GB VRAM optimal configuration expert analysis",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    }
+  ],
+  "synthesis": "",
+  "keyFindings": [],
+  "error": "LiteLLM timeout (180s)",
+  "startedAt": 1771228152653,
+  "completedAt": 1771228346401,
+  "duration": 193748
+}

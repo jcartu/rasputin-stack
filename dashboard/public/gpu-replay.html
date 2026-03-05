@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPU Replay - ALFIE Nexus</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #888;
+      font-size: 1.1em;
+    }
+
+    .unique-badge {
+      display: inline-block;
+      background: rgba(255, 0, 255, 0.2);
+      color: #ff00ff;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: 600;
+      margin-top: 10px;
+      border: 1px solid rgba(255, 0, 255, 0.3);
+    }
+
+    .session-selector {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .session-selector h3 {
+      margin-bottom: 15px;
+      color: #00ffff;
+    }
+
+    .session-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .session-card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .session-card:hover {
+      border-color: #00ffff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .session-card.active {
+      border-color: #ff00ff;
+      background: rgba(255, 0, 255, 0.1);
+    }
+
+    .gpu-viz-container {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .gpu-viz-container h3 {
+      margin-bottom: 20px;
+      color: #00ffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #gpuChart {
+      width: 100%;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .timeline-container {
+      margin-top: 20px;
+      position: relative;
+    }
+
+    #timeline {
+      width: 100%;
+      height: 80px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+
+    .playback-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      align-items: center;
+    }
+
+    .playback-controls button {
+      background: rgba(0, 255, 255, 0.2);
+      border: 1px solid #00ffff;
+      color: #00ffff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .playback-controls button:hover {
+      background: rgba(0, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .playback-controls button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .time-display {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      color: #00ffff;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+    }
+
+    .events-container {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .events-container h3 {
+      margin-bottom: 20px;
+      color: #00ffff;
+    }
+
+    .event-item {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border-left: 4px solid transparent;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .event-item:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .event-item.current {
+      border-left-color: #ff00ff;
+      background: rgba(255, 0, 255, 0.1);
+    }
+
+    .event-item.spike {
+      border-left-color: #ff0000;
+      background: rgba(255, 0, 0, 0.1);
+    }
+
+    .event-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .event-type {
+      font-weight: 600;
+      color: #00ffff;
+    }
+
+    .event-time {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    .event-gpu {
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    .gpu-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .gpu-bar-item {
+      flex: 1;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gpu-bar-fill {
+      height: 100%;
+      transition: width 0.3s;
+      border-radius: 4px;
+    }
+
+    .gpu-bar-fill.low { background: linear-gradient(90deg, #00ff00, #7fff00); }
+    .gpu-bar-fill.medium { background: linear-gradient(90deg, #ffff00, #ffa500); }
+    .gpu-bar-fill.high { background: linear-gradient(90deg, #ff6600, #ff0000); }
+
+    .gpu-label {
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8em;
+      font-weight: 600;
+      color: #000;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-label {
+      font-size: 0.9em;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #00ffff;
+      font-family: 'Courier New', monospace;
+    }
+
+    .correlations {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 165, 0, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 165, 0, 0.3);
+    }
+
+    .correlations h4 {
+      color: #ffa500;
+      margin-bottom: 10px;
+    }
+
+    .correlation-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #00ffff;
+      font-size: 1.2em;
+    }
+
+    .error {
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      color: #ff6b6b;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-container"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1>🎮 GPU Replay</h1>
+      <p>Visual GPU Utilization During Session Replay</p>
+      <div class="unique-badge">✨ UNIQUE FEATURE - No Competitor Has This</div>
+    </div>
+
+    <div class="session-selector">
+      <h3>Select Session</h3>
+      <div id="sessionList" class="session-list">
+        <div class="loading">Loading sessions...</div>
+      </div>
+    </div>
+
+    <div id="replayContainer" style="display: none;">
+      <div class="gpu-viz-container">
+        <h3>
+          <span>GPU Utilization Timeline</span>
+          <span class="time-display" id="currentTime">00:00.000</span>
+        </h3>
+        <canvas id="gpuChart"></canvas>
+        
+        <div class="stats-grid" id="gpuStats"></div>
+
+        <div class="timeline-container">
+          <canvas id="timeline"></canvas>
+          <div class="playback-controls">
+            <button id="playPauseBtn">▶ Play</button>
+            <button id="stepBackBtn">◀ Step Back</button>
+            <button id="stepForwardBtn">Step Forward ▶</button>
+            <button id="resetBtn">⟲ Reset</button>
+            <span class="time-display" id="durationDisplay">Duration: 0s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="events-container">
+        <h3>Session Events with GPU Correlation</h3>
+        <div id="eventsList"></div>
+      </div>
+
+      <div id="correlationsContainer"></div>
+    </div>
+  </div>
+
+  <script src="/shared-nav.js"></script>
+  <script>
+    let currentSession = null;
+    let correlationData = null;
+    let playbackInterval = null;
+    let currentEventIndex = 0;
+    let isPlaying = false;
+
+    // Load sessions
+    async function loadSessions() {
+      try {
+        const res = await fetch('/api/session-replays');
+        const sessions = await res.json();
+        
+        const container = document.getElementById('sessionList');
+        if (sessions.length === 0) {
+          container.innerHTML = '<p style="color: #888;">No sessions with GPU data available</p>';
+          return;
+        }
+
+        container.innerHTML = sessions.map(s => `
+          <div class="session-card" onclick="loadSession('${s.sessionId}')">
+            <div style="font-weight: 600; color: #00ffff;">${s.sessionId.substring(0, 8)}...</div>
+            <div style="font-size: 0.9em; color: #888; margin-top: 5px;">
+              ${new Date(s.startTime).toLocaleString()}
+            </div>
+            <div style="font-size: 0.9em; margin-top: 5px;">
+              ${s.eventCount} events • ${(s.duration / 1000).toFixed(1)}s
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('sessionList').innerHTML = 
+          `<div class="error">Error loading sessions: ${err.message}</div>`;
+      }
+    }
+
+    // Load and correlate session with GPU data
+    async function loadSession(sessionId) {
+      try {
+        document.querySelectorAll('.session-card').forEach(card => {
+          card.classList.remove('active');
+        });
+        event.target.closest('.session-card').classList.add('active');
+
+        document.getElementById('replayContainer').style.display = 'none';
+        
+        const res = await fetch(`/api/gpu-replay/${sessionId}`);
+        correlationData = await res.json();
+        
+        if (correlationData.error) {
+          alert(correlationData.error);
+          return;
+        }
+
+        currentSession = sessionId;
+        currentEventIndex = 0;
+        renderGPUVisualization();
+        renderEvents();
+        renderCorrelations();
+        
+        document.getElementById('replayContainer').style.display = 'block';
+      } catch (err) {
+        alert('Error loading session: ' + err.message);
+      }
+    }
+
+    // Render GPU visualization
+    function renderGPUVisualization() {
+      const canvas = document.getElementById('gpuChart');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 400;
+
+      const timeline = correlationData.gpu.timeline;
+      if (timeline.length === 0) return;
+
+      const maxTime = timeline[timeline.length - 1].time;
+      const pixelsPerMs = canvas.width / maxTime;
+
+      // Draw grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 100; i += 20) {
+        const y = canvas.height - (canvas.height * i / 100);
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Draw GPU0 (cyan)
+      ctx.strokeStyle = '#00ffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      timeline.forEach((point, idx) => {
+        const x = point.time * pixelsPerMs;
+        const y = canvas.height - (canvas.height * point.gpu0 / 100);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw GPU1 (magenta)
+      ctx.strokeStyle = '#ff00ff';
+      ctx.beginPath();
+      timeline.forEach((point, idx) => {
+        const x = point.time * pixelsPerMs;
+        const y = canvas.height - (canvas.height * point.gpu1 / 100);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw average (yellow)
+      ctx.strokeStyle = '#ffff00';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      timeline.forEach((point, idx) => {
+        const x = point.time * pixelsPerMs;
+        const y = canvas.height - (canvas.height * point.avg / 100);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw legend
+      ctx.font = '14px Inter';
+      ctx.fillStyle = '#00ffff';
+      ctx.fillText('GPU0 (PRO 6000)', 10, 20);
+      ctx.fillStyle = '#ff00ff';
+      ctx.fillText('GPU1 (RTX 5090)', 10, 40);
+      ctx.fillStyle = '#ffff00';
+      ctx.fillText('Average', 10, 60);
+
+      // Render stats
+      const stats = correlationData.gpu.stats;
+      document.getElementById('gpuStats').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">GPU0 Avg</div>
+          <div class="stat-value">${stats.gpu0.avg.toFixed(1)}%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">GPU0 Peak</div>
+          <div class="stat-value">${stats.gpu0.max.toFixed(1)}%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">GPU1 Avg</div>
+          <div class="stat-value">${stats.gpu1.avg.toFixed(1)}%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">GPU1 Peak</div>
+          <div class="stat-value">${stats.gpu1.max.toFixed(1)}%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Combined P95</div>
+          <div class="stat-value">${stats.combined.p95.toFixed(1)}%</div>
+        </div>
+      `;
+
+      // Update duration display
+      const durationS = (correlationData.session.duration / 1000).toFixed(1);
+      document.getElementById('durationDisplay').textContent = `Duration: ${durationS}s`;
+    }
+
+    // Render events
+    function renderEvents() {
+      const events = correlationData.session.events;
+      const container = document.getElementById('eventsList');
+      
+      container.innerHTML = events.map((event, idx) => {
+        const spikeClass = event.gpu?.spike ? 'spike' : '';
+        const gpuUtil = event.gpu ? `
+          <div class="event-gpu">
+            <div>GPU Utilization:</div>
+            <div class="gpu-bar">
+              <div class="gpu-bar-item">
+                <div class="gpu-bar-fill ${getUtilClass(event.gpu.utilization.gpu0)}" 
+                     style="width: ${event.gpu.utilization.gpu0}%">
+                  <span class="gpu-label">GPU0</span>
+                </div>
+              </div>
+              <div class="gpu-bar-item">
+                <div class="gpu-bar-fill ${getUtilClass(event.gpu.utilization.gpu1)}" 
+                     style="width: ${event.gpu.utilization.gpu1}%">
+                  <span class="gpu-label">GPU1</span>
+                </div>
+              </div>
+            </div>
+            ${event.gpu.spike ? '<div style="color: #ff0000; margin-top: 5px;">⚠️ GPU SPIKE DETECTED</div>' : ''}
+          </div>
+        ` : '<div style="color: #666; font-style: italic;">No GPU data</div>';
+
+        return `
+          <div class="event-item ${spikeClass}" data-index="${idx}" onclick="jumpToEvent(${idx})">
+            <div class="event-header">
+              <span class="event-type">${event.type}</span>
+              <span class="event-time">${formatTime(event.timestamp - correlationData.session.startTime)}</span>
+            </div>
+            ${event.content ? `<div style="color: #aaa; margin-top: 5px;">${truncate(event.content, 100)}</div>` : ''}
+            ${gpuUtil}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render correlations
+    function renderCorrelations() {
+      const correlations = correlationData.correlations;
+      if (correlations.length === 0) return;
+
+      const container = document.getElementById('correlationsContainer');
+      container.innerHTML = `
+        <div class="correlations">
+          <h4>🔍 Interesting Findings</h4>
+          ${correlations.map(c => `
+            <div class="correlation-item">
+              <div style="font-weight: 600; color: ${getSeverityColor(c.severity)}">
+                ${c.message}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Jump to specific event
+    function jumpToEvent(index) {
+      currentEventIndex = index;
+      updateCurrentEvent();
+    }
+
+    // Update current event highlight
+    function updateCurrentEvent() {
+      document.querySelectorAll('.event-item').forEach((item, idx) => {
+        item.classList.toggle('current', idx === currentEventIndex);
+      });
+
+      const event = correlationData.session.events[currentEventIndex];
+      const elapsed = event.timestamp - correlationData.session.startTime;
+      document.getElementById('currentTime').textContent = formatTime(elapsed);
+    }
+
+    // Playback controls
+    document.getElementById('playPauseBtn').onclick = () => {
+      if (isPlaying) {
+        clearInterval(playbackInterval);
+        isPlaying = false;
+        document.getElementById('playPauseBtn').textContent = '▶ Play';
+      } else {
+        isPlaying = true;
+        document.getElementById('playPauseBtn').textContent = '⏸ Pause';
+        playbackInterval = setInterval(() => {
+          if (currentEventIndex < correlationData.session.events.length - 1) {
+            currentEventIndex++;
+            updateCurrentEvent();
+          } else {
+            clearInterval(playbackInterval);
+            isPlaying = false;
+            document.getElementById('playPauseBtn').textContent = '▶ Play';
+          }
+        }, 500);
+      }
+    };
+
+    document.getElementById('stepBackBtn').onclick = () => {
+      if (currentEventIndex > 0) {
+        currentEventIndex--;
+        updateCurrentEvent();
+      }
+    };
+
+    document.getElementById('stepForwardBtn').onclick = () => {
+      if (currentEventIndex < correlationData.session.events.length - 1) {
+        currentEventIndex++;
+        updateCurrentEvent();
+      }
+    };
+
+    document.getElementById('resetBtn').onclick = () => {
+      currentEventIndex = 0;
+      updateCurrentEvent();
+      if (isPlaying) {
+        clearInterval(playbackInterval);
+        isPlaying = false;
+        document.getElementById('playPauseBtn').textContent = '▶ Play';
+      }
+    };
+
+    // Helper functions
+    function getUtilClass(util) {
+      if (util < 30) return 'low';
+      if (util < 70) return 'medium';
+      return 'high';
+    }
+
+    function getSeverityColor(severity) {
+      const colors = {
+        high: '#ff0000',
+        medium: '#ffa500',
+        info: '#00ffff'
+      };
+      return colors[severity] || '#888';
+    }
+
+    function formatTime(ms) {
+      const minutes = Math.floor(ms / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      const millis = ms % 1000;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
+    }
+
+    function truncate(str, len) {
+      return str.length > len ? str.substring(0, len) + '...' : str;
+    }
+
+    // Initialize
+    loadSessions();
+  </script>
+</body>
+</html>

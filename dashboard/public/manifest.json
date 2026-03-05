@@ -1,0 +1,49 @@
+{
+  "name": "ALFIE Nexus",
+  "short_name": "Nexus",
+  "description": "AI-powered neural dashboard for monitoring and controlling ALFIE infrastructure",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "developer tools"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Main ALFIE dashboard",
+      "url": "/",
+      "icons": []
+    },
+    {
+      "name": "Agents",
+      "short_name": "Agents",
+      "description": "Active sub-agents",
+      "url": "/agents.html",
+      "icons": []
+    },
+    {
+      "name": "Browser",
+      "short_name": "Browser",
+      "description": "Remote browser control",
+      "url": "/browser.html",
+      "icons": []
+    }
+  ]
+}

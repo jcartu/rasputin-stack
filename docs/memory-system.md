@@ -63,7 +63,7 @@ One user question becomes 5+ search queries:
 | Topic search | "supplements taking" |
 | Source-filtered | "email supplements" (if email-related keywords detected) |
 | Temporal | "recent supplements" (if time keywords detected) |
-| Semantic expansion | "fertility supplements embryo PGT genetic screening" |
+| Semantic expansion | "health-goal supplements embryo PGT genetic screening" |
 
 Each angle catches different memories. The entity search finds mentions by name. The topic search finds discussions about supplements in general. The source filter narrows to specific data types. Combined and reranked, this dramatically improves recall.
 

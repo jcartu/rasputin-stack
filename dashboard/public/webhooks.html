@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhooks — Rasputin Nexus</title>
+  <link rel="stylesheet" href="/shared-styles.css">
+  <script src="/shared-nav.js" defer></script>
+  <style>
+    .webhooks-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .webhook-grid {
+      display: grid;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    
+    .webhook-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      position: relative;
+    }
+    
+    .webhook-card.disabled {
+      opacity: 0.6;
+    }
+    
+    .webhook-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    
+    .webhook-status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .webhook-status.enabled {
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+    
+    .webhook-status.disabled {
+      background: var(--text-3);
+    }
+    
+    .webhook-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .webhook-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+    
+    .webhook-btn {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-1) var(--space-2);
+      font-size: 0.875rem;
+      color: var(--text-1);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .webhook-btn:hover {
+      background: var(--cyan);
+      color: var(--bg-1);
+      border-color: var(--cyan);
+    }
+    
+    .webhook-btn.danger:hover {
+      background: var(--red);
+      border-color: var(--red);
+    }
+    
+    .webhook-details {
+      display: grid;
+      gap: var(--space-2);
+      font-size: 0.875rem;
+      color: var(--text-2);
+      font-family: var(--font-mono);
+    }
+    
+    .webhook-row {
+      display: flex;
+      gap: var(--space-2);
+    }
+    
+    .webhook-label {
+      color: var(--text-3);
+      min-width: 100px;
+    }
+    
+    .webhook-events {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+    
+    .event-badge {
+      padding: var(--space-1) var(--space-2);
+      background: var(--cyan-glow);
+      color: var(--cyan);
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .add-webhook-btn {
+      background: var(--cyan);
+      color: var(--bg-1);
+      border: none;
+      border-radius: var(--radius);
+      padding: var(--space-3) var(--space-4);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    
+    .add-webhook-btn:hover {
+      background: var(--purple);
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-content {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-6);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-2);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      background: var(--bg-3);
+      color: var(--text-1);
+    }
+    
+    .form-group {
+      margin-bottom: var(--space-4);
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+      color: var(--text-2);
+    }
+    
+    .form-input {
+      width: 100%;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      color: var(--text-1);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+    
+    .form-select {
+      width: 100%;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      color: var(--text-1);
+      font-size: 0.875rem;
+    }
+    
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+    
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      cursor: pointer;
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      transition: background 0.2s ease;
+    }
+    
+    .checkbox-label:hover {
+      background: var(--bg-3);
+    }
+    
+    .checkbox-input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    
+    .form-buttons {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+    
+    .btn-primary {
+      flex: 1;
+      background: var(--cyan);
+      color: var(--bg-1);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: var(--space-3) var(--space-4);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+      background: var(--purple);
+    }
+    
+    .btn-secondary {
+      flex: 1;
+      background: var(--bg-3);
+      color: var(--text-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3) var(--space-4);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--bg-2);
+      border-color: var(--text-3);
+    }
+    
+    .delivery-log {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    
+    .log-entry {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      font-family: var(--font-mono);
+    }
+    
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .log-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .log-status.success {
+      background: var(--green);
+    }
+    
+    .log-status.failure {
+      background: var(--red);
+    }
+    
+    .log-time {
+      color: var(--text-3);
+      min-width: 80px;
+    }
+    
+    .log-webhook {
+      color: var(--text-2);
+      min-width: 150px;
+    }
+    
+    .log-event {
+      color: var(--cyan);
+      flex: 1;
+    }
+    
+    .log-duration {
+      color: var(--text-3);
+      min-width: 60px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  
+  <main class="main-content">
+    <div class="webhooks-container">
+      <div class="section-header">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <h1>🪝 Webhooks</h1>
+            <p style="color: var(--text-3); margin-top: var(--space-2);">
+              POST to Slack, Discord, or custom endpoints on events
+            </p>
+          </div>
+          <button class="add-webhook-btn" onclick="openAddWebhookModal()">
+            <span>➕</span>
+            <span>Add Webhook</span>
+          </button>
+        </div>
+      </div>
+      
+      <div id="webhooks-grid" class="webhook-grid">
+        <!-- Webhooks will be inserted here -->
+      </div>
+      
+      <div class="delivery-log">
+        <h3>📋 Recent Deliveries</h3>
+        <div id="delivery-log" style="margin-top: var(--space-3);">
+          <!-- Log entries will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Add/Edit Webhook Modal -->
+  <div id="webhook-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Add Webhook</div>
+        <button class="modal-close" onclick="closeWebhookModal()">×</button>
+      </div>
+      
+      <form id="webhook-form" onsubmit="saveWebhook(event)">
+        <div class="form-group">
+          <label class="form-label">Webhook Name</label>
+          <input type="text" class="form-input" id="webhook-name" required placeholder="My Slack Alert">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Webhook URL</label>
+          <input type="url" class="form-input" id="webhook-url" required placeholder="https://hooks.slack.com/services/...">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Format</label>
+          <select class="form-select" id="webhook-format">
+            <option value="json">Generic JSON</option>
+            <option value="slack">Slack Incoming Webhook</option>
+            <option value="discord">Discord Webhook</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Events to Monitor</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="error"> Errors
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="cost_alert"> Cost Alerts
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="budget_alert"> Budget Alerts
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="latency_spike"> Latency Spikes
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="session_complete"> Session Complete
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="agent_spawn"> Agent Spawn
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="checkbox-input event-checkbox" value="test"> Test Events
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-buttons">
+          <button type="button" class="btn-secondary" onclick="closeWebhookModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Webhook</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+    let webhooks = [];
+    let deliveryLog = [];
+    let editingWebhookId = null;
+    
+    // Fetch and render webhooks
+    async function loadWebhooks() {
+      try {
+        const [webhooksRes, logRes] = await Promise.all([
+          fetch('/api/webhooks'),
+          fetch('/api/webhooks/log'),
+        ]);
+        
+        webhooks = await webhooksRes.json();
+        deliveryLog = await logRes.json();
+        
+        renderWebhooks();
+        renderDeliveryLog();
+      } catch (e) {
+        console.error('Failed to load webhooks:', e);
+      }
+    }
+    
+    // Render webhooks
+    function renderWebhooks() {
+      const grid = $('#webhooks-grid');
+      
+      if (webhooks.length === 0) {
+        grid.innerHTML = `
+          <div style="padding: var(--space-6); text-align: center; color: var(--text-3);">
+            <p style="font-size: 3rem; margin-bottom: var(--space-3);">🪝</p>
+            <p>No webhooks configured yet</p>
+            <p style="font-size: 0.875rem; margin-top: var(--space-2);">
+              Add a webhook to receive real-time notifications
+            </p>
+          </div>
+        `;
+        return;
+      }
+      
+      grid.innerHTML = webhooks.map(webhook => `
+        <div class="webhook-card ${webhook.enabled ? '' : 'disabled'}">
+          <div class="webhook-header">
+            <div class="webhook-status ${webhook.enabled ? 'enabled' : 'disabled'}"></div>
+            <div class="webhook-name">${webhook.name}</div>
+            <div class="webhook-actions">
+              <button class="webhook-btn" onclick="testWebhook('${webhook.id}')">🧪 Test</button>
+              <button class="webhook-btn" onclick="toggleWebhook('${webhook.id}')">
+                ${webhook.enabled ? '⏸️ Disable' : '▶️ Enable'}
+              </button>
+              <button class="webhook-btn danger" onclick="deleteWebhook('${webhook.id}')">🗑️ Delete</button>
+            </div>
+          </div>
+          <div class="webhook-details">
+            <div class="webhook-row">
+              <span class="webhook-label">URL:</span>
+              <span>${webhook.url}</span>
+            </div>
+            <div class="webhook-row">
+              <span class="webhook-label">Format:</span>
+              <span>${webhook.format}</span>
+            </div>
+            <div class="webhook-row">
+              <span class="webhook-label">Events:</span>
+              <div class="webhook-events">
+                ${webhook.events.map(e => `<span class="event-badge">${e}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Render delivery log
+    function renderDeliveryLog() {
+      const log = $('#delivery-log');
+      
+      if (deliveryLog.length === 0) {
+        log.innerHTML = '<div style="color: var(--text-3); text-align: center; padding: var(--space-4);">No deliveries yet</div>';
+        return;
+      }
+      
+      log.innerHTML = deliveryLog.slice(0, 20).map(entry => {
+        const time = new Date(entry.timestamp).toLocaleTimeString();
+        return `
+          <div class="log-entry">
+            <div class="log-status ${entry.success ? 'success' : 'failure'}"></div>
+            <div class="log-time">${time}</div>
+            <div class="log-webhook">${entry.webhookName}</div>
+            <div class="log-event">${entry.event}</div>
+            <div class="log-duration">${entry.duration}ms</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // Open add webhook modal
+    function openAddWebhookModal() {
+      editingWebhookId = null;
+      $('#webhook-form').reset();
+      $('.modal-title').textContent = 'Add Webhook';
+      $('#webhook-modal').classList.add('active');
+    }
+    
+    // Close modal
+    function closeWebhookModal() {
+      $('#webhook-modal').classList.remove('active');
+    }
+    
+    // Save webhook
+    async function saveWebhook(event) {
+      event.preventDefault();
+      
+      const name = $('#webhook-name').value;
+      const url = $('#webhook-url').value;
+      const format = $('#webhook-format').value;
+      const events = Array.from(document.querySelectorAll('.event-checkbox:checked')).map(cb => cb.value);
+      
+      if (events.length === 0) {
+        alert('Please select at least one event');
+        return;
+      }
+      
+      try {
+        const method = editingWebhookId ? 'PUT' : 'POST';
+        const endpoint = editingWebhookId ? `/api/webhooks/${editingWebhookId}` : '/api/webhooks';
+        
+        const res = await fetch(endpoint, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, url, format, events }),
+        });
+        
+        if (!res.ok) throw new Error('Failed to save webhook');
+        
+        closeWebhookModal();
+        loadWebhooks();
+      } catch (e) {
+        alert('Error saving webhook: ' + e.message);
+      }
+    }
+    
+    // Test webhook
+    async function testWebhook(webhookId) {
+      try {
+        const res = await fetch('/api/webhooks/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ webhookId }),
+        });
+        
+        const data = await res.json();
+        
+        if (data.ok) {
+          alert('✅ Test webhook sent successfully!');
+          loadWebhooks();
+        } else {
+          alert('❌ Test webhook failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (e) {
+        alert('Error testing webhook: ' + e.message);
+      }
+    }
+    
+    // Toggle webhook enabled/disabled
+    async function toggleWebhook(webhookId) {
+      const webhook = webhooks.find(w => w.id === webhookId);
+      if (!webhook) return;
+      
+      try {
+        const res = await fetch(`/api/webhooks/${webhookId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled: !webhook.enabled }),
+        });
+        
+        if (!res.ok) throw new Error('Failed to toggle webhook');
+        
+        loadWebhooks();
+      } catch (e) {
+        alert('Error toggling webhook: ' + e.message);
+      }
+    }
+    
+    // Delete webhook
+    async function deleteWebhook(webhookId) {
+      if (!confirm('Are you sure you want to delete this webhook?')) return;
+      
+      try {
+        const res = await fetch(`/api/webhooks/${webhookId}`, {
+          method: 'DELETE',
+        });
+        
+        if (!res.ok) throw new Error('Failed to delete webhook');
+        
+        loadWebhooks();
+      } catch (e) {
+        alert('Error deleting webhook: ' + e.message);
+      }
+    }
+    
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeWebhookModal();
+    });
+    
+    // Auto-refresh log every 30s
+    loadWebhooks();
+    setInterval(() => {
+      fetch('/api/webhooks/log').then(r => r.json()).then(log => {
+        deliveryLog = log;
+        renderDeliveryLog();
+      });
+    }, 30000);
+  </script>
+</body>
+</html>

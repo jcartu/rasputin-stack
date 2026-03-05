@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALFIE Nexus — Wide Research</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:oklch(0.12 0.015 280);--bg2:oklch(0.155 0.015 280);--bg3:oklch(0.19 0.015 280);--bg4:oklch(0.22 0.015 280);
+  --text:oklch(0.92 0.01 280);--text2:oklch(0.62 0.015 280);--text3:oklch(0.48 0.01 280);
+  --accent:oklch(0.72 0.19 160);--accent-dim:oklch(0.72 0.19 160/0.15);
+  --purple:oklch(0.65 0.18 280);--purple-dim:oklch(0.65 0.18 280/0.12);
+  --border:oklch(0.24 0.015 280);--border2:oklch(0.30 0.015 280);
+  --success:oklch(0.72 0.17 150);--error:oklch(0.65 0.22 25);--warn:oklch(0.78 0.15 85);
+  --blue:oklch(0.68 0.14 240);
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif}
+a{color:var(--accent);text-decoration:none}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+.layout{display:grid;grid-template-columns:260px 1fr;grid-template-rows:52px 1fr;height:100vh}
+
+/* ── Topbar ── */
+.topbar{grid-column:1/-1;background:oklch(0.08 0.015 265/0.35);backdrop-filter:blur(10px) saturate(150%);border-bottom:1px solid oklch(0.38 0.04 270/0.15);display:flex;align-items:center;padding:0 16px;gap:10px;z-index:100;position:sticky;top:0}
+.topbar-logo{font-size:16px;font-weight:700;background:linear-gradient(135deg,oklch(0.68 0.30 290),oklch(0.78 0.22 195));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.topbar-nav{display:flex;gap:6px;margin-left:16px}
+.topbar-nav a{font-size:12px;padding:5px 12px;border:1px solid oklch(0.30 0.02 280);border-radius:6px;transition:all .2s;color:oklch(0.70 0.18 280);text-decoration:none}
+.topbar-nav a:hover{border-color:oklch(0.70 0.18 280);background:oklch(0.70 0.18 280/0.1)}
+.topbar-nav a.active{border-color:oklch(0.70 0.18 280);background:oklch(0.70 0.18 280/0.15);color:oklch(0.78 0.22 195)}
+.topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.brave-badge{font-size:10px;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.brave-badge.active{color:var(--warn);border-color:oklch(0.78 0.15 85/0.3)}
+
+/* ── Sidebar ── */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-header{padding:14px 14px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sidebar-header h3{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.sidebar-count{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace}
+.sidebar-list{flex:1;overflow-y:auto;padding:8px}
+.past-job{padding:10px;border-radius:8px;cursor:pointer;margin-bottom:4px;transition:all .15s;border:1px solid transparent}
+.past-job:hover{background:var(--bg3);border-color:var(--border)}
+.past-job.active{background:var(--accent-dim);border-color:oklch(0.72 0.19 160/0.3)}
+.past-job .q{font-size:12px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+.past-job .meta{font-size:10px;color:var(--text3);margin-top:5px;display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-complete{background:var(--success)}.dot-running{background:var(--warn);animation:pulse 1.2s infinite}.dot-error{background:var(--error)}.dot-pending{background:var(--text3)}
+
+/* ── Main ── */
+.main{overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:32px 24px 60px}
+
+/* ── Hero Input ── */
+.hero{max-width:720px;width:100%;text-align:center;margin-bottom:32px}
+.hero h1{font-size:32px;font-weight:700;letter-spacing:-1px;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:14px;margin-bottom:20px}
+.input-box{display:flex;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:6px 6px 6px 18px;transition:border-color .2s}
+.input-box:focus-within{border-color:var(--accent)}
+.input-box input{flex:1;background:none;border:none;color:var(--text);font-size:15px;font-family:inherit;outline:none}
+.input-box input::placeholder{color:var(--text3)}
+.btn-go{background:var(--accent);color:oklch(0.13 0.015 160);border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.btn-go:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-go:active{transform:translateY(0)}
+.btn-go:disabled{opacity:0.4;cursor:not-allowed;transform:none;filter:none}
+.btn-go svg{width:16px;height:16px}
+
+/* ── Progress ── */
+.progress{max-width:720px;width:100%;margin-bottom:20px;display:none}
+.progress.visible{display:block}
+.steps-bar{display:flex;gap:3px;margin-bottom:12px}
+.step-seg{flex:1;height:5px;border-radius:3px;background:var(--bg3);transition:background .4s}
+.step-seg.done{background:var(--success)}.step-seg.active{background:var(--accent);animation:glow 2s infinite}.step-seg.err{background:var(--error)}
+.steps-labels{display:flex;justify-content:space-between;margin-bottom:10px}
+.step-label{font-size:10px;color:var(--text3);text-align:center;flex:1;transition:color .3s}
+.step-label.active{color:var(--accent);font-weight:600}.step-label.done{color:var(--success)}.step-label.err{color:var(--error)}
+.progress-detail{font-size:12px;color:var(--text2);padding:8px 12px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)}
+
+/* ── Queries ── */
+.queries{max-width:720px;width:100%;margin-bottom:16px;display:none}
+.queries.visible{display:block}
+.queries h3{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text2);transition:border-color .2s}
+
+/* ── Sources ── */
+.sources{max-width:720px;width:100%;margin-bottom:20px;display:none}
+.sources.visible{display:block}
+.sources h3{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.sources h3 .ct{font-size:10px;background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--text2)}
+.src-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.src{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:11px;transition:border-color .2s;overflow:hidden}
+.src:hover{border-color:var(--border2)}
+.src .dot{flex-shrink:0}
+.src-info{flex:1;min-width:0}
+.src-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;font-size:11px}
+.src-meta{display:flex;gap:6px;align-items:center;margin-top:2px}
+.src-badge{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--bg3);color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase}
+.src-badge.wikipedia{color:var(--blue)}.src-badge.hackernews{color:oklch(0.7 0.15 30)}.src-badge.arxiv{color:var(--error)}.src-badge.reddit{color:oklch(0.7 0.15 25)}.src-badge.stackoverflow{color:oklch(0.75 0.12 60)}.src-badge.perplexity{color:var(--accent)}
+.src-len{font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+
+/* ── Report ── */
+.report{max-width:720px;width:100%;display:none}
+.report.visible{display:block}
+.report-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.report-bar h2{font-size:18px;font-weight:700}
+.report-actions{display:flex;gap:6px;align-items:center}
+.badge{font-size:10px;padding:4px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;background:var(--bg3);color:var(--text2)}
+.btn-sm{background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 12px;font-size:11px;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-sm:hover{border-color:var(--accent);color:var(--text)}
+
+/* Key findings */
+.findings{background:var(--accent-dim);border:1px solid oklch(0.72 0.19 160/0.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:none}
+.findings.visible{display:block}
+.findings h3{font-size:13px;color:var(--accent);margin-bottom:8px;font-weight:600}
+.findings li{font-size:13px;margin-bottom:5px;line-height:1.5;color:var(--text)}
+
+/* Report markdown */
+.md{line-height:1.75;font-size:14px;color:oklch(0.88 0.01 280)}
+.md h1{font-size:22px;margin:28px 0 12px;font-weight:700;color:var(--text)}
+.md h2{font-size:17px;margin:24px 0 10px;font-weight:600;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:6px}
+.md h3{font-size:14px;margin:18px 0 8px;font-weight:600;color:var(--purple)}
+.md p{margin-bottom:12px}
+.md ul,ol{margin:0 0 12px 20px}.md li{margin-bottom:4px}
+.md code{background:var(--bg3);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--warn)}
+.md pre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;margin:12px 0;overflow-x:auto}
+.md pre code{background:none;padding:0;color:var(--text)}
+.md blockquote{border-left:3px solid var(--accent);padding:8px 0 8px 16px;color:var(--text2);margin:12px 0;background:var(--accent-dim);border-radius:0 6px 6px 0}
+.md a{color:var(--purple);border-bottom:1px dotted var(--purple)}
+.md a:hover{color:var(--accent);border-color:var(--accent)}
+.md hr{border:none;border-top:1px solid var(--border);margin:24px 0}
+.md strong{color:var(--text);font-weight:600}
+.md table{border-collapse:collapse;margin:12px 0;width:100%}.md th,.md td{border:1px solid var(--border);padding:6px 10px;font-size:13px;text-align:left}.md th{background:var(--bg3);font-weight:600}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes glow{0%,100%{box-shadow:0 0 4px oklch(0.72 0.19 160/0.3)}50%{box-shadow:0 0 12px oklch(0.72 0.19 160/0.5)}}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:20px 16px 40px}
+  .hero h1{font-size:24px}
+  .src-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="topbar">
+    <div class="topbar-logo">🧠 ALFIE NEXUS</div>
+    <div class="topbar-nav">
+      <a href="/">📊 Dashboard</a>
+      <a href="/browser.html">🌐 Browser</a>
+      <a href="/execute.html">⚡ Execute</a>
+      <a href="/research.html" class="active">🔬 Research</a>
+      <a href="/playground.html">🎯 Playground</a>
+      <a href="/replay.html">🔄 Replay</a>
+      <a href="/agents.html">🤖 Agents</a>
+      <a href="/knowledge.html">📚 Knowledge</a>
+      <a href="/templates.html">📝 Templates</a>
+    </div>
+    <div class="topbar-right">
+      <div class="brave-badge" id="search-badge">PERPLEXITY AI</div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>History</h3>
+      <span class="sidebar-count" id="job-count">0</span>
+    </div>
+    <div class="sidebar-list" id="past-jobs"></div>
+  </div>
+
+  <div class="main" id="main">
+    <div class="hero">
+      <h1>Wide Research</h1>
+      <p>Multi-source deep research — searches, reads, and synthesizes across Wikipedia, HN, arXiv, StackOverflow, and Reddit.</p>
+      <div class="input-box">
+        <input type="text" id="question" placeholder="What do you want to research?" autofocus>
+        <button class="btn-go" id="btn-start" onclick="startResearch()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Research
+        </button>
+      </div>
+    </div>
+
+    <div class="progress" id="progress">
+      <div class="steps-bar" id="steps-bar">
+        <div class="step-seg" data-step="1"></div>
+        <div class="step-seg" data-step="2"></div>
+        <div class="step-seg" data-step="3"></div>
+        <div class="step-seg" data-step="4"></div>
+      </div>
+      <div class="steps-labels">
+        <div class="step-label" data-step="1" id="sl-1">Generate Queries</div>
+        <div class="step-label" data-step="2" id="sl-2">Perplexity Search</div>
+        <div class="step-label" data-step="3" id="sl-3">Opus Synthesis</div>
+        <div class="step-label" data-step="4" id="sl-4">Complete</div>
+      </div>
+      <div class="progress-detail" id="progress-detail">Initializing...</div>
+    </div>
+
+    <div class="queries" id="queries-panel">
+      <h3>🔍 Search Queries</h3>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="sources" id="sources-panel">
+      <h3>📄 Sources <span class="ct" id="src-count">0</span></h3>
+      <div class="src-grid" id="src-grid"></div>
+    </div>
+
+    <div class="report" id="report-panel">
+      <div class="report-bar">
+        <h2>📋 Research Report</h2>
+        <div class="report-actions">
+          <span class="badge" id="duration"></span>
+          <span class="badge" id="src-summary"></span>
+          <button class="btn-sm" onclick="exportMd()">📥 Export MD</button>
+          <button class="btn-sm" onclick="exportFromServer()">💾 Download</button>
+          <button class="btn-sm" onclick="shareResult()">🔗 Share</button>
+        </div>
+      </div>
+      <div class="findings" id="findings">
+        <h3>🎯 Key Findings</h3>
+        <ul id="findings-list"></ul>
+      </div>
+      <div class="md" id="report-md"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SECRET='rasputin-neural-2026';
+let ws=null, currentJobId=null, currentReport=null, pollTimer=null;
+
+// ── WebSocket ──
+function connectWS(){
+  try{
+    const p=location.protocol==='https:'?'wss:':'ws:';
+    ws=new WebSocket(`${p}//${location.host}`);
+    ws.onopen=()=>ws.send(JSON.stringify({type:'auth',secret:SECRET}));
+    ws.onmessage=e=>{try{handleMsg(JSON.parse(e.data))}catch(_){}};
+    ws.onclose=()=>setTimeout(connectWS,3000);
+    ws.onerror=()=>{};
+  }catch(_){setTimeout(connectWS,5000)}
+}
+
+function handleMsg(m){
+  if(m.jobId&&m.jobId!==currentJobId)return;
+  switch(m.type){
+    case'research_progress':setProgress(m);break;
+    case'research_queries':setQueries(m.queries);break;
+    case'research_sources':setSources(m.sources);break;
+    case'research_source_update':updateSrc(m);break;
+    case'research_complete':loadReport(m.jobId);break;
+    case'research_error':setError(m.error);break;
+  }
+}
+
+// ── Progress ──
+const STEP_NAMES=['','Generate Queries','Perplexity Search','Opus Synthesis','Complete'];
+function setProgress(p){
+  $('progress').classList.add('visible');
+  document.querySelectorAll('.step-seg').forEach(s=>{
+    const n=+s.dataset.step;s.className='step-seg';
+    if(n<p.step)s.classList.add('done');
+    else if(n===p.step)s.classList.add(p.stepName==='error'?'err':'active');
+  });
+  document.querySelectorAll('.step-label').forEach(s=>{
+    const n=+s.dataset.step;s.className='step-label';
+    if(n<p.step)s.classList.add('done');
+    else if(n===p.step)s.classList.add(p.stepName==='error'?'err':'active');
+  });
+  $('progress-detail').textContent=p.details||STEP_NAMES[p.step]||'Working...';
+}
+function setError(err){
+  document.querySelectorAll('.step-seg.active').forEach(s=>{s.classList.remove('active');s.classList.add('err')});
+  document.querySelectorAll('.step-label.active').forEach(s=>{s.classList.remove('active');s.classList.add('err')});
+  $('progress-detail').textContent='Error: '+err;
+  enableBtn();
+}
+
+// ── Queries ──
+function setQueries(qs){
+  $('queries-panel').classList.add('visible');
+  $('chips').innerHTML=qs.map(q=>`<div class="chip">${esc(q)}</div>`).join('');
+}
+
+// ── Sources ──
+function setSources(srcs){
+  $('sources-panel').classList.add('visible');
+  $('src-count').textContent=srcs.length;
+  $('src-grid').innerHTML=srcs.map((s,i)=>`<div class="src" id="src-${i}">
+    <div class="dot dot-${s.status||'pending'}"></div>
+    <div class="src-info">
+      <div class="src-title"><a href="${esc(s.url)}" target="_blank">${esc(s.title||urlShort(s.url))}</a></div>
+      <div class="src-meta"><span class="src-badge ${s.source||''}">${esc(s.source||'web')}</span><span class="src-len" id="slen-${i}"></span></div>
+    </div>
+  </div>`).join('');
+}
+function updateSrc(u){
+  const el=$(`src-${u.index}`);if(!el)return;
+  const dot=el.querySelector('.dot');if(dot)dot.className='dot dot-'+(u.status||'pending');
+  const len=$(`slen-${u.index}`);if(len&&u.length)len.textContent=fmtLen(u.length);
+}
+
+// ── Report ──
+async function loadReport(jid){
+  if(pollTimer){clearInterval(pollTimer);pollTimer=null}
+  const r=await(await fetch(`/api/research/${jid}`)).json();
+  currentReport=r;
+  // progress done
+  document.querySelectorAll('.step-seg').forEach(s=>s.className='step-seg done');
+  document.querySelectorAll('.step-label').forEach(s=>{s.className='step-label done'});
+  $('progress-detail').textContent='Research complete!';
+  // show sources final state
+  if(r.sources?.length){setSources(r.sources);r.sources.forEach((s,i)=>updateSrc({index:i,status:s.status,length:s.textLength}))}
+  // report
+  $('report-panel').classList.add('visible');
+  $('duration').textContent=fmtDur(r.duration);
+  const ok=r.sources?.filter(s=>s.status==='done').length||0;
+  $('src-summary').textContent=`${ok} sources`;
+  if(r.keyFindings?.length){
+    $('findings').classList.add('visible');
+    $('findings-list').innerHTML=r.keyFindings.map(f=>`<li>${esc(f)}</li>`).join('');
+  }
+  $('report-md').innerHTML=renderMd(r.synthesis||'No synthesis available.');
+  enableBtn();
+  loadHistory();
+  // scroll to report
+  $('report-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── Actions ──
+async function startResearch(){
+  const q=$('question').value.trim();if(!q)return;
+  resetUI();
+  $('btn-start').disabled=true;$('btn-start').querySelector('svg').style.display='none';
+  const res=await fetch('/api/research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+  const d=await res.json();
+  if(d.error){setError(d.error);return}
+  currentJobId=d.jobId;
+  // Start polling as backup for WS
+  pollTimer=setInterval(()=>pollJob(currentJobId),3000);
+}
+async function pollJob(jid){
+  try{
+    const r=await(await fetch(`/api/research/${jid}`)).json();
+    if(r.progress)setProgress(r.progress);
+    if(r.queries?.length&&!$('queries-panel').classList.contains('visible'))setQueries(r.queries);
+    if(r.sources?.length){
+      if(!$('sources-panel').classList.contains('visible'))setSources(r.sources);
+      r.sources.forEach((s,i)=>updateSrc({index:i,status:s.status,length:s.textLength}));
+    }
+    if(r.status==='complete')loadReport(jid);
+    else if(r.status==='error')setError(r.error||'Unknown error');
+  }catch(_){}
+}
+function resetUI(){
+  ['queries-panel','sources-panel','report-panel','progress'].forEach(id=>$(id).classList.remove('visible'));
+  $('findings').classList.remove('visible');
+  if(pollTimer){clearInterval(pollTimer);pollTimer=null}
+}
+function enableBtn(){$('btn-start').disabled=false;$('btn-start').querySelector('svg').style.display=''}
+
+async function loadHistory(){
+  try{
+    const r=await(await fetch('/api/research')).json();
+    const jobs=r.jobs||[];
+    $('job-count').textContent=jobs.length;
+    $('past-jobs').innerHTML=jobs.map(j=>{
+      const cls=j.status==='complete'?'complete':j.status==='error'?'error':j.status==='running'?'running':'pending';
+      const time=j.completedAt?ago(j.completedAt):(j.status==='running'?'In progress...':'');
+      return`<div class="past-job ${j.id===currentJobId?'active':''}" onclick="openJob('${j.id}')">
+        <div class="q"><span class="dot dot-${cls}"></span> ${esc(j.question)}</div>
+        <div class="meta">${time}</div>
+      </div>`;
+    }).join('');
+  }catch(_){}
+}
+async function openJob(jid){
+  currentJobId=jid;
+  const r=await(await fetch(`/api/research/${jid}`)).json();
+  currentReport=r;
+  $('question').value=r.question||'';
+  resetUI();
+  if(r.queries?.length)setQueries(r.queries);
+  if(r.sources?.length){setSources(r.sources);r.sources.forEach((s,i)=>updateSrc({index:i,status:s.status,length:s.textLength}))}
+  if(r.status==='complete'){setProgress({step:4,stepName:'complete',details:'Research complete!'});loadReport(jid)}
+  else if(r.status==='error'){setProgress({step:r.progress?.step||1,stepName:'error',details:r.error||''});setError(r.error||'Unknown')}
+  else if(r.status==='running'){setProgress(r.progress||{step:1,stepName:'running',details:'In progress...'});pollTimer=setInterval(()=>pollJob(jid),3000)}
+  loadHistory();
+}
+
+function exportMd(){
+  if(!currentReport)return;const r=currentReport;
+  let md=`# Research Report: ${r.question}\n\n`;
+  md+=`> Generated: ${new Date(r.completedAt||r.startedAt).toISOString()} | Duration: ${fmtDur(r.duration)}\n\n`;
+  if(r.keyFindings?.length)md+=`## 🎯 Key Findings\n\n${r.keyFindings.map(f=>`- ${f}`).join('\n')}\n\n`;
+  md+=`## 🔍 Search Queries\n\n${(r.queries||[]).map((q,i)=>`${i+1}. ${q}`).join('\n')}\n\n`;
+  md+=`## 📄 Sources\n\n${(r.sources||[]).map(s=>`- [${s.title||s.url}](${s.url}) *(${s.source||'web'})*`).join('\n')}\n\n`;
+  md+=`## 📋 Analysis\n\n${r.synthesis||''}\n`;
+  const b=new Blob([md],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`research-${(r.question||'report').slice(0,40).replace(/[^a-z0-9]+/gi,'-')}.md`;a.click();
+}
+
+function exportFromServer(){
+  if(!currentReport)return;
+  window.open('/api/export/research/'+currentReport.id,'_blank');
+}
+function shareResult(){
+  if(!currentReport)return;
+  fetch('/api/share',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'research',id:currentReport.id})})
+    .then(r=>r.json()).then(d=>{
+      const url=location.origin+d.url;
+      navigator.clipboard.writeText(url).then(()=>alert('Share link copied: '+url)).catch(()=>prompt('Share link:',url));
+    }).catch(e=>alert('Share failed: '+e.message));
+}
+
+// ── Markdown renderer (better) ──
+function renderMd(text){
+  let h=text;
+  // Escape HTML
+  h=h.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Code blocks
+  h=h.replace(/```(\w*)\n([\s\S]*?)```/g,(_,lang,code)=>`<pre><code class="lang-${lang}">${code.trim()}</code></pre>`);
+  // Inline code
+  h=h.replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  // Headers
+  h=h.replace(/^#### (.+)$/gm,'<h4>$1</h4>');
+  h=h.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+  h=h.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  h=h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  // Bold/italic
+  h=h.replace(/\*\*\*(.+?)\*\*\*/g,'<strong><em>$1</em></strong>');
+  h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  h=h.replace(/(?<!\*)\*([^\*\n]+)\*(?!\*)/g,'<em>$1</em>');
+  // Links
+  h=h.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  // Blockquotes
+  h=h.replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>');
+  h=h.replace(/<\/blockquote>\n<blockquote>/g,'\n');
+  // Numbered lists
+  h=h.replace(/^(\d+)\. (.+)$/gm,'<oli>$2</oli>');
+  h=h.replace(/((?:<oli>.*<\/oli>\n?)+)/g,m=>'<ol>'+m.replace(/<\/?oli>/g,s=>s==='<oli>'?'<li>':'</li>')+'</ol>');
+  // Bullet lists
+  h=h.replace(/^[-*] (.+)$/gm,'<uli>$1</uli>');
+  h=h.replace(/((?:<uli>.*<\/uli>\n?)+)/g,m=>'<ul>'+m.replace(/<\/?uli>/g,s=>s==='<uli>'?'<li>':'</li>')+'</ul>');
+  // HR
+  h=h.replace(/^---+$/gm,'<hr>');
+  // Paragraphs
+  h=h.replace(/\n\n+/g,'</p><p>');
+  h='<p>'+h+'</p>';
+  // Clean up
+  h=h.replace(/<p>\s*<(h[1-4]|ul|ol|pre|blockquote|hr)/g,'<$1');
+  h=h.replace(/<\/(h[1-4]|ul|ol|pre|blockquote)>\s*<\/p>/g,'</$1>');
+  h=h.replace(/<p><\/p>/g,'');
+  h=h.replace(/<p><hr><\/p>/g,'<hr>');
+  h=h.replace(/<hr><\/p>/g,'<hr>');
+  return h;
+}
+
+// ── Util ──
+function $(id){return document.getElementById(id)}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function urlShort(u){try{const x=new URL(u);return x.hostname+x.pathname.slice(0,30)}catch(_){return u?.slice(0,40)||''}}
+function fmtLen(n){return n>1000?(n/1000).toFixed(1)+'k':n+''}
+function fmtDur(ms){if(!ms)return'–';const s=ms/1000;return s<60?s.toFixed(1)+'s':s<3600?(s/60).toFixed(1)+'m':(s/3600).toFixed(1)+'h'}
+function ago(ts){const d=Date.now()-ts;if(d<60000)return'just now';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'}
+
+$('question').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('btn-start').disabled)startResearch()});
+
+connectWS();
+loadHistory();
+</script>
+</body>
+</html>

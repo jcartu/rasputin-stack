@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rasputin Nexus — Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg: #0a0b0d;
+  --bg-subtle: #0f1113;
+  --surface: #16181c;
+  --surface-hover: #1c1f24;
+  --border: #252932;
+  --border-hover: #2f3542;
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --text-tertiary: #5f6368;
+  --green: #10b981;
+  --green-subtle: #064e3b;
+  --gray: #6b7280;
+  --gray-subtle: #1f2937;
+  --red: #ef4444;
+  --red-subtle: #7f1d1d;
+  --blue: #3b82f6;
+}
+
+body{
+  background: linear-gradient(180deg, var(--bg) 0%, #0c0d0f 100%);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Topbar - minimal changes */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 24px;
+  background: rgba(15, 17, 19, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.topbar-logo{
+  font-size:15px;
+  font-weight:700;
+  color: var(--text-primary);
+  text-decoration:none;
+  font-family:'Space Grotesk',sans-serif;
+  margin-right: 16px;
+}
+.topbar-nav{display:flex;gap:6px;}
+.topbar-nav a{
+  font-size:13px;
+  padding:6px 12px;
+  border:1px solid transparent;
+  border-radius:6px;
+  color: var(--text-secondary);
+  text-decoration:none;
+  transition:all .15s;
+  font-family:'Space Grotesk',sans-serif;
+}
+.topbar-nav a:hover{
+  color: var(--text-primary);
+  background: var(--surface);
+  border-color: var(--border);
+}
+.topbar-nav a.active{
+  color: var(--text-primary);
+  background: var(--surface);
+  border-color: var(--border-hover);
+}
+
+/* Stats Bar with inline spawn */
+.stats-bar{
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Space Grotesk', sans-serif;
+}
+.stats-text{
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.stats-text strong{
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.stats-text .dot{
+  display: inline-block;
+  margin: 0 8px;
+  color: var(--text-tertiary);
+}
+.spawn-trigger{
+  margin-left: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.spawn-trigger:hover{
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+}
+.spawn-trigger svg{
+  width: 14px;
+  height: 14px;
+}
+
+/* Spawn Panel - collapsible */
+.spawn-panel{
+  display: none;
+  padding: 20px 24px;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border);
+}
+.spawn-panel.visible{
+  display: block;
+}
+.spawn-form{
+  display: flex;
+  gap: 8px;
+  max-width: 1200px;
+}
+.spawn-form input,
+.spawn-form select{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color .15s;
+}
+.spawn-form input:focus,
+.spawn-form select:focus{
+  border-color: var(--border-hover);
+}
+.spawn-form input[name="task"]{
+  flex: 1;
+  min-width: 280px;
+}
+.spawn-form input[name="label"]{
+  width: 160px;
+}
+.spawn-form select{
+  width: 180px;
+}
+.spawn-btn{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all .15s;
+}
+.spawn-btn:hover{
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+}
+.spawn-btn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.spawn-status{
+  font-size: 13px;
+  margin-top: 12px;
+  display: none;
+}
+
+/* Container */
+.container{
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Section Headers */
+.section-header{
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+/* Active Agent Cards */
+.active-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.agent-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all .15s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.agent-card::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--gray);
+}
+.agent-card.status-active::before{
+  background: var(--green);
+}
+.agent-card.status-error::before{
+  background: var(--red);
+}
+.agent-card:hover{
+  border-color: var(--border-hover);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.card-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.card-label{
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.card-model{
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+.card-badge{
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  background: var(--gray-subtle);
+  color: var(--gray);
+}
+.card-badge.active{
+  background: var(--green-subtle);
+  color: var(--green);
+}
+.card-badge.error{
+  background: var(--red-subtle);
+  color: var(--red);
+}
+
+.card-message{
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  max-height: 2.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.card-meta{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.card-meta span{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Idle Agents Table */
+.idle-table{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.table-header{
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 0.8fr;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}
+.table-row{
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 0.8fr;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: background .15s;
+  cursor: pointer;
+}
+.table-row:last-child{
+  border-bottom: none;
+}
+.table-row:hover{
+  background: var(--surface-hover);
+}
+.table-row .label{
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.table-row .id{
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-left: 8px;
+}
+
+/* Loading/Empty States */
+.loading,
+.empty-state{
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+.empty-state .icon{
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.empty-state .title{
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">RASPUTIN NEXUS</a>
+  <div class="topbar-nav">
+    <a href="/">Dashboard</a>
+    <a href="/browser.html">Browser</a>
+    <a href="/execute.html">Execute</a>
+    <a href="/research.html">Research</a>
+    <a href="/playground.html">Playground</a>
+    <a href="/council.html">Council</a>
+    <a href="/replay.html">Replay</a>
+    <a href="/agents.html" class="active">Agents</a>
+    <a href="/knowledge.html">Knowledge</a>
+    <a href="/templates.html">Templates</a>
+    <a href="/remote.html">Remote</a>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-text">
+    <strong id="active-num">—</strong> active
+    <span class="dot">·</span>
+    <strong id="idle-num">—</strong> idle
+    <span class="dot">·</span>
+    <strong id="total-num">—</strong> total
+  </div>
+  <button class="spawn-trigger" id="spawn-trigger" onclick="toggleSpawn()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+    Spawn Agent
+  </button>
+</div>
+
+<div class="spawn-panel" id="spawn-panel">
+  <form class="spawn-form" id="spawn-form">
+    <input type="text" name="task" placeholder="Task description..." required>
+    <input type="text" name="label" placeholder="Agent label..." required>
+    <select name="model">
+      <option value="">Auto-select model</option>
+      <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+      <option value="claude-opus-4-20250514">Claude Opus 4</option>
+      <option value="gpt-4o">GPT-4o</option>
+    </select>
+    <button type="submit" class="spawn-btn" id="spawn-btn">Spawn</button>
+  </form>
+  <div class="spawn-status" id="spawn-status"></div>
+</div>
+
+<div class="container">
+  <div id="active-section" style="display:none">
+    <div class="section-header">Active Agents</div>
+    <div class="active-grid" id="active-grid"></div>
+  </div>
+
+  <div id="idle-section" style="display:none">
+    <div class="section-header">Idle Agents</div>
+    <div class="idle-table" id="idle-table"></div>
+  </div>
+
+  <div class="loading" id="loading">Loading agents...</div>
+  
+  <div class="empty-state" id="empty" style="display:none">
+    <div class="icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+        <path d="M7 11V7a5 5 0 0110 0v4"></path>
+      </svg>
+    </div>
+    <div class="title">No agents running</div>
+    <div>Click "Spawn Agent" to create one</div>
+  </div>
+</div>
+
+<script>
+let spawnPanelVisible = false;
+
+function toggleSpawn() {
+  spawnPanelVisible = !spawnPanelVisible;
+  const panel = document.getElementById('spawn-panel');
+  panel.classList.toggle('visible', spawnPanelVisible);
+  if (spawnPanelVisible) {
+    document.querySelector('[name="task"]').focus();
+  }
+}
+
+function timeAgo(ts) {
+  const now = Date.now();
+  const diff = Math.floor((now - ts) / 1000);
+  if (diff < 60) return diff + 's ago';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+function getHumanLabel(agent) {
+  if (agent.label && agent.label !== agent.sessionId) return agent.label;
+  const parts = agent.sessionId.split(':');
+  if (parts.length >= 3) {
+    return parts[2].charAt(0).toUpperCase() + parts[2].slice(1);
+  }
+  return 'Agent';
+}
+
+function escapeHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function fetchAgents() {
+  try {
+    const res = await fetch('/api/agents/active', { credentials: 'include' });
+    const data = await res.json();
+    renderAgents(data.agents || []);
+    updateStats(data.stats || {});
+  } catch(e) {
+    console.error('Fetch failed:', e);
+    document.getElementById('loading').innerHTML = `
+      <div class="icon">⚠️</div>
+      <div class="title">Connection failed</div>
+      <div>${escapeHtml(e.message)}</div>
+    `;
+  }
+}
+
+function updateStats(stats) {
+  document.getElementById('active-num').textContent = stats.active || 0;
+  document.getElementById('idle-num').textContent = (stats.total || 0) - (stats.active || 0);
+  document.getElementById('total-num').textContent = stats.total || 0;
+}
+
+function renderAgents(agents) {
+  document.getElementById('loading').style.display = 'none';
+  
+  if (!agents.length) {
+    document.getElementById('empty').style.display = 'block';
+    document.getElementById('active-section').style.display = 'none';
+    document.getElementById('idle-section').style.display = 'none';
+    return;
+  }
+  
+  document.getElementById('empty').style.display = 'none';
+  
+  const active = agents.filter(a => a.status === 'active');
+  const idle = agents.filter(a => a.status !== 'active');
+  
+  // Active agents
+  if (active.length) {
+    document.getElementById('active-section').style.display = 'block';
+    document.getElementById('active-grid').innerHTML = active.map(a => {
+      const label = getHumanLabel(a);
+      const model = (a.model || '').split('/').pop() || 'auto';
+      const statusClass = a.status === 'error' ? 'error' : 'active';
+      const statusText = a.status === 'error' ? 'ERROR' : 'ACTIVE';
+      
+      return `
+        <div class="agent-card status-${statusClass}">
+          <div class="card-top">
+            <div>
+              <div class="card-label">${escapeHtml(label)}</div>
+              <div class="card-model">${escapeHtml(model)}</div>
+            </div>
+            <div class="card-badge ${statusClass}">${statusText}</div>
+          </div>
+          <div class="card-message">${escapeHtml(a.lastMessage || 'Initializing...')}</div>
+          <div class="card-meta">
+            <span>${timeAgo(a.lastActivity)}</span>
+            <span>${a.messageCount || 0} messages</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    document.getElementById('active-section').style.display = 'none';
+  }
+  
+  // Idle agents
+  if (idle.length) {
+    document.getElementById('idle-section').style.display = 'block';
+    const tableHtml = `
+      <div class="table-header">
+        <div>Label</div>
+        <div>Model</div>
+        <div>Last Active</div>
+        <div>Messages</div>
+      </div>
+      ${idle.map(a => {
+        const label = getHumanLabel(a);
+        const model = (a.model || '').split('/').pop() || 'auto';
+        const shortId = a.sessionId.slice(-8);
+        
+        return `
+          <div class="table-row">
+            <div>
+              <span class="label">${escapeHtml(label)}</span>
+              <span class="id">#${shortId}</span>
+            </div>
+            <div>${escapeHtml(model)}</div>
+            <div>${timeAgo(a.lastActivity)}</div>
+            <div>${a.messageCount || 0}</div>
+          </div>
+        `;
+      }).join('')}
+    `;
+    document.getElementById('idle-table').innerHTML = tableHtml;
+  } else {
+    document.getElementById('idle-section').style.display = 'none';
+  }
+}
+
+// Spawn form
+document.getElementById('spawn-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('spawn-btn');
+  const status = document.getElementById('spawn-status');
+  const fd = new FormData(e.target);
+  const payload = {
+    task: fd.get('task'),
+    label: fd.get('label'),
+    model: fd.get('model') || undefined
+  };
+  
+  btn.disabled = true;
+  btn.textContent = 'Spawning...';
+  
+  try {
+    const res = await fetch('/api/agents/spawn', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'include',
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    
+    if (data.ok) {
+      status.style.display = 'block';
+      status.style.color = 'var(--green)';
+      status.textContent = `Agent "${payload.label}" spawned successfully`;
+      e.target.reset();
+      setTimeout(() => {
+        fetchAgents();
+        toggleSpawn();
+      }, 1500);
+    } else {
+      throw new Error(data.error || 'Spawn failed');
+    }
+  } catch(err) {
+    status.style.display = 'block';
+    status.style.color = 'var(--red)';
+    status.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Spawn';
+    setTimeout(() => status.style.display = 'none', 5000);
+  }
+});
+
+// Initial load + auto-refresh
+fetchAgents();
+setInterval(fetchAgents, 10000);
+</script>
+</body>
+</html>

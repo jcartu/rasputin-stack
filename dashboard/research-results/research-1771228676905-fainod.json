@@ -1,0 +1,117 @@
+{
+  "id": "research-1771228676905-fainod",
+  "question": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+  "status": "error",
+  "progress": {
+    "step": 4,
+    "totalSteps": 5,
+    "stepName": "error",
+    "details": "LiteLLM timeout (120s)"
+  },
+  "queries": [
+    "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+    "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb? overview",
+    "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb? latest 2025 2026",
+    "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb? comparison analysis",
+    "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb? expert opinion"
+  ],
+  "searchMode": "perplexity",
+  "sources": [
+    {
+      "url": "https://haimaker.ai/blog/posts/best-models-for-clawdbot",
+      "title": "https://haimaker.ai/blog/posts/best-models-for-clawdbot",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=o4aH7e7ZPqs",
+      "title": "https://www.youtube.com/watch?v=o4aH7e7ZPqs",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://dev.to/mechcloud_academy/unleashing-openclaw-the-ultimate-guide-to-local-ai-agents-for-developers-in-2026-3k0h",
+      "title": "https://dev.to/mechcloud_academy/unleashing-openclaw-the-ultimate-guide-to-local-ai-agents-for-developers-in-2026-3k0h",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://velvetshark.com/openclaw-multi-model-routing",
+      "title": "https://velvetshark.com/openclaw-multi-model-routing",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://github.com/openclaw/openclaw/discussions/12267",
+      "title": "https://github.com/openclaw/openclaw/discussions/12267",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.datacamp.com/blog/openclaw-projects",
+      "title": "https://www.datacamp.com/blog/openclaw-projects",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://corpwaters.substack.com/p/the-ultimate-guide-to-openclaw",
+      "title": "https://corpwaters.substack.com/p/the-ultimate-guide-to-openclaw",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://kanerika.com/blogs/openclaw/",
+      "title": "https://kanerika.com/blogs/openclaw/",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://haimaker.ai/blog/best-models-for-clawdbot/",
+      "title": "https://haimaker.ai/blog/best-models-for-clawdbot/",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb? overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nxcode.io/resources/news/openclaw-complete-guide-2026",
+      "title": "https://www.nxcode.io/resources/news/openclaw-complete-guide-2026",
+      "description": "",
+      "query": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb? overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    }
+  ],
+  "synthesis": "",
+  "keyFindings": [],
+  "error": "LiteLLM timeout (120s)",
+  "startedAt": 1771228676905,
+  "completedAt": 1771228807812,
+  "duration": 130907
+}

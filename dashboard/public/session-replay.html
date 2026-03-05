@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Replay - ALFIE Nexus</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a0520 100%);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(20, 20, 30, 0.6);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(100, 100, 255, 0.2);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      background: linear-gradient(90deg, #00d4ff, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .session-selector {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    select {
+      padding: 10px 15px;
+      background: rgba(40, 40, 60, 0.8);
+      color: #e0e0e0;
+      border: 1px solid rgba(100, 100, 255, 0.3);
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .playback-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: rgba(20, 20, 30, 0.6);
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(100, 100, 255, 0.2);
+    }
+
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(60, 60, 90, 0.8);
+      border: 1px solid rgba(100, 100, 255, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 18px;
+    }
+
+    .control-btn:hover {
+      background: rgba(100, 100, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .timeline-slider {
+      flex: 1;
+      height: 8px;
+      background: rgba(60, 60, 90, 0.5);
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .timeline-progress {
+      height: 100%;
+      background: linear-gradient(90deg, #00d4ff, #a855f7);
+      border-radius: 4px;
+      transition: width 0.1s;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      top: -4px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border: 2px solid #00d4ff;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      cursor: grab;
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    .time-display {
+      font-size: 14px;
+      color: #00d4ff;
+      min-width: 150px;
+      text-align: right;
+      font-family: 'Courier New', monospace;
+    }
+
+    .split-view {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 20px;
+      min-height: 600px;
+    }
+
+    .timeline-panel {
+      background: rgba(20, 20, 30, 0.6);
+      border-radius: 15px;
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 700px;
+      border: 1px solid rgba(100, 100, 255, 0.2);
+    }
+
+    .timeline-panel h3 {
+      margin-bottom: 20px;
+      color: #00d4ff;
+      font-size: 18px;
+    }
+
+    .event-item {
+      padding: 15px;
+      margin-bottom: 10px;
+      background: rgba(40, 40, 60, 0.5);
+      border-left: 3px solid #667eea;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.5;
+    }
+
+    .event-item.active {
+      opacity: 1;
+      background: rgba(60, 60, 90, 0.8);
+      border-left-color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    }
+
+    .event-item.future {
+      opacity: 0.3;
+    }
+
+    .event-item:hover {
+      background: rgba(60, 60, 90, 0.7);
+    }
+
+    .event-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .event-type {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .event-type.message { background: rgba(0, 212, 255, 0.2); color: #00d4ff; }
+    .event-type.tool_call { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+    .event-type.thinking { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+    .event-type.error { background: rgba(255, 68, 68, 0.2); color: #ff4444; }
+    .event-type.state_change { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+
+    .event-time {
+      font-size: 12px;
+      color: #888;
+      font-family: 'Courier New', monospace;
+    }
+
+    .event-content {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 8px;
+      color: #e0e0e0;
+      max-height: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .detail-panel {
+      background: rgba(20, 20, 30, 0.6);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(100, 100, 255, 0.2);
+      overflow-y: auto;
+      max-height: 700px;
+    }
+
+    .detail-panel h3 {
+      margin-bottom: 20px;
+      color: #00d4ff;
+      font-size: 18px;
+    }
+
+    .detail-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(40, 40, 60, 0.5);
+      border-radius: 8px;
+    }
+
+    .detail-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      color: #e0e0e0;
+      word-wrap: break-word;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      padding: 15px;
+      background: rgba(40, 40, 60, 0.5);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00d4ff;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+    }
+
+    .no-session {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+    }
+
+    .no-session-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <span>⏮️</span>
+        Session Replay
+      </h1>
+      <div class="session-selector">
+        <select id="sessionSelect">
+          <option value="">Select a session...</option>
+        </select>
+        <button class="btn" onclick="loadSessions()">🔄 Refresh</button>
+        <button class="btn" onclick="exportSession()">📥 Export</button>
+      </div>
+    </div>
+
+    <div id="loadingState" class="no-session">
+      <div class="no-session-icon">⏳</div>
+      <p>Loading sessions...</p>
+    </div>
+
+    <div id="noSessionState" class="no-session" style="display: none;">
+      <div class="no-session-icon">🎬</div>
+      <p>No session selected. Choose a session above to replay.</p>
+    </div>
+
+    <div id="replayInterface" style="display: none;">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalEvents">0</div>
+          <div class="stat-label">Total Events</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statDuration">0s</div>
+          <div class="stat-label">Duration</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statMessages">0</div>
+          <div class="stat-label">Messages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statToolCalls">0</div>
+          <div class="stat-label">Tool Calls</div>
+        </div>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="playback-controls">
+        <div class="control-btn" onclick="stepBackward()" title="Step Back">⏮</div>
+        <div class="control-btn" onclick="togglePlayPause()" id="playPauseBtn" title="Play/Pause">▶️</div>
+        <div class="control-btn" onclick="stepForward()" title="Step Forward">⏭</div>
+        
+        <div class="timeline-slider" onclick="seekToPosition(event)" id="timelineSlider">
+          <div class="timeline-progress" id="timelineProgress"></div>
+          <div class="timeline-marker" id="timelineMarker"></div>
+        </div>
+        
+        <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+      </div>
+
+      <!-- Split View -->
+      <div class="split-view">
+        <!-- Timeline Panel -->
+        <div class="timeline-panel">
+          <h3>📋 Event Timeline</h3>
+          <div id="eventList"></div>
+        </div>
+
+        <!-- Detail Panel -->
+        <div class="detail-panel">
+          <h3>🔍 Event Details</h3>
+          <div id="eventDetail">
+            <p class="no-session" style="padding: 40px;">Select an event to view details</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentSession = null;
+    let currentEventIndex = 0;
+    let isPlaying = false;
+    let playbackInterval = null;
+
+    async function loadSessions() {
+      document.getElementById('loadingState').style.display = 'block';
+      document.getElementById('noSessionState').style.display = 'none';
+      document.getElementById('replayInterface').style.display = 'none';
+
+      try {
+        const response = await fetch('/api/replay/sessions');
+        const sessions = await response.json();
+        
+        const select = document.getElementById('sessionSelect');
+        select.innerHTML = '<option value="">Select a session...</option>';
+        
+        sessions.forEach(session => {
+          const option = document.createElement('option');
+          option.value = session.file;
+          const date = new Date(session.recordedAt).toLocaleString();
+          option.textContent = `${session.sessionKey} - ${date} (${session.eventCount} events)`;
+          select.appendChild(option);
+        });
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('noSessionState').style.display = 'block';
+      } catch (err) {
+        console.error('Failed to load sessions:', err);
+        document.getElementById('loadingState').innerHTML = '<div class="no-session-icon">❌</div><p>Failed to load sessions</p>';
+      }
+    }
+
+    document.getElementById('sessionSelect').addEventListener('change', async (e) => {
+      const file = e.target.value;
+      if (!file) {
+        document.getElementById('noSessionState').style.display = 'block';
+        document.getElementById('replayInterface').style.display = 'none';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/replay/session/${encodeURIComponent(file)}`);
+        currentSession = await response.json();
+        currentEventIndex = 0;
+        renderSession();
+      } catch (err) {
+        console.error('Failed to load session:', err);
+        alert('Failed to load session');
+      }
+    });
+
+    function renderSession() {
+      if (!currentSession) return;
+
+      document.getElementById('noSessionState').style.display = 'none';
+      document.getElementById('replayInterface').style.display = 'block';
+
+      // Update stats
+      const stats = {
+        totalEvents: currentSession.events.length,
+        duration: Math.round(currentSession.duration / 1000),
+        messages: currentSession.events.filter(e => e.type === 'message').length,
+        toolCalls: currentSession.events.filter(e => e.type === 'tool_call').length
+      };
+
+      document.getElementById('statTotalEvents').textContent = stats.totalEvents;
+      document.getElementById('statDuration').textContent = stats.duration + 's';
+      document.getElementById('statMessages').textContent = stats.messages;
+      document.getElementById('statToolCalls').textContent = stats.toolCalls;
+
+      // Render event list
+      const eventList = document.getElementById('eventList');
+      eventList.innerHTML = '';
+
+      currentSession.events.forEach((event, index) => {
+        const div = document.createElement('div');
+        div.className = 'event-item';
+        if (index < currentEventIndex) div.classList.add('past');
+        if (index === currentEventIndex) div.classList.add('active');
+        if (index > currentEventIndex) div.classList.add('future');
+
+        const time = new Date(event.timestampISO).toLocaleTimeString();
+        
+        let content = '';
+        if (event.type === 'message') {
+          content = `${event.role === 'user' ? '👤' : '🤖'} ${(event.content || '').substring(0, 100)}`;
+        } else if (event.type === 'tool_call') {
+          content = `🔧 ${event.toolName}`;
+        } else if (event.type === 'thinking') {
+          content = `💭 ${(event.content || '').substring(0, 100)}`;
+        } else if (event.type === 'error') {
+          content = `❌ ${event.error}`;
+        } else if (event.type === 'state_change') {
+          content = `📊 ${event.stateType}`;
+        }
+
+        div.innerHTML = `
+          <div class="event-header">
+            <span class="event-type ${event.type}">${event.type}</span>
+            <span class="event-time">${time}</span>
+          </div>
+          <div class="event-content">${content}</div>
+        `;
+
+        div.onclick = () => jumpToEvent(index);
+        eventList.appendChild(div);
+      });
+
+      updateEventDetails();
+      updateTimeline();
+    }
+
+    function updateEventDetails() {
+      if (!currentSession || currentEventIndex >= currentSession.events.length) return;
+
+      const event = currentSession.events[currentEventIndex];
+      const detailPanel = document.getElementById('eventDetail');
+
+      let html = `
+        <div class="detail-section">
+          <div class="detail-label">Event Type</div>
+          <div class="detail-value"><span class="event-type ${event.type}">${event.type}</span></div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Timestamp</div>
+          <div class="detail-value">${new Date(event.timestampISO).toLocaleString()}</div>
+        </div>
+      `;
+
+      if (event.type === 'message') {
+        html += `
+          <div class="detail-section">
+            <div class="detail-label">Role</div>
+            <div class="detail-value">${event.role}</div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Content</div>
+            <div class="detail-value">${event.content || ''}</div>
+          </div>
+        `;
+        if (event.metadata) {
+          html += `
+            <div class="detail-section">
+              <div class="detail-label">Metadata</div>
+              <pre>${JSON.stringify(event.metadata, null, 2)}</pre>
+            </div>
+          `;
+        }
+      } else if (event.type === 'tool_call') {
+        html += `
+          <div class="detail-section">
+            <div class="detail-label">Tool Name</div>
+            <div class="detail-value">${event.toolName}</div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Parameters</div>
+            <pre>${JSON.stringify(event.params, null, 2)}</pre>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Result</div>
+            <pre>${JSON.stringify(event.result, null, 2)}</pre>
+          </div>
+        `;
+      } else if (event.type === 'thinking') {
+        html += `
+          <div class="detail-section">
+            <div class="detail-label">Thought</div>
+            <div class="detail-value">${event.content || ''}</div>
+          </div>
+        `;
+      } else if (event.type === 'error') {
+        html += `
+          <div class="detail-section">
+            <div class="detail-label">Error</div>
+            <div class="detail-value" style="color: #ff4444">${event.error}</div>
+          </div>
+          ${event.stack ? `
+          <div class="detail-section">
+            <div class="detail-label">Stack Trace</div>
+            <pre>${event.stack}</pre>
+          </div>` : ''}
+        `;
+      }
+
+      detailPanel.innerHTML = html;
+    }
+
+    function updateTimeline() {
+      if (!currentSession || currentSession.events.length === 0) return;
+
+      const progress = (currentEventIndex / (currentSession.events.length - 1)) * 100;
+      document.getElementById('timelineProgress').style.width = progress + '%';
+      document.getElementById('timelineMarker').style.left = progress + '%';
+
+      const currentTime = Math.round((currentSession.events[currentEventIndex].timestamp - currentSession.events[0].timestamp) / 1000);
+      const totalTime = Math.round(currentSession.duration / 1000);
+      
+      const formatTime = (s) => {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      };
+
+      document.getElementById('timeDisplay').textContent = `${formatTime(currentTime)} / ${formatTime(totalTime)}`;
+    }
+
+    function jumpToEvent(index) {
+      currentEventIndex = Math.max(0, Math.min(index, currentSession.events.length - 1));
+      renderSession();
+    }
+
+    function stepForward() {
+      if (currentEventIndex < currentSession.events.length - 1) {
+        currentEventIndex++;
+        renderSession();
+      }
+    }
+
+    function stepBackward() {
+      if (currentEventIndex > 0) {
+        currentEventIndex--;
+        renderSession();
+      }
+    }
+
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('playPauseBtn');
+      btn.textContent = isPlaying ? '⏸' : '▶️';
+
+      if (isPlaying) {
+        playbackInterval = setInterval(() => {
+          if (currentEventIndex >= currentSession.events.length - 1) {
+            togglePlayPause();
+          } else {
+            stepForward();
+          }
+        }, 500); // Playback speed: 500ms per event
+      } else {
+        clearInterval(playbackInterval);
+      }
+    }
+
+    function seekToPosition(e) {
+      if (!currentSession) return;
+      
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percent = x / rect.width;
+      const index = Math.round(percent * (currentSession.events.length - 1));
+      
+      jumpToEvent(index);
+    }
+
+    function exportSession() {
+      if (!currentSession) return;
+      
+      const dataStr = JSON.stringify(currentSession, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `session_${currentSession.sessionKey}_${Date.now()}.json`;
+      a.click();
+    }
+
+    // Load sessions on page load
+    loadSessions();
+  </script>
+</body>
+</html>

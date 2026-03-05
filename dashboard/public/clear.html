@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><title>Clearing cache...</title></head>
+<body style="background:#0a0a0f;color:#fff;font-family:monospace;padding:40px;text-align:center">
+<h2>🧹 Clearing dashboard cache...</h2>
+<p id="status">Working...</p>
+<script>
+(async () => {
+  const s = document.getElementById('status');
+  try {
+    // Unregister all service workers
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (const r of regs) await r.unregister();
+    s.textContent = 'Cleared ' + regs.length + ' service workers. ';
+    
+    // Delete all caches
+    const keys = await caches.keys();
+    for (const k of keys) await caches.delete(k);
+    s.textContent += 'Deleted ' + keys.length + ' caches. ';
+    
+    s.textContent += 'Redirecting...';
+    setTimeout(() => {
+      window.location.href = '/?cleared=' + Date.now();
+    }, 1000);
+  } catch(e) {
+    s.textContent = 'Error: ' + e.message + '. Try: ' + window.location.origin + '/?c=' + Date.now();
+  }
+})();
+</script>
+</body></html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Heatmap • Rasputin Nexus</title>
+  <link rel="stylesheet" href="shared-styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      background: #0a0e15;
+      color: #c5d1eb;
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #1e2836;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #ff0064 0%, #00d4ff 50%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #7a8ba0;
+      margin-top: 8px;
+    }
+
+    .badge-novel {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(255, 0, 100, 0.1);
+      border: 1px solid rgba(255, 0, 100, 0.3);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #ff0064;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.02); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(30, 40, 54, 0.8) 0%, rgba(20, 28, 40, 0.9) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .stat-card:nth-child(1)::before {
+      background: linear-gradient(90deg, #ff0064 0%, #ff4488 100%);
+    }
+
+    .stat-card:nth-child(2)::before {
+      background: linear-gradient(90deg, #00d4ff 0%, #0099ff 100%);
+    }
+
+    .stat-card:nth-child(3)::before {
+      background: linear-gradient(90deg, #a855f7 0%, #7c3aed 100%);
+    }
+
+    .stat-card:nth-child(4)::before {
+      background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7a8ba0;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #00d4ff;
+    }
+
+    .stat-unit {
+      font-size: 16px;
+      color: #7a8ba0;
+      margin-left: 4px;
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: #5a6a80;
+      margin-top: 8px;
+    }
+
+    .section {
+      background: rgba(30, 40, 54, 0.6);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #c5d1eb;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: #7a8ba0;
+      margin-top: 4px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 4px;
+      margin-top: 20px;
+    }
+
+    .heatmap-cell {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .heatmap-cell:hover {
+      transform: scale(1.1);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .heatmap-cell.level-0 { background: rgba(30, 40, 54, 0.8); color: #5a6a80; }
+    .heatmap-cell.level-1 { background: rgba(0, 212, 255, 0.15); color: #7a8ba0; }
+    .heatmap-cell.level-2 { background: rgba(0, 212, 255, 0.3); color: #c5d1eb; }
+    .heatmap-cell.level-3 { background: rgba(0, 212, 255, 0.5); color: #fff; }
+    .heatmap-cell.level-4 { background: rgba(255, 165, 0, 0.6); color: #fff; }
+    .heatmap-cell.level-5 { background: rgba(255, 0, 100, 0.7); color: #fff; }
+
+    .memory-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .memory-item {
+      background: rgba(20, 28, 40, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .memory-item:hover {
+      border-color: rgba(0, 212, 255, 0.5);
+      background: rgba(30, 40, 54, 0.9);
+      transform: translateX(4px);
+    }
+
+    .memory-info {
+      flex: 1;
+    }
+
+    .memory-id {
+      font-size: 13px;
+      color: #00d4ff;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .memory-meta {
+      font-size: 11px;
+      color: #7a8ba0;
+      display: flex;
+      gap: 12px;
+    }
+
+    .memory-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #00d4ff;
+    }
+
+    .memory-badge.hot {
+      background: rgba(255, 0, 100, 0.15);
+      color: #ff0064;
+    }
+
+    .memory-badge.warm {
+      background: rgba(255, 165, 0, 0.15);
+      color: #ffa500;
+    }
+
+    .memory-badge.cold {
+      background: rgba(100, 116, 139, 0.15);
+      color: #94a3b8;
+    }
+
+    canvas {
+      max-height: 300px;
+    }
+
+    .cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .cluster-card {
+      background: rgba(20, 28, 40, 0.8);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .cluster-card:hover {
+      border-color: rgba(168, 85, 247, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.2);
+    }
+
+    .cluster-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 8px;
+    }
+
+    .cluster-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: #7a8ba0;
+    }
+
+    .live-feed {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .feed-item {
+      background: rgba(20, 28, 40, 0.6);
+      border-left: 3px solid #00d4ff;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      transition: all 0.2s ease;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .feed-item:hover {
+      background: rgba(30, 40, 54, 0.8);
+    }
+
+    .feed-time {
+      color: #7a8ba0;
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .feed-query {
+      color: #c5d1eb;
+      margin-bottom: 4px;
+    }
+
+    .feed-memory {
+      color: #00d4ff;
+      font-family: monospace;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 212, 255, 0.15);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #7a8ba0;
+    }
+
+    .legend-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <div class="dashboard">
+    <div class="header">
+      <div>
+        <h1>🔥 Memory Heatmap</h1>
+        <div class="subtitle">
+          Visualize which second brain memories are accessed most
+          <span class="badge-novel">✨ NOVEL FEATURE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Accesses</div>
+        <div class="stat-value" id="totalAccesses">—</div>
+        <div class="stat-sub">All-time memory lookups</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Unique Memories</div>
+        <div class="stat-value" id="uniqueMemories">—</div>
+        <div class="stat-sub">Distinct memories accessed</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Access Velocity</div>
+        <div class="stat-value" id="velocity">—<span class="stat-unit">/hr</span></div>
+        <div class="stat-sub">Average accesses per hour (24h)</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Peak Activity</div>
+        <div class="stat-value" id="peakHour">—<span class="stat-unit">acc</span></div>
+        <div class="stat-sub">Highest hourly access count</div>
+      </div>
+    </div>
+
+    <!-- Hottest Memories (Top 50) -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">🔥 Hottest Memories</div>
+          <div class="section-subtitle">Top 50 most accessed memories — red = frequently accessed, blue = rarely</div>
+        </div>
+      </div>
+      <div class="heatmap-grid" id="heatmapGrid">
+        <!-- Populated via JS -->
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-box level-0"></div>
+          <span>Cold (0-5 accesses)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-1"></div>
+          <span>Cool (6-20)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-2"></div>
+          <span>Warm (21-50)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-3"></div>
+          <span>Hot (51-100)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-4"></div>
+          <span>Very Hot (101-200)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box level-5"></div>
+          <span>Burning (200+)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Memories List -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">📊 Top 20 Memories</div>
+          <div class="section-subtitle">Most frequently accessed memories with metadata</div>
+        </div>
+      </div>
+      <div class="memory-list" id="topMemoriesList">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <!-- Temporal Heatmap (Last 7 Days) -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">📈 Access Timeline</div>
+          <div class="section-subtitle">Memory access frequency over the last 7 days</div>
+        </div>
+      </div>
+      <canvas id="temporalChart"></canvas>
+    </div>
+
+    <!-- Memory Clusters -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">🗂️ Memory Clusters</div>
+          <div class="section-subtitle">Grouped by topic — shows which knowledge areas are most active</div>
+        </div>
+      </div>
+      <div class="cluster-grid" id="clusterGrid">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <!-- Live Access Feed -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">⚡ Live Access Feed</div>
+          <div class="section-subtitle">Real-time stream of memory lookups</div>
+        </div>
+      </div>
+      <div class="live-feed" id="liveFeed">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <script src="shared-nav.js"></script>
+  <script>
+    let ws = null;
+    let temporalChart = null;
+
+    // Connect to WebSocket
+    function connectWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}`;
+      
+      ws = new WebSocket(wsUrl);
+      
+      ws.onopen = () => {
+        console.log('WebSocket connected');
+        fetchMemoryHeatmap();
+      };
+      
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === 'memory-access') {
+            addLiveFeedItem(msg.data);
+          }
+        } catch (e) {
+          console.error('Failed to parse WebSocket message:', e);
+        }
+      };
+      
+      ws.onclose = () => {
+        console.log('WebSocket disconnected, reconnecting...');
+        setTimeout(connectWebSocket, 3000);
+      };
+    }
+
+    // Fetch memory heatmap data from API
+    async function fetchMemoryHeatmap() {
+      try {
+        const response = await fetch('/api/memory/heatmap');
+        const data = await response.json();
+        
+        // Extract access tracking data
+        const tracking = data.accessTracking || {};
+        
+        updateStats(tracking.stats || {});
+        renderHeatmapGrid(tracking.topMemories || []);
+        renderTopMemoriesList(tracking.topMemories || []);
+        renderTemporalChart(tracking.temporal || []);
+        renderClusters(tracking.clusters || []);
+        renderLiveFeed(tracking.recentAccesses || []);
+      } catch (err) {
+        console.error('Failed to fetch memory heatmap:', err);
+      }
+    }
+
+    // Update key stats
+    function updateStats(stats) {
+      document.getElementById('totalAccesses').textContent = stats.totalAccesses.toLocaleString();
+      document.getElementById('uniqueMemories').textContent = stats.uniqueMemories.toLocaleString();
+      document.getElementById('velocity').innerHTML = `${stats.velocity}<span class="stat-unit">/hr</span>`;
+      document.getElementById('peakHour').innerHTML = `${stats.peakHourAccesses}<span class="stat-unit">acc</span>`;
+    }
+
+    // Render heatmap grid (top 50 memories as colored cells)
+    function renderHeatmapGrid(memories) {
+      const grid = document.getElementById('heatmapGrid');
+      grid.innerHTML = '';
+
+      memories.slice(0, 50).forEach(mem => {
+        const cell = document.createElement('div');
+        cell.className = `heatmap-cell ${getHeatLevel(mem.accessCount)}`;
+        cell.textContent = mem.accessCount;
+        cell.title = `Memory ${mem.memoryId}: ${mem.accessCount} accesses`;
+        cell.onclick = () => showMemoryDetails(mem);
+        grid.appendChild(cell);
+      });
+    }
+
+    // Determine heat level based on access count
+    function getHeatLevel(count) {
+      if (count >= 200) return 'level-5';
+      if (count >= 101) return 'level-4';
+      if (count >= 51) return 'level-3';
+      if (count >= 21) return 'level-2';
+      if (count >= 6) return 'level-1';
+      return 'level-0';
+    }
+
+    // Render top memories list
+    function renderTopMemoriesList(memories) {
+      const list = document.getElementById('topMemoriesList');
+      list.innerHTML = '';
+
+      memories.slice(0, 20).forEach(mem => {
+        const item = document.createElement('div');
+        item.className = 'memory-item';
+        
+        const tempClass = mem.accessCount >= 100 ? 'hot' : mem.accessCount >= 20 ? 'warm' : 'cold';
+        
+        item.innerHTML = `
+          <div class="memory-info">
+            <div class="memory-id">${mem.memoryId}</div>
+            <div class="memory-meta">
+              <span>Last: ${mem.lastAccessed ? new Date(mem.lastAccessed).toLocaleString() : 'Never'}</span>
+              ${mem.lastQuery ? `<span>Query: "${mem.lastQuery.slice(0, 50)}${mem.lastQuery.length > 50 ? '...' : ''}"</span>` : ''}
+            </div>
+          </div>
+          <div class="memory-badge ${tempClass}">${mem.accessCount}</div>
+        `;
+        
+        list.appendChild(item);
+      });
+    }
+
+    // Render temporal chart (access frequency over time)
+    function renderTemporalChart(temporal) {
+      const ctx = document.getElementById('temporalChart').getContext('2d');
+      
+      if (temporalChart) {
+        temporalChart.destroy();
+      }
+
+      const labels = temporal.map(t => new Date(t.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      const data = temporal.map(t => t.accessCount);
+
+      temporalChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Memory Accesses',
+            data: data,
+            borderColor: '#00d4ff',
+            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              backgroundColor: 'rgba(10, 14, 21, 0.95)',
+              titleColor: '#00d4ff',
+              bodyColor: '#c5d1eb',
+              borderColor: 'rgba(0, 212, 255, 0.3)',
+              borderWidth: 1,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(122, 139, 160, 0.1)',
+              },
+              ticks: {
+                color: '#7a8ba0',
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                color: '#7a8ba0',
+                maxRotation: 45,
+                minRotation: 45,
+              },
+            },
+          },
+        },
+      });
+    }
+
+    // Render memory clusters
+    function renderClusters(clusters) {
+      const grid = document.getElementById('clusterGrid');
+      grid.innerHTML = '';
+
+      if (!clusters || clusters.length === 0) {
+        grid.innerHTML = '<div style="color: #7a8ba0; font-size: 14px;">No clusters available yet. Topics are inferred from access metadata.</div>';
+        return;
+      }
+
+      clusters.forEach(cluster => {
+        const card = document.createElement('div');
+        card.className = 'cluster-card';
+        card.innerHTML = `
+          <div class="cluster-name">${cluster.topic}</div>
+          <div class="cluster-stats">
+            <span>${cluster.memoryCount} memories</span>
+            <span>•</span>
+            <span>${cluster.totalAccesses} accesses</span>
+            <span>•</span>
+            <span>~${cluster.avgAccessesPerMemory} avg</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Render live feed
+    function renderLiveFeed(accesses) {
+      const feed = document.getElementById('liveFeed');
+      feed.innerHTML = '';
+
+      if (!accesses || accesses.length === 0) {
+        feed.innerHTML = '<div style="color: #7a8ba0; font-size: 13px; padding: 16px;">No recent accesses. Live feed will populate as memories are accessed.</div>';
+        return;
+      }
+
+      accesses.forEach(access => {
+        addLiveFeedItem(access);
+      });
+    }
+
+    // Add single item to live feed
+    function addLiveFeedItem(access) {
+      const feed = document.getElementById('liveFeed');
+      const item = document.createElement('div');
+      item.className = 'feed-item';
+      
+      const time = new Date(access.timestamp).toLocaleTimeString();
+      const query = access.query ? `Query: "${access.query.slice(0, 60)}${access.query.length > 60 ? '...' : ''}"` : 'No query';
+      const score = access.score ? ` (score: ${Math.round(access.score * 100) / 100})` : '';
+      
+      item.innerHTML = `
+        <div class="feed-time">${time}</div>
+        <div class="feed-query">${query}</div>
+        <div class="feed-memory">Memory: ${access.memoryId}${score}</div>
+      `;
+      
+      feed.insertBefore(item, feed.firstChild);
+      
+      // Keep max 50 items
+      while (feed.children.length > 50) {
+        feed.removeChild(feed.lastChild);
+      }
+    }
+
+    // Show memory details (modal or inline)
+    function showMemoryDetails(memory) {
+      alert(`Memory ${memory.memoryId}\n\nAccess Count: ${memory.accessCount}\nLast Accessed: ${memory.lastAccessed ? new Date(memory.lastAccessed).toLocaleString() : 'Never'}\nLast Query: ${memory.lastQuery || 'N/A'}`);
+    }
+
+    // Initialize on load
+    window.addEventListener('load', () => {
+      connectWebSocket();
+      
+      // Refresh every 30 seconds
+      setInterval(fetchMemoryHeatmap, 30000);
+    });
+  </script>
+</body>
+</html>

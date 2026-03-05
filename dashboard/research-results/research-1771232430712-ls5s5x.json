@@ -1,0 +1,311 @@
+{
+  "id": "research-1771232430712-ls5s5x",
+  "question": "What is quantum computing",
+  "status": "complete",
+  "progress": {
+    "step": 5,
+    "totalSteps": 5,
+    "stepName": "complete",
+    "details": "Done! 26 sources, 0 key findings."
+  },
+  "queries": [
+    "What is quantum computing",
+    "What is quantum computing overview",
+    "What is quantum computing latest 2025 2026",
+    "What is quantum computing comparison analysis",
+    "What is quantum computing expert opinion"
+  ],
+  "searchMode": "searxng",
+  "sources": [
+    {
+      "url": "https://www.ibm.com/think/topics/quantum-computing",
+      "title": "What Is Quantum Computing? | IBM",
+      "description": "Quantum computing is a rapidly-emerging technology that harnesses the laws of quantum mechanics to solve problems too complex for classical computers.",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Quantum_computing",
+      "title": "Quantum computing - Wikipedia",
+      "description": "Quantum computers can be viewed as sampling from quantum systems that evolve in ways that may be described as operating on an enormous number of possibilities simultaneously, though still subject to strict computational constraints. By contrast, ordi",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://aws.amazon.com/what-is/quantum-computing/",
+      "title": "What is Quantum Computing? - Quantum Computing Explained - AWS",
+      "description": "Quantum computing is a multidisciplinary field comprising aspects of computer science, physics, and mathematics that utilizes quantum mechanics to solve complex problems faster than on classical computers. The field of quantum computing includes hard",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.reddit.com/r/QuantumComputing/comments/yjnvwh/explain_it_like_im_5/",
+      "title": "Explain it like I'm 5? : r/QuantumComputing - Reddit",
+      "description": "Nov 1, 2022 ... Quantum computers are machines that do quantum computation using tiny physical systems that are subject to the laws of quantum physics. These ...",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 491,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.reddit.com/r/quantum/comments/1p6p3pa/what_would_be_considered_ground_breaking_in/",
+      "title": "What would be considered ground breaking in quantum computing?",
+      "description": "You might get a better answer on r/quantumcomputing . But basically, qubits that are reliable with low error rates. Of course, if you can come up with a new algorithm for solving a useful problem, that's cool too. More on reddit.com",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 277,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.energy.gov/science/doe-explainsquantum-computing",
+      "title": "DOE Explains...Quantum Computing - Department of Energy",
+      "description": "Quantum computers are computers that consist of quantum bits, or “qubits,” that play a similar role to the bits in today's digital computers.",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.nsf.gov/science-matters/quantum-computing-expanding-whats-possible",
+      "title": "Quantum computing: Expanding what's possible - NSF",
+      "description": "Jan 21, 2026 ... Quantum computers aim to solve highly complex problems by using the properties of tiny particles, like atoms, to process information.",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=IzGJw6daRTw",
+      "title": "Quantum Computing Explained by a Retired Microsoft Engineer",
+      "description": "Jun 3, 2025 ... Dave Plummer explains the basics of Quantum Computing (superposition, entanglement, qubits, error correction, Grover's algorithm, etc.)",
+      "query": "What is quantum computing",
+      "status": "done",
+      "textLength": 201,
+      "source": "searxng"
+    },
+    {
+      "url": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-quantum-computing",
+      "title": "What is Quantum Computing | Microsoft Azure",
+      "description": "Quantum computers harness the unique behavior of quantum physics—such as superposition, entanglement, and quantum interference—and apply it to computing. This introduces new concepts to traditional programming methods. In superposition, quantum parti",
+      "query": "What is quantum computing overview",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://help.rc.unc.edu/Assets/New_Course_Material/General_Computing/Introduction_to_Quantum_Computers.pdf",
+      "title": "Introduction to Quantum Computers",
+      "description": "What is a Quantum Computer? • Brief history, quantum mechanics, current status. • Basic Concepts of Quantum Computers. • Qubit, superposition, entanglement ...",
+      "query": "What is quantum computing overview",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK538701/",
+      "title": "Quantum Computing: What It Is, Why We Want It, and How We're Trying to Get It - Frontiers of Engineering - NCBI Bookshelf",
+      "description": "Superconducting systems, trapped atomic ions, and semiconductors are some of the leading platforms for building a quantum computer. Each has advantages and disadvantages related to coherence, fidelity, and ultimate scalability to large systems. It is",
+      "query": "What is quantum computing overview",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.bluequbit.io/quantum-computing-basics",
+      "title": "Quantum Computing Basics: A Beginner’s Guide",
+      "description": "The core principles of quantum theory include superposition, entanglement, and the uncertainty principle. ... Superposition is the idea that particles can exist in multiple states simultaneously. For example, a particle can be in two different locati",
+      "query": "What is quantum computing overview",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.forbes.com/sites/bernardmarr/2025/12/11/7-quantum-computing-trends-that-will-shape-every-industry-in-2026/",
+      "title": "7 Quantum Computing Trends That Will Shape Every Industry In 2026",
+      "description": "Recently, research has focused ... 2026, we can expect these experiments to scale and spread out of labs, enabling more organizations to move from pilots to real-world applications....",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.ibm.com/thought-leadership/institute-business-value/en-us/report/2025-quantum-computing-readiness",
+      "title": "Are organizations taking quantum risk and responsibility seriously?",
+      "description": "More than half of our survey respondents (56%) see quantum-safe security as a technical issue, rather than a business threat. But as IBM IBV research on quantum safety has demonstrated, quantum-triggered risk is “a strategic concern for every organiz",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://newsroom.ibm.com/2025-11-12-ibm-delivers-new-quantum-processors,-software,-and-algorithm-breakthroughs-on-path-to-advantage-and-fault-tolerance",
+      "title": "IBM Delivers New Quantum Processors, Software, and Algorithm Breakthroughs on Path to Advantage and Fault Tolerance",
+      "description": "This architecture will enable users ... operations critical for quantum computation. IBM expects future iterations of Nighthawk to deliver up to 7,500 gates by the end of 2026 and then up to 10,000 gates in 2027....",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://spectrum.ieee.org/neutral-atom-quantum-computing",
+      "title": "Neutral Atom Quantum Computing: 2026's Big Leap - IEEE Spectrum",
+      "description": "QuEra has also delivered a quantum machine ready for error correction to Japan’s National Institute of Advanced Industrial Science and Technology (AIST), and plans to make it available to global customers in 2026. Arguably, the main trouble with toda",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://thequantuminsider.com/2025/12/30/tqis-expert-predictions-on-quantum-technology-in-2026/",
+      "title": "TQI's Expert Predictions on Quantum Technology in 2026",
+      "description": "In 2026, I expect to see substantial advances in quantum platforms supporting fault-tolerant computation, as well as significant demonstrations of hybrid quantum-classical applications.",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://mitsloan.mit.edu/ideas-made-to-matter/new-mit-report-captures-state-quantum-computing",
+      "title": "New MIT report captures state of quantum computing | MIT Sloan",
+      "description": "Insights from the “Quantum Index Report 2025” include the following: Quantum processor performance is improving, with the U. S. leading the field. Two-dozen manufacturers are now commercially offering more than 40 quantum processing units ...",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.sciencedaily.com/releases/2025/12/251226045341.htm",
+      "title": "This tiny chip could change the future of quantum computing | ScienceDaily",
+      "description": "6, 2026  A new chip-based quantum memory uses nanoprinted “light cages” to trap light inside atomic vapor, enabling fast, reliable storage of quantum information. The structures can be fabricated with ...",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.crispidea.com/quantum-computing-industry-outlook-2026/",
+      "title": "Quantum Computing Industry Outlook: Who’s Leading in 2026",
+      "description": "Governments view quantum as strategically critical—similar to semiconductors and AI—driving more than $54 billion in cumulative public commitments globally. The rally was triggered by credible roadmap execution, multi-hundred-million-dollar private r",
+      "query": "What is quantum computing latest 2025 2026",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.mckinsey.com/featured-insights/mckinsey-explainers/what-is-quantum-computing",
+      "title": "What is quantum computing? - McKinsey",
+      "description": "Mar 31, 2025 ... Quantum computing is a new approach to calculation that uses principles of fundamental physics to solve extremely complex problems very quickly.",
+      "query": "What is quantum computing comparison analysis",
+      "status": "error",
+      "textLength": 0,
+      "error": "timeout",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.bluequbit.io/quantum-computing-vs-classical-computing",
+      "title": "Quantum Computing vs. Classical Computing: What's the Difference?",
+      "description": "Jan 29, 2025 ... Meanwhile, quantum computers process multiple possibilities at once, allowing them to handle large datasets far more efficiently. This makes ...",
+      "query": "What is quantum computing comparison analysis",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.ornl.gov/news/new-ornl-study-first-compare-quantum-computers",
+      "title": "New ORNL study first to compare quantum computers | ORNL",
+      "description": "Researchers used Oak Ridge National Laboratory’s Quantum Computing User Program, or QCUP, to perform the first independent comparison test of leading quantum computers.",
+      "query": "What is quantum computing comparison analysis",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.spinquanta.com/news-detail/quantum-computing-introduction-vs-classical-computing-a-revolutionary-paradigm-shift",
+      "title": "Quantum Computing Introduction vs Classical Computing: A Revolutionary Paradigm Shift | SpinQ",
+      "description": "Classical computing relies on bits ... ultimately reduces to combinations of these binary states. Quantum computing introduces qubits (quantum bits), which leverage the bizarre properties of quantum mechanics....",
+      "query": "What is quantum computing comparison analysis",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.digitalrealty.com/resources/blog/what-is-quantum-computing",
+      "title": "What is Quantum Computing | Digital Realty",
+      "description": "Sep 12, 2025 ... Quantum computing uses the principles of quantum mechanics to perform tasks exponentially faster than classical computers. At its core, it uses ...",
+      "query": "What is quantum computing comparison analysis",
+      "status": "done",
+      "textLength": 1435,
+      "source": "searxng"
+    },
+    {
+      "url": "https://mitsloan.mit.edu/ideas-made-to-matter/quantum-computing-what-leaders-need-to-know-now",
+      "title": "Quantum computing: What leaders need to know now | MIT Sloan",
+      "description": "Jan 11, 2024 ... An overview of quantum computing ... The idea for building a system that leverages physics principles to simulate problems too difficult to model ...",
+      "query": "What is quantum computing comparison analysis",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://journals.aps.org/prper/abstract/10.1103/md6x-pfrr",
+      "title": "Do we have a quantum computer? Expert perspectives on current state and future prospects | Phys. Rev. Phys. Educ. Res.",
+      "description": "Regarding carrying a quantum computer ... as specialized tools that will remain in central locations such as data centers and can be accessed remotely for applications for which they are particularly effective compared to classical computers...",
+      "query": "What is quantum computing expert opinion",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    },
+    {
+      "url": "https://thequantuminsider.com/2024/12/31/2025-expert-quantum-predictions-quantum-computing/",
+      "title": "2025 Expert Quantum Predictions — Quantum Computing",
+      "description": "The Quantum Error Correction (QEC) Era is here. We’ve seen increased global alignment on the necessity of QEC to remove faults in quantum computing and help achieve useful scale to drive the industry forward and make the technology’s transformative a",
+      "query": "What is quantum computing expert opinion",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-year-of-quantum-from-concept-to-reality-in-2025",
+      "title": "The Year of Quantum: From concept to reality in 2025",
+      "description": "Quantum computing is a new computing paradigm that capitalizes on the laws of quantum mechanics to provide significant performance improvement for certain applications, and to enable new territories of computing beyond existing classical computing.",
+      "query": "What is quantum computing expert opinion",
+      "status": "error",
+      "textLength": 0,
+      "error": "timeout",
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.nature.com/articles/d41586-026-00312-6",
+      "title": "Quantum computers will finally be useful: what’s behind the revolution",
+      "description": "She says there is room for further improvement. “There are obvious things to try, where I believe we can get to 10 or 15 milliseconds,” de Leon says, although she also warns that often, after removing one source of noise, another unexpected one creep",
+      "query": "What is quantum computing expert opinion",
+      "status": "done",
+      "textLength": 3000,
+      "source": "searxng"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/399467656_Do_we_have_a_quantum_computer_Expert_perspectives_on_current_state_and_future_prospects",
+      "title": "(PDF) Do we have a quantum computer? Expert perspectives on current state and future prospects",
+      "description": "Through in-depth interviews, we explored several issues related to QIST including the following key areas: the current state of quantum computing in the noisy intermediate-scale quantum (NISQ) era and timelines for fault-tolerant quantum computers, i",
+      "query": "What is quantum computing expert opinion",
+      "status": "error",
+      "textLength": 0,
+      "error": "HTTP 403",
+      "source": "searxng"
+    }
+  ],
+  "synthesis": "",
+  "keyFindings": [],
+  "error": null,
+  "startedAt": 1771232430712,
+  "completedAt": 1771232498060,
+  "duration": 67348
+}

@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RASPUTIN — Operations Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --bg-hover: #1c2128;
+    --border: #30363d;
+    --border-light: #21262d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --green: #3fb950;
+    --amber: #d29922;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --font-ui: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  }
+  html, body { height: 100%; overflow: auto; }
+  body {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    line-height: 1.5;
+    /* Safe area for foldables, notches, rounded corners */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+  /* ── Login Screen ── */
+  #login-screen {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--bg-primary);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #login-screen.hidden { display: none; }
+  .login-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px;
+    width: 340px;
+    max-width: calc(100vw - 32px);
+  }
+  .login-box h1 {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  .login-box p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .login-box input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 12px;
+  }
+  .login-box input:focus { border-color: var(--blue); }
+  .login-box button {
+    width: 100%;
+    padding: 10px;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .login-box button:hover { opacity: 0.9; }
+  .login-error {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* ── App Shell ── */
+  #app { display: none; height: 100vh; flex-direction: column; }
+  #app.active { display: flex; }
+
+  /* ── Header ── */
+  .header {
+    height: 48px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    flex-shrink: 0;
+  }
+  .header-left, .header-center, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-left { min-width: 260px; }
+  .header-right { min-width: 260px; justify-content: flex-end; }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+  .status-dot.connected { background: var(--green); }
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .conn-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .header-center {
+    color: var(--text-secondary);
+    font-size: 13px;
+    gap: 16px;
+  }
+  .header-center .model-name {
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .header-right .clock {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  .header-right .latency {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .header-stat { display: flex; align-items: center; gap: 4px; }
+  .header-stat .label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .header-stat .value { font-family: var(--font-mono); font-size: 13px; }
+
+  /* ── Main Layout ── */
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 280px 1fr 280px;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  /* ── Panels ── */
+  .panel {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+  .panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+  .panel-section {
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .panel-section.flex-grow {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-light);
+    cursor: default;
+    user-select: none;
+  }
+  .section-header .count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .section-header.collapsible { cursor: pointer; }
+  .section-header.collapsible::after {
+    content: '▾';
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.15s;
+  }
+  .section-header.collapsible.collapsed::after { transform: rotate(-90deg); }
+  .section-body { padding: 0; }
+  .section-body.scrollable {
+    overflow-y: auto;
+    flex: 1;
+  }
+  .section-body.collapsed { display: none; }
+
+  /* ── Activity Feed ── */
+  .feed-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 13px;
+    transition: background 0.1s;
+  }
+  .feed-item:hover { background: var(--bg-hover); }
+  .feed-icon {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  .feed-content { flex: 1; min-width: 0; }
+  .feed-tool {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--blue);
+    font-weight: 500;
+  }
+  .feed-desc {
+    color: var(--text-secondary);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .feed-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .feed-status { font-size: 12px; }
+  .feed-status.running { color: var(--amber); }
+  .feed-status.success { color: var(--green); }
+  .feed-status.error { color: var(--red); }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .spinner {
+    width: 12px; height: 12px;
+    border: 2px solid var(--border);
+    border-top-color: var(--amber);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+
+  /* ── Provider Health ── */
+  .provider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  .provider-row .status-dot { width: 6px; height: 6px; }
+  .provider-name { flex: 1; color: var(--text-secondary); }
+  .provider-latency {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── Cron Jobs ── */
+  .cron-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  .cron-name { flex: 1; color: var(--text-secondary); font-size: 12px; }
+  .cron-next {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* ── Center Panel ── */
+  .center-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: none;
+  }
+  .tab-bar {
+    display: flex;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text-secondary); }
+  .tab.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--blue);
+  }
+  .tab-pulse {
+    animation: tabPulse 1.5s ease-in-out 2;
+  }
+  @keyframes tabPulse {
+    0%, 100% { color: var(--text-muted); }
+    50% { color: #34d399; text-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
+  }
+  .tab .coder-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34d399;
+    margin-left: 5px;
+    animation: coderPulse 1.2s ease-in-out infinite;
+    vertical-align: middle;
+  }
+  .tab .coder-dot.idle {
+    background: var(--text-muted);
+    animation: none;
+  }
+  @keyframes coderPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(52, 211, 153, 0.6); }
+    50% { opacity: 0.4; box-shadow: none; }
+  }
+  .tab-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .tab-pane {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    padding: 16px;
+    display: none;
+  }
+  .tab-pane.active { display: block; }
+
+  /* ── Output Stream ── */
+  .output-block {
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .output-block.user-msg {
+    border-left: 3px solid var(--blue);
+    padding: 10px 14px;
+    background: rgba(88, 166, 255, 0.04);
+    border-radius: 0 6px 6px 0;
+    color: var(--text-primary);
+    font-size: 14px;
+  }
+  .output-block.user-msg .msg-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .output-block.assistant-msg {
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-left: 3px solid var(--green);
+    background: rgba(63, 185, 80, 0.03);
+    border-radius: 0 6px 6px 0;
+  }
+  .output-block.assistant-msg .msg-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .output-block.thinking-msg {
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    border-left: 3px solid var(--border);
+    background: rgba(139, 148, 158, 0.03);
+    border-radius: 0 6px 6px 0;
+  }
+  .output-block.thinking-msg .msg-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    font-style: normal;
+  }
+  .output-block.tool-block {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-left: 3px solid var(--amber);
+    background: rgba(210, 153, 34, 0.03);
+    border-radius: 0 6px 6px 0;
+    font-family: var(--font-mono);
+  }
+  .output-block.tool-block .tool-header {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 4px;
+  }
+  .output-block.tool-block .tool-output {
+    color: var(--text-secondary);
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  /* Code pane: styled for watching code generation */
+  #pane-code .output-block.tool-block {
+    border-left-color: #34d399;
+    background: rgba(52, 211, 153, 0.03);
+  }
+  #pane-code .output-block.tool-block .tool-header {
+    color: #34d399;
+  }
+  #pane-code .output-block.tool-block .tool-output {
+    max-height: none;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #c8d0dc;
+    background: rgba(0,0,0,0.2);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-top: 6px;
+    overflow-x: auto;
+  }
+  /* highlight.js overrides for Code pane */
+  #coder-live-code .hljs {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  #coder-live-code pre {
+    background: transparent !important;
+    margin: 0;
+  }
+  .msg-text { white-space: pre-wrap; word-wrap: break-word; }
+  .msg-text code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-tertiary);
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+  .msg-text pre {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 10px;
+    margin: 6px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .msg-text strong { font-weight: 600; }
+  .msg-text ul, .msg-text ol { padding-left: 20px; margin: 4px 0; }
+  .msg-text li { margin: 2px 0; }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  .stream-cursor {
+    display: inline-block;
+    width: 7px;
+    height: 16px;
+    background: var(--text-primary);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+    margin-left: 1px;
+  }
+  .ready-state {
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 20px 14px;
+  }
+  .ready-state .stream-cursor {
+    background: var(--text-muted);
+    height: 14px;
+  }
+
+  /* ── Chat Input ── */
+  .chat-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--border);
+    background: var(--bg-secondary);
+    flex-shrink: 0;
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    outline: none;
+    resize: none;
+    min-height: 20px;
+    max-height: 120px;
+    line-height: 1.4;
+  }
+  .chat-input:focus { border-color: var(--blue); }
+  .chat-input::placeholder { color: var(--text-muted); }
+  .chat-send {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 38px;
+  }
+  .chat-send:hover { opacity: 0.9; }
+  .chat-send:disabled { opacity: 0.4; cursor: default; }
+
+  /* ── Right Panel: Costs ── */
+  /* ── Spend & Context (Redesigned) ── */
+  .cost-total {
+    padding: 16px 14px 8px;
+    text-align: center;
+  }
+  .cost-total .amount {
+    font-family: var(--font-mono);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(63, 185, 80, 0.3);
+    transition: all 0.3s ease;
+  }
+  .cost-total .label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+  }
+  .cost-savings {
+    text-align: center;
+    padding: 4px 14px 10px;
+    font-size: 12px;
+    color: #a78bfa;
+    font-family: var(--font-mono);
+    opacity: 0.9;
+  }
+  .cost-savings .savings-amount {
+    color: #67e8f9;
+    font-weight: 600;
+  }
+  .token-bar-wrap {
+    padding: 6px 14px 10px;
+  }
+  .token-bar-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .token-bar-track {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+  }
+  .token-bar-seg {
+    height: 100%;
+    transition: width 0.6s ease;
+    min-width: 2px;
+  }
+  .token-bar-seg.input { background: var(--blue); }
+  .token-bar-seg.output { background: #a78bfa; }
+  .token-bar-seg.cache { background: #67e8f9; }
+  .token-bar-legend {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+  .token-bar-legend span::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
+  .token-bar-legend .leg-input::before { background: var(--blue); }
+  .token-bar-legend .leg-output::before { background: #a78bfa; }
+  .token-bar-legend .leg-cache::before { background: #67e8f9; }
+  .cost-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 14px;
+    font-size: 13px;
+  }
+  .cost-row .key { color: var(--text-secondary); }
+  .cost-row .val {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+
+  /* ── Context Radial Gauge ── */
+  .context-meter {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .context-gauge-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+  .context-gauge-wrap svg {
+    width: 80px;
+    height: 80px;
+    transform: rotate(-90deg);
+  }
+  .context-gauge-bg {
+    fill: none;
+    stroke: var(--bg-tertiary);
+    stroke-width: 6;
+  }
+  .context-gauge-fill {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;
+  }
+  .context-gauge-fill.ctx-yellow { stroke: #e5c07b; }
+  .context-gauge-fill.ctx-orange { stroke: #e5953b; }
+  .context-gauge-fill.ctx-red { stroke: #e06c75; }
+  .context-gauge-fill.ctx-red.pulse {
+    animation: gauge-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes gauge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .context-gauge-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .context-meter-pct {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--green);
+    display: block;
+    transition: color 0.4s ease;
+  }
+  .context-meter-pct.ctx-yellow { color: #e5c07b; }
+  .context-meter-pct.ctx-orange { color: #e5953b; }
+  .context-meter-pct.ctx-red { color: #e06c75; }
+  .context-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .context-meter-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .context-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+  }
+  .context-details .ctx-used { color: var(--text-secondary); }
+  .context-details .ctx-max { color: var(--text-muted); }
+  .context-details .ctx-compactions {
+    color: var(--amber);
+    font-size: 10px;
+  }
+  /* Hidden elements kept for JS compat */
+  .context-bar-track { display: none; }
+  .context-bar-fill {
+    height: 0;
+    background: var(--green);
+    transition: width 0.6s ease, background 0.4s ease;
+  }
+  .context-bar-fill.ctx-yellow { background: #e5c07b; }
+  .context-bar-fill.ctx-orange { background: #e5953b; }
+  .context-bar-fill.ctx-red { background: #e06c75; }
+  .context-bar-fill.ctx-red.pulse { }
+  @keyframes pulse-danger {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  /* Old context section (for compatibility) */
+  .context-section { padding: 10px 14px; }
+  .context-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+  }
+
+  /* ── Sub-Agents ── */
+  .subagent-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .subagent-row:last-child { border-bottom: none; }
+  .subagent-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--text-muted);
+  }
+  .subagent-dot.active {
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 4px var(--green); }
+    50% { box-shadow: 0 0 10px var(--green); }
+  }
+  .subagent-dot.cron { background: var(--blue, #61afef); }
+  .subagent-dot.cron.active {
+    background: var(--blue, #61afef);
+    box-shadow: 0 0 6px var(--blue, #61afef);
+  }
+  .subagent-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .subagent-label {
+    color: var(--text-primary);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .subagent-meta {
+    color: var(--text-muted);
+    font-size: 10px;
+    font-family: var(--font-mono);
+    margin-top: 1px;
+  }
+  .subagent-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  .subagent-badge.running {
+    background: rgba(152, 195, 121, 0.15);
+    color: var(--green);
+  }
+  .subagent-badge.idle {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+  }
+  .subagent-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 4px 14px;
+    font-family: var(--font-mono);
+  }
+
+  /* ── System Metrics (Redesigned) ── */
+  .sys-gauges {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 14px 8px;
+  }
+  .sys-gauge {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+  .sys-gauge svg {
+    width: 64px;
+    height: 64px;
+    transform: rotate(-90deg);
+  }
+  .sys-gauge-bg {
+    fill: none;
+    stroke: var(--bg-tertiary);
+    stroke-width: 5;
+  }
+  .sys-gauge-fill {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease, stroke 0.3s ease;
+  }
+  .sys-gauge-fill.warning { stroke: var(--amber); }
+  .sys-gauge-fill.danger { stroke: var(--red); }
+  .sys-gauge-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .sys-gauge-val {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+    line-height: 1;
+  }
+  .sys-gauge-label {
+    font-size: 8px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-top: 2px;
+  }
+  .sys-health {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 14px 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .sys-health-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(63, 185, 80, 0.5);
+  }
+  .sys-health-dot.warn { background: var(--amber); box-shadow: 0 0 6px rgba(210, 153, 34, 0.5); }
+  .sys-health-dot.danger { background: var(--red); box-shadow: 0 0 6px rgba(248, 81, 73, 0.5); }
+  /* Hidden metric-row elements for JS compat */
+  .metric-row { display: none; }
+  .metric-label { display: none; }
+  .metric-bar-track { display: none; }
+  .metric-bar-fill {
+    height: 0;
+    background: var(--green);
+    transition: width 0.3s, background 0.3s;
+  }
+  .metric-bar-fill.warning { background: var(--amber); }
+  .metric-bar-fill.danger { background: var(--red); }
+  .metric-value { display: none; }
+
+  /* ── GPU Cards (Redesigned) ── */
+  .gpu-card {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-light);
+    background: linear-gradient(135deg, rgba(88, 166, 255, 0.03) 0%, rgba(167, 139, 250, 0.03) 100%);
+    transition: background 0.3s ease;
+  }
+  .gpu-card:last-child { border-bottom: none; }
+  .gpu-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .gpu-name {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+  .gpu-temp {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .gpu-temp .temp-icon { font-size: 11px; }
+  .gpu-metrics-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gpu-util-gauge {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  .gpu-util-gauge svg {
+    width: 40px;
+    height: 40px;
+    transform: rotate(-90deg);
+  }
+  .gpu-util-gauge .gauge-bg {
+    fill: none;
+    stroke: var(--bg-tertiary);
+    stroke-width: 4;
+  }
+  .gpu-util-gauge .gauge-fill {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease, stroke 0.3s ease;
+  }
+  .gpu-util-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .gpu-vram-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .gpu-vram-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 3px;
+  }
+  .gpu-vram-track {
+    width: 100%;
+    height: 5px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .gpu-vram-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--blue), #a78bfa);
+    transition: width 0.6s ease;
+  }
+
+  /* ── GPU Stats (hidden originals for JS compat) ── */
+  .gpu-stats { display: none; }
+
+  /* ── Memory Store (Redesigned) ── */
+  .mem-store-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+  .mem-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+  }
+  .mem-card:hover { border-color: rgba(255,255,255,0.1); }
+  .mem-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .mem-card-icon {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .mem-card-value {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .mem-card-value.purple { color: #a78bfa; }
+  .mem-card-value.cyan { color: #67e8f9; }
+  .mem-card-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+  .mem-enrichment {
+    padding: 6px 14px 12px;
+  }
+  .mem-enrichment-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .mem-enrichment-track {
+    width: 100%;
+    height: 5px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mem-enrichment-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #a78bfa, #67e8f9);
+    transition: width 0.8s ease;
+  }
+  .mem-graph-viz {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px 0;
+  }
+  .mem-graph-viz .node-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #a78bfa;
+    opacity: 0.6;
+  }
+  .mem-graph-viz .edge-line {
+    width: 12px;
+    height: 1px;
+    background: rgba(103, 232, 249, 0.4);
+  }
+  /* Original memory elements hidden for compat */
+  .memory-section { display: none; }
+  .memory-count { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--text-primary); }
+  .memory-label { font-size: 12px; color: var(--text-secondary); }
+
+  /* ── Model Activity ── */
+  .model-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0 4px 4px;
+  }
+  .model-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .model-dot.active {
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse-dot 2s infinite;
+  }
+  .model-dot.idle {
+    background: var(--text-muted);
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .model-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+  .model-badge {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+  }
+  .model-badge.active {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--green);
+  }
+  .model-badge.warning {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--amber);
+  }
+  .model-badge.used {
+    color: var(--text-secondary);
+  }
+  .model-dot.idle-used {
+    background: var(--text-secondary);
+  }
+  .model-cost {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    margin-right: 4px;
+  }
+
+  /* ── Responsive ── */
+  /* ── Mobile nav toggle ── */
+  .mobile-nav { display: none; }
+  .mobile-nav button {
+    background: var(--bg-tertiary); border: 1px solid var(--border);
+    color: var(--text-secondary); font-family: var(--font-ui); font-size: 12px;
+    padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mobile-nav button:hover, .mobile-nav button.active {
+    background: var(--bg-hover); color: var(--text-primary);
+    border-color: var(--blue);
+  }
+
+  /* ── TriFold: Fully open (10", ~880px) — 2-column layout ── */
+  @media (max-width: 1100px) {
+    .main {
+      grid-template-columns: 1fr 260px;
+    }
+    #panel-left { display: none; }
+    #panel-left.mobile-visible { display: flex; position: fixed; left: 0; top: 48px; bottom: 0; width: 300px; z-index: 50; background: var(--bg-secondary); border-right: 1px solid var(--border); box-shadow: 4px 0 20px rgba(0,0,0,0.5); }
+    .mobile-nav { display: flex; gap: 6px; }
+  }
+
+  /* ── TriFold: Half-open (~600px) — single column with drawer ── */
+  @media (max-width: 768px) {
+    .header { padding: 0 10px; gap: 8px; }
+    .header-center { display: none; }
+    .header-left { min-width: auto; gap: 8px; flex-shrink: 1; }
+    .header-right { min-width: auto; gap: 8px; flex-shrink: 1; }
+    .main {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
+    .panel { display: none; }
+    #panel-left.mobile-visible, #panel-right.mobile-visible {
+      display: flex; position: fixed; top: 48px; bottom: 0; width: 320px; max-width: 85vw; z-index: 50;
+      background: var(--bg-secondary); box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    }
+    #panel-left.mobile-visible { left: 0; border-right: 1px solid var(--border); }
+    #panel-right.mobile-visible { right: 0; border-left: 1px solid var(--border); box-shadow: -4px 0 20px rgba(0,0,0,0.5); }
+    .center-panel { display: flex; }
+    .mobile-nav { display: flex; gap: 6px; }
+    .chat-bar { padding: 10px; }
+    .chat-bar input, .chat-input { font-size: 16px; padding: 10px 12px; }
+    .chat-send { min-height: 44px; }
+    .tab-bar .tab { padding: 10px 12px; font-size: 12px; min-height: 44px; }
+  }
+
+  /* ── TriFold: Folded cover screen (~360px) — compact phone mode ── */
+  @media (max-width: 420px) {
+    .header { padding: 0 8px; height: 44px; }
+    .brand { font-size: 14px; letter-spacing: 2px; }
+    .conn-label { display: none; }
+    .header-right .latency { display: none; }
+    .header-right .clock { font-size: 12px; }
+    /* Tabs become scrollable icons */
+    .tab-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; gap: 0; }
+    .tab-bar .tab { padding: 8px 10px; font-size: 11px; letter-spacing: 0; white-space: nowrap; scroll-snap-align: start; min-height: 44px; }
+    .tab-bar .badge { display: none; }
+    /* Larger touch targets for chat */
+    .chat-bar { padding: 8px; padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
+    .chat-bar input, .chat-input { font-size: 16px !important; padding: 12px !important; border-radius: 8px; }
+    .chat-bar button, .chat-send { min-height: 48px; padding: 12px 16px; font-size: 14px; border-radius: 8px; }
+    /* Content sizing */
+    .output-block { padding: 10px 12px; font-size: 14px; line-height: 1.5; }
+    .term-block { font-size: 12px; }
+    /* Full-width drawers */
+    .mobile-nav button { padding: 6px 10px; font-size: 11px; min-height: 36px; }
+    #panel-left.mobile-visible, #panel-right.mobile-visible { width: 100vw; }
+    /* Reduce panel section padding */
+    .section-body { padding: 8px 10px; }
+    .section-header { padding: 8px 10px; font-size: 12px; }
+  }
+
+  /* ── Backdrop overlay for mobile drawers ── */
+  .drawer-backdrop {
+    display: none; position: fixed; inset: 0; z-index: 49;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+  }
+  .drawer-backdrop.visible { display: block; }
+</style>
+<!-- Syntax highlighting for Code pane -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+</head>
+<body>
+
+<!-- ── Login Screen ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>RASPUTIN</h1>
+    <p>Operations Dashboard — Authenticate to continue</p>
+    <form id="login-form">
+      <input type="password" id="login-password" placeholder="Enter access key" autocomplete="current-password">
+      <button type="submit">Authenticate</button>
+      <div class="login-error" id="login-error">Authentication failed</div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Drawer Backdrop ── -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeMobilePanels()"></div>
+
+<!-- ── App Shell ── -->
+<div id="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="status-dot" id="status-dot"></div>
+      <img src="/logo.png" alt="" style="height:20px;width:20px;object-fit:contain;margin-right:4px;">
+      <span class="brand">RASPUTIN</span>
+      <span class="conn-label" id="conn-label">Disconnected</span>
+    </div>
+    <div class="header-center">
+      <div class="header-stat">
+        <span class="label">Model</span>
+        <span class="value model-name" id="hdr-model">—</span>
+      </div>
+      <div class="header-stat">
+        <span class="label">Uptime</span>
+        <span class="value" id="hdr-uptime">—</span>
+      </div>
+      <div class="header-stat">
+        <span class="label">Messages</span>
+        <span class="value" id="hdr-messages">0</span>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobile-nav">
+      <button id="btn-left-panel" onclick="toggleMobilePanel('left')">☰ Activity</button>
+      <button id="btn-right-panel" onclick="toggleMobilePanel('right')">📊 Metrics</button>
+    </div>
+    <div class="header-right">
+      <span class="latency" id="hdr-latency">— ms</span>
+      <span class="clock" id="hdr-clock">00:00:00</span>
+    </div>
+  </div>
+
+  <!-- Main 3-Column Layout -->
+  <div class="main">
+
+    <!-- Left Panel -->
+    <div class="panel" id="panel-left">
+
+      <!-- Activity Feed -->
+      <div class="panel-section flex-grow">
+        <div class="section-header">
+          Activity Feed <span class="count" id="feed-count">0</span>
+        </div>
+        <div class="section-body scrollable" id="activity-feed"></div>
+      </div>
+
+      <!-- Provider Health -->
+      <div class="panel-section">
+        <div class="section-header">Provider Health</div>
+        <div class="section-body" id="provider-list">
+          <div class="provider-row" style="color:var(--text-muted);padding:10px 14px;font-size:12px;">Loading...</div>
+        </div>
+      </div>
+
+      <!-- Cron Jobs -->
+      <div class="panel-section">
+        <div class="section-header collapsible" id="cron-header">Cron Jobs</div>
+        <div class="section-body" id="cron-list">
+          <div class="cron-row" style="color:var(--text-muted);font-size:12px;">Loading...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Center Panel -->
+    <div class="center-panel">
+      <div class="tab-bar">
+        <div class="tab active" data-tab="output">Output</div>
+        <div class="tab" data-tab="terminal">Terminal</div>
+        <div class="tab" data-tab="code">Code<span class="coder-dot idle" id="coder-dot" title="Qwen3-Coder (GPU1/5090)"></span></div>
+        <div class="tab" data-tab="browser">Browser</div>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="pane-output">
+          <div class="ready-state" id="ready-state">Ready <span class="stream-cursor"></span></div>
+        </div>
+        <div class="tab-pane" id="pane-terminal">
+          <div class="ready-state" style="color:var(--text-muted);font-size:13px;">Shell output will appear here</div>
+        </div>
+        <div class="tab-pane" id="pane-code">
+          <div class="ready-state" style="color:var(--text-muted);font-size:13px;">File operations will appear here</div>
+        </div>
+        <div class="tab-pane" id="pane-browser">
+          <div class="ready-state" style="color:var(--text-muted);font-size:13px;">Web results will appear here</div>
+        </div>
+      </div>
+      <div class="chat-bar">
+        <input type="text" class="chat-input" id="chat-input" placeholder="Send a message..." autocomplete="off">
+        <button class="chat-send" id="chat-send">Send</button>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="panel" id="panel-right">
+
+      <!-- Cost & Context (Redesigned) -->
+      <div class="panel-section">
+        <div class="section-header">Spend & Context</div>
+        <div class="section-body">
+          <div class="cost-total">
+            <div class="amount" id="cost-total">$0.00</div>
+            <div class="cost-plan" id="cost-plan" style="font-size:10px;color:var(--text-muted);margin-top:2px"></div>
+            <div class="label">Actual Spend Today</div>
+          </div>
+          <div class="cost-savings" id="cost-savings"></div>
+          <!-- Token breakdown bar -->
+          <div class="token-bar-wrap">
+            <div class="token-bar-label">Token Breakdown</div>
+            <div class="token-bar-track">
+              <div class="token-bar-seg input" id="token-seg-input" style="width:33%"></div>
+              <div class="token-bar-seg output" id="token-seg-output" style="width:33%"></div>
+              <div class="token-bar-seg cache" id="token-seg-cache" style="width:33%"></div>
+            </div>
+            <div class="token-bar-legend">
+              <span class="leg-input"><span id="cost-input" style="color:var(--text-secondary)">0</span> in</span>
+              <span class="leg-output"><span id="cost-output" style="color:var(--text-secondary)">0</span> out</span>
+              <span class="leg-cache"><span id="cost-cache" style="color:var(--text-secondary)">0</span> cache</span>
+            </div>
+          </div>
+          <!-- Hidden: keep for JS compat -->
+          <div style="display:none">
+            <span id="cost-requests">0</span>
+          </div>
+
+          <!-- Context Radial Gauge -->
+          <div class="context-meter">
+            <div class="context-gauge-wrap">
+              <svg viewBox="0 0 80 80">
+                <circle class="context-gauge-bg" cx="40" cy="40" r="34"></circle>
+                <circle class="context-gauge-fill" id="context-gauge-fill" cx="40" cy="40" r="34"
+                  stroke-dasharray="213.6" stroke-dashoffset="213.6"></circle>
+              </svg>
+              <div class="context-gauge-text">
+                <span class="context-meter-pct" id="context-pct">—%</span>
+              </div>
+            </div>
+            <div class="context-info">
+              <span class="context-meter-title">🧠 Context Window</span>
+              <div class="context-details">
+                <span class="ctx-used" id="context-used">— tokens</span>
+                <span class="ctx-max" id="context-max">/ —</span>
+                <span class="ctx-compactions" id="context-compactions"></span>
+              </div>
+            </div>
+            <!-- Hidden bar for JS compat -->
+            <div class="context-bar-track">
+              <div class="context-bar-fill" id="context-bar" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Metrics (Redesigned) -->
+      <div class="panel-section">
+        <div class="section-header">System <span class="sys-health-dot" id="sys-health-dot"></span></div>
+        <div class="section-body">
+          <!-- Circular gauges for CPU/RAM -->
+          <div class="sys-gauges">
+            <div class="sys-gauge" id="cpu-gauge">
+              <svg viewBox="0 0 64 64">
+                <circle class="sys-gauge-bg" cx="32" cy="32" r="26"></circle>
+                <circle class="sys-gauge-fill" id="cpu-gauge-fill" cx="32" cy="32" r="26"
+                  stroke-dasharray="163.4" stroke-dashoffset="163.4"></circle>
+              </svg>
+              <div class="sys-gauge-center">
+                <span class="sys-gauge-val" id="cpu-gauge-val">—</span>
+                <span class="sys-gauge-label">CPU</span>
+              </div>
+            </div>
+            <div class="sys-gauge" id="ram-gauge">
+              <svg viewBox="0 0 64 64">
+                <circle class="sys-gauge-bg" cx="32" cy="32" r="26"></circle>
+                <circle class="sys-gauge-fill" id="ram-gauge-fill" cx="32" cy="32" r="26"
+                  stroke-dasharray="163.4" stroke-dashoffset="163.4"></circle>
+              </svg>
+              <div class="sys-gauge-center">
+                <span class="sys-gauge-val" id="ram-gauge-val">—</span>
+                <span class="sys-gauge-label">RAM</span>
+              </div>
+            </div>
+          </div>
+          <!-- Hidden original metric rows for JS compat -->
+          <div class="metric-row">
+            <span class="metric-label">CPU</span>
+            <div class="metric-bar-track"><div class="metric-bar-fill" id="cpu-bar" style="width:0%"></div></div>
+            <span class="metric-value" id="cpu-val">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">RAM</span>
+            <div class="metric-bar-track"><div class="metric-bar-fill" id="ram-bar" style="width:0%"></div></div>
+            <span class="metric-value" id="ram-val">—</span>
+          </div>
+          <div id="gpu-list"></div>
+        </div>
+      </div>
+
+      <!-- Memory Store (Redesigned) -->
+      <div class="panel-section">
+        <div class="section-header">Memory Store</div>
+        <div class="section-body">
+          <div class="mem-store-grid">
+            <div class="mem-card full-width">
+              <div class="mem-card-icon">🧬</div>
+              <div class="mem-card-value" id="memory-count-display">—</div>
+              <div class="mem-card-label">Qdrant Vectors</div>
+            </div>
+            <div class="mem-card">
+              <div class="mem-card-icon">🔮</div>
+              <div class="mem-card-value purple" id="graph-nodes-display">—</div>
+              <div class="mem-card-label">Nodes</div>
+            </div>
+            <div class="mem-card">
+              <div class="mem-card-icon">🔗</div>
+              <div class="mem-card-value cyan" id="graph-edges-display">—</div>
+              <div class="mem-card-label">Edges</div>
+            </div>
+          </div>
+          <div class="mem-enrichment" id="mem-enrichment" style="display:none">
+            <div class="mem-enrichment-label">
+              <span>Enrichment</span>
+              <span id="mem-enrichment-pct">0%</span>
+            </div>
+            <div class="mem-enrichment-track">
+              <div class="mem-enrichment-fill" id="mem-enrichment-fill" style="width:0%"></div>
+            </div>
+          </div>
+          <!-- Hidden originals for JS compat -->
+          <div class="memory-section">
+            <span class="memory-count" id="memory-count">—</span>
+            <span class="memory-label">vectors in Qdrant</span>
+          </div>
+          <div class="memory-section" style="margin-top:8px;">
+            <span class="memory-count" id="graph-nodes" style="font-size:18px;color:var(--accent-purple,#a78bfa)">—</span>
+            <span class="memory-label">graph nodes</span>
+            <span class="memory-count" id="graph-edges" style="font-size:18px;color:var(--accent-cyan,#67e8f9);margin-left:12px;">—</span>
+            <span class="memory-label">edges (FalkorDB)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Activity -->
+      <div class="panel-section">
+        <div class="section-header">Model Activity</div>
+        <div class="section-body" id="model-activity-body">
+          <div id="model-list"></div>
+          <div style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px">
+            <div class="cost-row"><span class="key">Quality Gate</span><span class="val" id="quality-rate">—</span></div>
+            <div class="cost-row"><span class="key">MiniMax Passed</span><span class="val" id="quality-passed">0</span></div>
+            <div class="cost-row"><span class="key">Escalated → Opus</span><span class="val" id="quality-escalated">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quota Status -->
+      <div class="panel-section">
+        <div class="section-header">Quota Status</div>
+        <div class="section-body" id="quota-status-body">
+          <div id="quota-list" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+      </div>
+
+      <!-- Session Health -->
+      <div class="panel-section">
+        <div class="section-header">Session Health</div>
+        <div class="section-body" id="session-health-body">
+          <div id="session-health-list" style="display:flex;flex-direction:column;gap:6px">
+            <div style="color:var(--text-muted);font-size:12px;">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Agents -->
+      <div class="panel-section">
+        <div class="section-header">Sub-Agents</div>
+        <div class="section-body" id="subagent-list">
+          <div style="color:var(--text-muted);font-size:12px;">No active sub-agents</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+  'use strict';
+
+  // ── State ──
+  const state = {
+    ws: null,
+    secret: null,
+    connected: false,
+    authenticated: false,
+    sessionStart: Date.now(),
+    messageCount: 0,
+    lastPing: 0,
+    latency: null,
+    pingInterval: null,
+    isStreaming: false,
+    streamEl: null,
+    streamText: '',
+    activeTools: new Map(),
+    feedItems: [],
+    contextUsed: 0,
+    contextMax: 200000,
+    model: '—'
+  };
+
+  // ── DOM Refs ──
+  const $ = id => document.getElementById(id);
+  const loginScreen = $('login-screen');
+  const loginForm = $('login-form');
+  const loginPassword = $('login-password');
+  const loginError = $('login-error');
+  const app = $('app');
+  const statusDot = $('status-dot');
+  const connLabel = $('conn-label');
+  const hdrModel = $('hdr-model');
+  const hdrUptime = $('hdr-uptime');
+  const hdrMessages = $('hdr-messages');
+  const hdrLatency = $('hdr-latency');
+  const hdrClock = $('hdr-clock');
+  const activityFeed = $('activity-feed');
+  const feedCount = $('feed-count');
+  const providerList = $('provider-list');
+  const cronList = $('cron-list');
+  const cronHeader = $('cron-header');
+  const outputPane = $('pane-output');
+  const terminalPane = $('pane-terminal');
+  const codePane = $('pane-code');
+  const browserPane = $('pane-browser');
+  const readyState = $('ready-state');
+  const chatInput = $('chat-input');
+  const chatSend = $('chat-send');
+  const costTotal = $('cost-total');
+  const costRequests = $('cost-requests');
+  const costInput = $('cost-input');
+  const costOutput = $('cost-output');
+  const costCache = $('cost-cache');
+  const contextBar = $('context-bar');
+  const contextPct = $('context-pct');
+  const contextUsedEl = $('context-used');
+  const contextMaxEl = $('context-max');
+  const contextCompactions = $('context-compactions');
+  const cpuBar = $('cpu-bar');
+  const cpuVal = $('cpu-val');
+  const ramBar = $('ram-bar');
+  const ramVal = $('ram-val');
+  const gpuList = $('gpu-list');
+  const memoryCount = $('memory-count');
+  const graphNodes  = $('graph-nodes');
+  const graphEdges  = $('graph-edges');
+
+  // ── Helpers ──
+  function formatNum(n) {
+    if (n == null) return '—';
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+    return n.toLocaleString();
+  }
+
+  function formatDuration(ms) {
+    const s = Math.floor(ms / 1000);
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    if (h > 0) return h + 'h ' + m + 'm';
+    if (m > 0) return m + 'm ' + (s % 60) + 's';
+    return s + 's';
+  }
+
+  function timeStr(d) {
+    return (d || new Date()).toLocaleTimeString('en-GB', { timeZone: 'Europe/city-hq', hour12: false });
+  }
+
+  function setBarClass(el, pct) {
+    el.classList.remove('warning', 'danger');
+    if (pct >= 80) el.classList.add('danger');
+    else if (pct >= 60) el.classList.add('warning');
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // Simple markdown: bold, inline code, code blocks, lists
+  function renderMarkdown(text) {
+    let html = escapeHtml(text);
+    // Code blocks
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Bold
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Unordered lists
+    html = html.replace(/^[-*] (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+    // Numbered lists
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    return html;
+  }
+
+  // Tool icons by category
+  function toolIcon(name) {
+    const n = (name || '').toLowerCase();
+    if (n.includes('exec') || n.includes('process')) return '⚡';
+    if (n.includes('read') || n.includes('write') || n.includes('edit')) return '📄';
+    if (n.includes('web') || n.includes('browser')) return '🌐';
+    if (n.includes('search')) return '🔍';
+    if (n.includes('message') || n.includes('tts')) return '💬';
+    if (n.includes('image')) return '🖼';
+    if (n.includes('node')) return '📱';
+    if (n.includes('session') || n.includes('subagent') || n.includes('spawn')) return '🔀';
+    if (n.includes('canvas')) return '🎨';
+    return '⚙';
+  }
+
+  // Categorize tool for tab routing
+  function toolCategory(name, desc) {
+    const n = (name || '').toLowerCase();
+    const d = (desc || '').toLowerCase();
+    // Coding-related exec commands go to Code tab, not Terminal
+    if (n.includes('exec') || n.includes('process')) {
+      const codingPatterns = ['aider', 'code-with-qwen', 'codex ', 'codex\t', 'pi ', 'opencode ', 'claude code', '/coder-test', 'qwen3-coder', '--model openai/qwen'];
+      if (codingPatterns.some(p => d.includes(p))) return 'code';
+      return 'terminal';
+    }
+    if (n.includes('read') || n.includes('write') || n.includes('edit')) return 'code';
+    if (n.includes('web') || n.includes('browser') || n.includes('search')) return 'browser';
+    return null;
+  }
+
+  // ── Auth ──
+  function getSecret() {
+    const params = new URLSearchParams(location.search);
+    return params.get('token') || localStorage.getItem('nexus_token');
+  }
+
+  function authenticate(secret) {
+    state.secret = secret;
+    localStorage.setItem('nexus_token', secret);
+    loginScreen.classList.add('hidden');
+    app.classList.add('active');
+    connectWebSocket();
+    startDataFetching();
+    startClockUpdate();
+  }
+
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const val = loginPassword.value.trim();
+    if (!val) return;
+    authenticate(val);
+  });
+
+  // ── WebSocket ──
+  function connectWebSocket() {
+    if (state.ws) {
+      try { state.ws.close(); } catch(e) {}
+    }
+    const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const url = proto + '//' + location.host;
+    const ws = new WebSocket(url);
+    state.ws = ws;
+
+    ws.addEventListener('open', () => {
+      ws.send(JSON.stringify({ type: 'auth', secret: state.secret }));
+      startPing();
+    });
+
+    ws.addEventListener('message', e => {
+      try {
+        const msg = JSON.parse(e.data);
+        handleMessage(msg);
+      } catch(err) {}
+    });
+
+    ws.addEventListener('close', () => {
+      setConnected(false);
+      stopPing();
+      setTimeout(connectWebSocket, 3000);
+    });
+
+    ws.addEventListener('error', () => {
+      setConnected(false);
+    });
+  }
+
+  function setConnected(v) {
+    state.connected = v;
+    if (v) {
+      statusDot.classList.add('connected');
+      connLabel.textContent = 'Connected';
+    } else {
+      statusDot.classList.remove('connected');
+      connLabel.textContent = 'Disconnected';
+      state.authenticated = false;
+    }
+  }
+
+  function startPing() {
+    stopPing();
+    state.pingInterval = setInterval(() => {
+      if (state.ws && state.ws.readyState === 1) {
+        state.lastPing = Date.now();
+        state.ws.send(JSON.stringify({ type: 'ping', t: state.lastPing }));
+      }
+    }, 5000);
+  }
+
+  function stopPing() {
+    if (state.pingInterval) {
+      clearInterval(state.pingInterval);
+      state.pingInterval = null;
+    }
+  }
+
+  // ── Message Handler ──
+  function handleMessage(msg) {
+    switch (msg.type) {
+      case 'auth':
+        if (msg.status === 'ok') {
+          state.authenticated = true;
+          setConnected(true);
+          if (msg.model) state.model = msg.model;
+          hdrModel.textContent = state.model;
+        } else {
+          loginError.style.display = 'block';
+          loginScreen.classList.remove('hidden');
+          app.classList.remove('active');
+        }
+        break;
+
+      case 'pong':
+        if (msg.t) {
+          state.latency = Date.now() - msg.t;
+          hdrLatency.textContent = state.latency + ' ms';
+        }
+        break;
+
+      case 'user_message':
+        state.messageCount++;
+        hdrMessages.textContent = state.messageCount;
+        addOutputBlock('user', msg.text || '');
+        break;
+
+      case 'thinking':
+        addOutputBlock('thinking', msg.text || '');
+        break;
+
+      case 'streaming_start':
+        state.isStreaming = true;
+        hideReady();
+        startStreamBlock();
+        break;
+
+      case 'token_stream':
+        if (msg.role === 'assistant' && msg.delta) {
+          appendStreamingText(msg.delta);
+        }
+        break;
+
+      case 'streaming_end':
+        finalizeStream();
+        state.isStreaming = false;
+        break;
+
+      case 'tool_start':
+        handleToolStart(msg);
+        break;
+
+      case 'tool_output':
+        handleToolOutput(msg);
+        break;
+
+      case 'tool_result':
+        handleToolResult(msg);
+        break;
+
+      case 'tool_end':
+        handleToolEnd(msg);
+        break;
+
+      case 'tool_error':
+        handleToolError(msg);
+        break;
+
+      case 'coder_stream':
+        handleCoderStream(msg);
+        break;
+
+      case 'telemetry':
+        handleTelemetry(msg.data || msg);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  // ── Output Blocks ──
+  function hideReady() {
+    if (readyState) readyState.style.display = 'none';
+  }
+
+  function scrollOutput() {
+    outputPane.scrollTop = outputPane.scrollHeight;
+  }
+
+  function addOutputBlock(type, text) {
+    hideReady();
+    const block = document.createElement('div');
+    block.className = 'output-block';
+
+    if (type === 'user') {
+      block.classList.add('user-msg');
+      block.innerHTML = '<div class="msg-label">User</div><div class="msg-text">' + escapeHtml(text) + '</div>';
+    } else if (type === 'thinking') {
+      block.classList.add('thinking-msg');
+      block.innerHTML = '<div class="msg-label">Thinking</div><div class="msg-text">' + escapeHtml(text) + '</div>';
+    } else if (type === 'assistant') {
+      block.classList.add('assistant-msg');
+      block.innerHTML = '<div class="msg-label">Assistant</div><div class="msg-text">' + renderMarkdown(text) + '</div>';
+    }
+
+    outputPane.appendChild(block);
+    scrollOutput();
+  }
+
+  // ── Token Streaming ──
+  function startStreamBlock() {
+    state.streamText = '';
+    const block = document.createElement('div');
+    block.className = 'output-block assistant-msg';
+    block.innerHTML = '<div class="msg-label">Assistant</div><div class="msg-text"><span class="stream-content"></span><span class="stream-cursor"></span></div>';
+    outputPane.appendChild(block);
+    state.streamEl = block.querySelector('.stream-content');
+    scrollOutput();
+  }
+
+  function appendStreamingText(delta) {
+    if (!state.streamEl) {
+      hideReady();
+      startStreamBlock();
+    }
+    state.streamText += delta;
+    // Render as escaped HTML during streaming for performance
+    state.streamEl.textContent = state.streamText;
+    scrollOutput();
+  }
+
+  function finalizeStream() {
+    if (state.streamEl) {
+      const parent = state.streamEl.closest('.output-block');
+      const textEl = parent.querySelector('.msg-text');
+      // Remove cursor and render final markdown
+      textEl.innerHTML = '<div class="msg-label">Assistant</div>' + renderMarkdown(state.streamText);
+      // Fix: label is already in parent, just set text content
+      textEl.innerHTML = renderMarkdown(state.streamText);
+      state.streamEl = null;
+      state.streamText = '';
+      scrollOutput();
+    }
+  }
+
+  // ── Tool Handling ──
+  function handleToolStart(msg) {
+    const id = msg.id;
+    const tool = msg.tool || 'unknown';
+    const desc = msg.description || '';
+
+    state.activeTools.set(id, { tool, desc, start: Date.now() });
+
+    // Add to activity feed
+    addFeedItem(id, tool, desc, 'running');
+
+    // Route to appropriate tab pane
+    const cat = toolCategory(tool, desc);
+    if (cat) {
+      addToolBlock(cat, id, tool, desc);
+      // Pulse the tab if it's not currently active
+      const tabEl = document.querySelector(`.tab[data-tab="${cat}"]`);
+      if (tabEl && !tabEl.classList.contains('active')) {
+        tabEl.classList.add('tab-pulse');
+        setTimeout(() => tabEl.classList.remove('tab-pulse'), 3000);
+      }
+    }
+    // Always add to output pane as well
+    addToolBlockToOutput(id, tool, desc);
+  }
+
+  // Strip ANSI escape codes for clean rendering
+  function stripAnsi(str) {
+    return (str || '').replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '').replace(/\x1b\].*?\x07/g, '');
+  }
+
+  function handleToolOutput(msg) {
+    const text = msg.text || '';
+    // Code pane gets cleaned output
+    const el = document.querySelector(`#pane-code [data-tool-id="${msg.id}"] .tool-output`);
+    if (el) {
+      el.textContent += stripAnsi(text);
+      el.scrollTop = el.scrollHeight;
+    }
+    // Terminal pane gets raw output
+    const tel = document.querySelector(`#pane-terminal [data-tool-id="${msg.id}"] .tool-output`);
+    if (tel) {
+      tel.textContent += text;
+      tel.scrollTop = tel.scrollHeight;
+    }
+    // Output pane always gets a copy (cleaned)
+    const oel = document.querySelector(`#pane-output [data-tool-id="${msg.id}"] .tool-output`);
+    if (oel) {
+      oel.textContent += stripAnsi(text);
+      oel.scrollTop = oel.scrollHeight;
+    }
+  }
+
+  function handleToolResult(msg) {
+    const el = document.querySelector(`[data-tool-id="${msg.id}"] .tool-output`);
+    if (el && msg.text) {
+      el.textContent = msg.text.substring(0, 2000);
+    }
+    const oel = document.querySelector(`#pane-output [data-tool-id="${msg.id}"] .tool-output`);
+    if (oel && msg.text) oel.textContent = msg.text.substring(0, 2000);
+  }
+
+  function handleToolEnd(msg) {
+    state.activeTools.delete(msg.id);
+    updateFeedItem(msg.id, 'success');
+  }
+
+  function handleToolError(msg) {
+    state.activeTools.delete(msg.id);
+    updateFeedItem(msg.id, 'error');
+    const el = document.querySelector(`[data-tool-id="${msg.id}"] .tool-output`);
+    if (el) {
+      el.textContent = msg.text || 'Error';
+      el.style.color = 'var(--red)';
+    }
+  }
+
+  // ── Live Coder Stream (Qwen3-Coder output) ──
+  let coderRawText = '';
+  let coderHighlightTimer = null;
+
+  function highlightCoderCode() {
+    const codeBlock = document.getElementById('coder-live-code');
+    if (!codeBlock) return;
+
+    // Extract code from markdown fences
+    const fenceMatch = coderRawText.match(/```(\w*)\n([\s\S]*?)(?:```|$)/);
+    if (fenceMatch) {
+      const lang = fenceMatch[1] || 'python';
+      const code = fenceMatch[2];
+      const pre = codeBlock.querySelector('pre') || document.createElement('pre');
+      const codeEl = pre.querySelector('code') || document.createElement('code');
+      
+      if (!pre.parentNode) {
+        pre.style.cssText = 'margin:0;background:transparent;overflow-x:auto;';
+        codeEl.className = 'language-' + lang;
+        codeEl.style.cssText = 'font-size:13px;line-height:1.6;';
+        pre.appendChild(codeEl);
+        codeBlock.innerHTML = '';
+        codeBlock.appendChild(pre);
+      }
+      
+      codeEl.textContent = code;
+      if (window.hljs) {
+        hljs.highlightElement(codeEl);
+      }
+    } else {
+      // No fence yet — just show raw text
+      codeBlock.textContent = coderRawText;
+    }
+    codeBlock.scrollTop = codeBlock.scrollHeight;
+  }
+
+  function handleCoderStream(msg) {
+    const text = stripAnsi(msg.text || '');
+    if (!text) return;
+    coderRawText += text;
+
+    const codePane = document.getElementById('pane-code');
+    if (!codePane) return;
+
+    // Hide placeholder
+    const ph = codePane.querySelector('.ready-state');
+    if (ph) ph.style.display = 'none';
+
+    // Get or create the live code block
+    let codeBlock = document.getElementById('coder-live-code');
+    if (!codeBlock) {
+      codeBlock = document.createElement('div');
+      codeBlock.id = 'coder-live-code';
+      codeBlock.style.cssText = 'background:#0d1117;border:1px solid rgba(52,211,153,0.15);border-radius:8px;padding:14px 16px;font-family:var(--font-mono);font-size:13px;line-height:1.6;color:#c8d0dc;overflow-y:auto;max-height:calc(100vh - 200px);scroll-behavior:smooth;';
+      codePane.appendChild(codeBlock);
+    }
+
+    // Debounce highlighting — apply every 400ms for smooth rendering
+    if (coderHighlightTimer) clearTimeout(coderHighlightTimer);
+    coderHighlightTimer = setTimeout(highlightCoderCode, 400);
+
+    // Auto-switch to Code tab if not there
+    const codeTab = document.querySelector('.tab[data-tab="code"]');
+    if (codeTab && !codeTab.classList.contains('active')) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      codeTab.classList.add('active');
+      codePane.classList.add('active');
+    }
+  }
+
+  function addToolBlockToOutput(id, tool, desc) {
+    hideReady();
+    const block = document.createElement('div');
+    block.className = 'output-block tool-block';
+    block.setAttribute('data-tool-id', id);
+    block.innerHTML = '<div class="tool-header">' + toolIcon(tool) + ' ' + escapeHtml(tool) +
+      (desc ? ' — ' + escapeHtml(desc.substring(0, 80)) : '') +
+      '</div><div class="tool-output"></div>';
+    outputPane.appendChild(block);
+    scrollOutput();
+  }
+
+  function addToolBlock(category, id, tool, desc) {
+    const paneMap = { terminal: terminalPane, code: codePane, browser: browserPane };
+    const pane = paneMap[category];
+    if (!pane) return;
+
+    // Clear placeholder
+    const placeholder = pane.querySelector('.ready-state');
+    if (placeholder) placeholder.style.display = 'none';
+
+    const block = document.createElement('div');
+    block.className = 'output-block tool-block';
+    block.setAttribute('data-tool-id', id);
+    block.innerHTML = '<div class="tool-header">' + toolIcon(tool) + ' ' + escapeHtml(tool) +
+      (desc ? ' — ' + escapeHtml(desc.substring(0, 80)) : '') +
+      '</div><div class="tool-output"></div>';
+    pane.appendChild(block);
+  }
+
+  // ── Activity Feed ──
+  function addFeedItem(id, tool, desc, status) {
+    const item = document.createElement('div');
+    item.className = 'feed-item';
+    item.setAttribute('data-feed-id', id);
+
+    const statusHtml = status === 'running'
+      ? '<span class="spinner"></span>'
+      : status === 'success'
+        ? '<span class="feed-status success">✓</span>'
+        : '<span class="feed-status error">✗</span>';
+
+    item.innerHTML =
+      '<span class="feed-icon">' + toolIcon(tool) + '</span>' +
+      '<div class="feed-content">' +
+        '<div class="feed-tool">' + escapeHtml(tool) + '</div>' +
+        '<div class="feed-desc">' + escapeHtml(desc || '').substring(0, 60) + '</div>' +
+      '</div>' +
+      '<div class="feed-meta">' +
+        '<span>' + timeStr() + '</span>' +
+        statusHtml +
+      '</div>';
+
+    // Prepend (newest first)
+    activityFeed.prepend(item);
+
+    state.feedItems.push(id);
+    feedCount.textContent = state.feedItems.length;
+
+    // Cap at 200
+    while (activityFeed.children.length > 200) {
+      activityFeed.removeChild(activityFeed.lastChild);
+    }
+  }
+
+  function updateFeedItem(id, status) {
+    const item = activityFeed.querySelector(`[data-feed-id="${id}"]`);
+    if (!item) return;
+    const meta = item.querySelector('.feed-meta');
+    if (!meta) return;
+    const spinner = meta.querySelector('.spinner');
+    if (spinner) {
+      if (status === 'success') {
+        spinner.outerHTML = '<span class="feed-status success">✓</span>';
+      } else {
+        spinner.outerHTML = '<span class="feed-status error">✗</span>';
+      }
+    }
+  }
+
+  // ── Tabs ──
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const pane = $('pane-' + tab.dataset.tab);
+      if (pane) pane.classList.add('active');
+    });
+  });
+
+  // ── Collapsible Cron Header ──
+  cronHeader.addEventListener('click', () => {
+    cronHeader.classList.toggle('collapsed');
+    cronList.classList.toggle('collapsed');
+  });
+
+  // ── Chat Input ──
+  function sendChat() {
+    const text = chatInput.value.trim();
+    if (!text || !state.ws || state.ws.readyState !== 1) return;
+    state.ws.send(JSON.stringify({ type: 'chat_message', text, secret: state.secret }));
+    chatInput.value = '';
+    // Show user message locally
+    state.messageCount++;
+    hdrMessages.textContent = state.messageCount;
+    addOutputBlock('user', text);
+  }
+
+  chatSend.addEventListener('click', sendChat);
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChat();
+    }
+  });
+
+  // ── Data Fetching ──
+  const GATEWAY_BASE = location.origin;
+
+  async function fetchCosts() {
+    try {
+      const resp = await fetch('/api/proxy/costs');
+      const data = await resp.json();
+      // Split actual spend vs flat-plan estimated
+      const providers = data.by_provider || {};
+      let actualSpend = 0;
+      let estimatedSpend = 0;
+      for (const [name, p] of Object.entries(providers)) {
+        if (name === 'anthropic-oauth') {
+          estimatedSpend += (p.cost_usd || 0);  // Flat plan — not real cost
+        } else {
+          actualSpend += (p.cost_usd || 0);
+        }
+      }
+      costTotal.textContent = '$' + actualSpend.toFixed(2);
+      const planEl = $('cost-plan');
+      if (planEl) {
+        planEl.textContent = estimatedSpend > 0
+          ? 'Opus: ~$' + estimatedSpend.toFixed(0) + ' equiv (Max20 flat plan)'
+          : '';
+      }
+      costRequests.textContent = formatNum(data.total_requests);
+      costInput.textContent = formatNum(data.total_input_tokens);
+      costOutput.textContent = formatNum(data.total_output_tokens);
+      // Calculate cache_read from provider breakdown
+      let cacheRead = data.total_cache_read_tokens || 0;
+      if (!cacheRead && data.by_provider) {
+        for (const p of Object.values(data.by_provider)) {
+          cacheRead += (p.cache_read || 0);
+        }
+      }
+      costCache.textContent = formatNum(cacheRead);
+    } catch(e) {}
+  }
+
+  async function fetchProviders() {
+    try {
+      const resp = await fetch('/api/proxy/providers');
+      const data = await resp.json();
+      // data can be object or array
+      const providers = Array.isArray(data) ? data : Object.entries(data).map(([name, info]) => ({ name, ...info }));
+      if (providers.length === 0) {
+        providerList.innerHTML = '<div class="provider-row" style="color:var(--text-muted);font-size:12px;">No providers</div>';
+        return;
+      }
+      providerList.innerHTML = providers.map(p => {
+        const name = p.name || p.id || '?';
+        const healthy = p.healthy !== false && p.status !== 'down';
+        const lat = p.latency || p.avg_latency;
+        const dotClass = healthy ? (lat && lat > 2000 ? '' : 'connected') : '';
+        const dotColor = !healthy ? 'var(--red)' : (lat && lat > 2000 ? 'var(--amber)' : 'var(--green)');
+        return '<div class="provider-row">' +
+          '<div class="status-dot" style="background:' + dotColor + '"></div>' +
+          '<span class="provider-name">' + escapeHtml(name) + '</span>' +
+          '<span class="provider-latency">' + (lat ? Math.round(lat) + 'ms' : '—') + '</span>' +
+          '</div>';
+      }).join('');
+    } catch(e) {
+      providerList.innerHTML = '<div class="provider-row" style="color:var(--text-muted);font-size:12px;">Unavailable</div>';
+    }
+  }
+
+  async function fetchMemory() {
+    try {
+      const resp = await fetch('/api/proxy/memory');
+      const data = await resp.json();
+      const count = (data.qdrant && data.qdrant.points) || data.points || data.total_memories || data.count || data.total || 0;
+      memoryCount.textContent = formatNum(count);
+      if (data.graph) {
+        if (graphNodes) graphNodes.textContent = formatNum(data.graph.nodes || 0);
+        if (graphEdges) graphEdges.textContent = formatNum(data.graph.edges || 0);
+      }
+    } catch(e) {
+      memoryCount.textContent = '—';
+      if (graphNodes) graphNodes.textContent = '—';
+      if (graphEdges) graphEdges.textContent = '—';
+    }
+  }
+
+  async function fetchSubagents() {
+    try {
+      const resp = await fetch('/api/proxy/subagents');
+      const data = await resp.json();
+      const list = $('subagent-list');
+      if (!list) return;
+
+      const sessions = data.sessions || [];
+      if (sessions.length === 0) {
+        list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:6px 14px;">No active sessions</div>';
+        return;
+      }
+
+      const html = [];
+
+      // Sort: active first, then by recency (newest idle first)
+      const sorted = [...sessions].sort((a, b) => {
+        if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+        return a.ageMin - b.ageMin;
+      });
+
+      const activeCount = sorted.filter(s => s.isActive).length;
+
+      function renderRow(s) {
+        const dotClass = s.isActive ? (s.kind === 'cron' ? 'cron active' : 'active') : (s.kind === 'cron' ? 'cron' : '');
+        let label = s.label || s.kind;
+        if (label === 'subagent' && s.key) {
+          const m = s.key.match(/:([a-f0-9]{8})/);
+          if (m) label = 'sub-' + m[1];
+        }
+        const kindIcon = s.kind === 'cron' ? '⏰' : s.kind === 'subagent' ? '🔀' : s.kind === 'telegram' || s.kind === 'main' ? '💬' : '🔹';
+        const badgeClass = s.isActive ? 'running' : 'idle';
+        const badgeText = s.isActive ? '● running' : formatAge(s.ageMin);
+        const model = s.model || (s.kind === 'subagent' ? 'opus-4-6' : '?');
+        return '<div class="subagent-row">' +
+          '<div class="subagent-dot ' + dotClass + '"></div>' +
+          '<div class="subagent-info">' +
+            '<div class="subagent-label">' + kindIcon + ' ' + escapeHtml(label) + '</div>' +
+            '<div class="subagent-meta">' + escapeHtml(model) + (s.tokens ? ' · ' + formatNum(s.tokens) + ' tok' : '') + '</div>' +
+          '</div>' +
+          '<span class="subagent-badge ' + badgeClass + '">' + badgeText + '</span>' +
+        '</div>';
+      }
+
+      function formatAge(min) {
+        if (min < 1) return 'just now';
+        if (min < 60) return Math.round(min) + 'm ago';
+        if (min < 1440) return Math.round(min / 60) + 'h ago';
+        return Math.round(min / 1440) + 'd ago';
+      }
+
+      if (activeCount > 0) {
+        html.push('<div class="subagent-count">⚡ ' + activeCount + ' running</div>');
+      }
+      sorted.forEach(s => html.push(renderRow(s)));
+      html.push('<div class="subagent-count" style="border-top:1px solid rgba(255,255,255,0.05);margin-top:4px;padding-top:6px;">' + data.total + ' total sessions</div>');
+
+      list.innerHTML = html.join('');
+    } catch(e) {
+      // silent
+    }
+  }
+
+  async function fetchContext() {
+    try {
+      const resp = await fetch('/api/proxy/context');
+      const data = await resp.json();
+      if (data.context_used != null) {
+        updateContext(data.context_used, data.context_max, data.compactions);
+      }
+    } catch(e) {
+      // silent — context is nice-to-have
+    }
+  }
+
+  async function fetchCrons() {
+    try {
+      const resp = await fetch(GATEWAY_BASE + '/api/crons');
+      const data = await resp.json();
+      const crons = Array.isArray(data) ? data : (data.crons || []);
+      if (crons.length === 0) {
+        cronList.innerHTML = '<div class="cron-row" style="color:var(--text-muted);font-size:12px;">No cron jobs</div>';
+        return;
+      }
+      cronList.innerHTML = crons.map(c => {
+        const name = c.name || c.label || c.id || '?';
+        const next = c.nextFire || c.next || '';
+        const active = c.enabled !== false && c.active !== false;
+        const dotColor = active ? 'var(--green)' : 'var(--text-muted)';
+        let nextStr = '—';
+        if (next) {
+          try {
+            const d = new Date(next);
+            nextStr = d.toLocaleTimeString('en-GB', { timeZone: 'Europe/city-hq', hour12: false, hour: '2-digit', minute: '2-digit' });
+          } catch(e) { nextStr = next; }
+        }
+        return '<div class="cron-row">' +
+          '<div class="status-dot" style="background:' + dotColor + ';width:6px;height:6px"></div>' +
+          '<span class="cron-name">' + escapeHtml(name) + '</span>' +
+          '<span class="cron-next">' + nextStr + '</span>' +
+          '</div>';
+      }).join('');
+    } catch(e) {
+      cronList.innerHTML = '<div class="cron-row" style="color:var(--text-muted);font-size:12px;">Unavailable</div>';
+    }
+  }
+
+  // ── Model Activity: real-time tracking ──
+  const modelState = {
+    lastCounts: {},    // provider -> last known count (for detecting live activity)
+    lastFetchTs: 0,
+  };
+
+  // Local Qwen 122B metrics state (persists across fetches)
+  const localModelState = {
+    status: 'unknown', // 'online' | 'offline' | 'busy' | 'unknown'
+    promptTokens: 0,
+    genTokens: 0,
+    totalCalls: 0,
+    tokPerSec: 0,
+    slots: [],
+    vramUsed: 0,
+    vramTotal: 0,
+    lastActivity: 0,
+  };
+
+  // Coder model state (Qwen3-Coder 30B on GPU1/5090)
+  const coderModelState = {
+    status: 'unknown',
+    promptTokens: 0,
+    genTokens: 0,
+    totalCalls: 0,
+    tokPerSec: 0,
+    slots: [],
+    lastActivity: 0,
+  };
+
+  async function fetchCoderModelMetrics() {
+    try {
+      const [metricsResp, slotsResp] = await Promise.all([
+        fetch('/api/coder/metrics').catch(() => null),
+        fetch('/api/coder/slots').catch(() => null),
+      ]);
+      if (!metricsResp || !metricsResp.ok) {
+        coderModelState.status = 'offline';
+        return;
+      }
+      const metricsText = await metricsResp.text();
+      const getMetric = (name) => {
+        const m = metricsText.match(new RegExp('^' + name.replace(/[:.]/g, '[$&]') + '\\s+([\\d.]+)', 'm'));
+        return m ? parseFloat(m[1]) : 0;
+      };
+      const prevGen = coderModelState.genTokens;
+      coderModelState.promptTokens = getMetric('llamacpp:prompt_tokens_total');
+      coderModelState.genTokens = getMetric('llamacpp:tokens_predicted_total');
+      coderModelState.totalCalls = getMetric('llamacpp:n_decode_total');
+
+      if (coderModelState.genTokens > prevGen) {
+        coderModelState.lastActivity = Date.now();
+      }
+
+      if (slotsResp && slotsResp.ok) {
+        coderModelState.slots = await slotsResp.json();
+        const busy = (Array.isArray(coderModelState.slots) ? coderModelState.slots : []).filter(s => s.is_processing);
+        coderModelState.status = busy.length > 0 ? 'busy' : 'online';
+        if (busy.length > 0 && busy[0].timings) {
+          coderModelState.tokPerSec = busy[0].timings.predicted_per_second || 0;
+        }
+      } else {
+        coderModelState.status = 'online';
+      }
+    } catch (e) {
+      coderModelState.status = 'offline';
+    }
+  }
+
+  async function fetchLocalModelMetrics() {
+    try {
+      const [metricsResp, slotsResp] = await Promise.all([
+        fetch('/api/local/metrics').catch(() => null),
+        fetch('/api/local/slots').catch(() => null),
+      ]);
+      if (!metricsResp || !metricsResp.ok) {
+        localModelState.status = 'offline';
+        return;
+      }
+      const metricsText = await metricsResp.text();
+      // Parse Prometheus-style metrics
+      const getMetric = (name) => {
+        const m = metricsText.match(new RegExp('^' + name.replace(/[:.]/g, '[$&]') + '\\s+([\\d.]+)', 'm'));
+        return m ? parseFloat(m[1]) : 0;
+      };
+      const prevGen = localModelState.genTokens;
+      localModelState.promptTokens = getMetric('llamacpp:prompt_tokens_total');
+      localModelState.genTokens = getMetric('llamacpp:tokens_predicted_total');
+      localModelState.totalCalls = getMetric('llamacpp:n_decode_total');
+
+      // Detect activity: tokens increased since last poll
+      if (localModelState.genTokens > prevGen) {
+        localModelState.lastActivity = Date.now();
+      }
+
+      // Parse slots
+      if (slotsResp && slotsResp.ok) {
+        localModelState.slots = await slotsResp.json();
+        const busy = localModelState.slots.filter(s => s.state !== 0 && s.is_processing);
+        localModelState.status = busy.length > 0 ? 'busy' : 'online';
+      } else {
+        localModelState.status = 'online';
+      }
+    } catch (e) {
+      localModelState.status = 'offline';
+    }
+  }
+
+  async function fetchModelActivity() {
+    try {
+      // Fetch costs, quality, proxy status, and local model metrics in parallel
+      const [costResp, qualResp, statusResp] = await Promise.all([
+        fetch('/api/proxy/costs'),
+        fetch('/api/proxy/quality'),
+        fetch('/api/proxy/status').catch(() => null),
+        fetchLocalModelMetrics(),
+        fetchCoderModelMetrics(),
+      ]);
+      const costData = await costResp.json();
+      const qualData = await qualResp.json();
+      const statusData = statusResp ? await statusResp.json().catch(() => ({})) : {};
+
+      const providers = costData.by_provider || {};
+      const recent = costData.recent || [];
+      const modelList = $('model-list');
+      if (!modelList) return;
+
+      // Define models to display
+      const models = [
+        { key: 'local-qwen', label: 'Qwen 122B Local', icon: '🟢', alwaysShow: true },
+        { key: 'local-coder', label: 'Qwen3-Coder 30B', icon: '🟢', alwaysShow: true, isCoder: true },
+        { key: 'opencode-zen', label: 'Zen (OpenCode)', icon: '⚫', alwaysShow: true },
+        { key: 'anthropic-oauth', label: 'Max20 OAuth (Opus)', icon: '🟣', notional: true },
+        { key: 'gemini-pro', label: 'Gemini 3.1 Pro', icon: '🔷', alwaysShow: true, altKey: 'gemini-flash' },
+        { key: 'minimax-highspeed', label: 'MiniMax Highspeed', icon: '⚡' },
+        { key: 'minimax', label: 'MiniMax M2.5', icon: '🔵' },
+        { key: 'anthropic-apikey', label: 'Anthropic Direct (paid)', icon: '🔴' },
+        { key: 'cerebras', label: 'Cerebras (compaction)', icon: '🧠' },
+      ];
+
+      // Determine which providers are currently active using 3 signals:
+      // 1. provider_activity timestamps (most reliable — tracks request start AND end)
+      // 2. in_flight requests (currently streaming)
+      // 3. recent completed calls (fallback)
+      const now = Date.now();
+      const recentProviders = new Set();
+      
+      // Signal 1: provider_activity — active if last activity within 2 minutes
+      const activity = costData.provider_activity || {};
+      for (const [prov, info] of Object.entries(activity)) {
+        if (info.seconds_ago < 120) {
+          recentProviders.add(prov);
+        }
+      }
+      
+      // Signal 2: in-flight requests (actively streaming right now)
+      const inflight = costData.in_flight || [];
+      for (const f of inflight) {
+        if (f.provider) recentProviders.add(f.provider);
+      }
+      
+      // Signal 3: recent completed calls (fallback)
+      for (const r of recent) {
+        const ts = new Date(r.ts).getTime();
+        if (now - ts < 120000) {
+          recentProviders.add(r.provider);
+        }
+      }
+
+      let html = '';
+      for (const m of models) {
+        // === Local model special handling ===
+        if (m.isLocal) {
+          const ls = localModelState;
+          const localActive = ls.status === 'busy';
+          const localOnline = ls.status === 'online' || ls.status === 'busy';
+          const localRecentActivity = (Date.now() - ls.lastActivity) < 120000;
+          const dotCls = !localOnline ? 'model-dot'
+            : localActive ? 'model-dot active'
+            : localRecentActivity ? 'model-dot idle-used'
+            : 'model-dot idle-used';
+          const badgeCls = localActive ? 'model-badge active'
+            : localOnline ? 'model-badge used'
+            : 'model-badge';
+          const genTok = ls.genTokens;
+          const totalTok = ls.promptTokens + ls.genTokens;
+          const badgeTxt = !localOnline ? 'offline'
+            : localActive ? 'generating · 115 t/s'
+            : genTok > 0 ? formatNum(genTok) + ' tok · $0'
+            : '2 slots · $0 · ready';
+          const costHtml = totalTok > 0
+            ? '<span class="model-cost"><span title="Local inference — zero cost">$0 <span style=\'font-size:9px;opacity:0.5\'>' + formatNum(totalTok) + ' tok</span></span></span>'
+            : '';
+          html += '<div class="model-row">' +
+            '<div class="' + dotCls + '"></div>' +
+            '<span class="model-name">' + escapeHtml(m.label) + '</span>' +
+            costHtml +
+            '<span class="' + badgeCls + '">' + badgeTxt + '</span>' +
+            '</div>';
+          continue;
+        }
+        // === Coder model (Qwen3-Coder 30B on GPU1/5090) ===
+        if (m.isCoder) {
+          const cs = coderModelState;
+          const coderActive = cs.status === 'busy';
+          const coderOnline = cs.status === 'online' || cs.status === 'busy';
+          const coderRecentActivity = (Date.now() - cs.lastActivity) < 120000;
+          const dotCls = !coderOnline ? 'model-dot'
+            : coderActive ? 'model-dot active'
+            : coderRecentActivity ? 'model-dot idle-used'
+            : 'model-dot idle-used';
+          const badgeCls = coderActive ? 'model-badge active'
+            : coderOnline ? 'model-badge used'
+            : 'model-badge';
+          const genTok = cs.genTokens;
+          const totalTok = cs.promptTokens + cs.genTokens;
+          const tps = cs.tokPerSec > 0 ? Math.round(cs.tokPerSec) : 247;
+          const badgeTxt = !coderOnline ? 'offline'
+            : coderActive ? 'coding · ' + tps + ' t/s'
+            : genTok > 0 ? formatNum(genTok) + ' tok · $0'
+            : '1 slot · $0 · ready';
+          const costHtml = totalTok > 0
+            ? '<span class="model-cost"><span title="Local inference on RTX 5090 — zero cost">$0 <span style=\'font-size:9px;opacity:0.5\'>' + formatNum(totalTok) + ' tok</span></span></span>'
+            : '';
+          html += '<div class="model-row">' +
+            '<div class="' + dotCls + '"></div>' +
+            '<span class="model-name">' + escapeHtml(m.label) + '</span>' +
+            costHtml +
+            '<span class="' + badgeCls + '">' + badgeTxt + '</span>' +
+            '</div>';
+          continue;
+        }
+        // === Standard proxy-tracked models ===
+        const stats = providers[m.key];
+        const count = stats ? stats.count : 0;
+        if (count === 0 && !m.alwaysShow && m.key === 'minimax') continue; // hide regular minimax if unused
+
+        const isLive = recentProviders.has(m.key) || (m.altKey && recentProviders.has(m.altKey));
+        const wasLive = modelState.lastCounts[m.key] != null && count > modelState.lastCounts[m.key];
+        modelState.lastCounts[m.key] = count;
+
+        // Override active status with real health signals from proxy /status
+        const zenOk = statusData.zen_ok || 0;
+        const zenFail = statusData.zen_fail || 0;
+        const zenQuotaExceeded = zenFail > 0 && zenOk === 0; // all attempts failed this session
+
+        let active, dotClass, badgeClass;
+        if (m.key === 'opencode-zen') {
+          // Green only if Zen is actually succeeding; amber if quota exceeded
+          if (zenQuotaExceeded) {
+            active = false;
+            dotClass = 'model-dot idle-used'; // amber/dim — tried but quota exceeded
+            badgeClass = count > 0 ? 'model-badge used' : 'model-badge';
+          } else if (zenOk > 0) {
+            active = true; // genuinely working
+            dotClass = 'model-dot active';
+            badgeClass = 'model-badge active';
+          } else {
+            active = false;
+            dotClass = count > 0 ? 'model-dot idle-used' : 'model-dot';
+            badgeClass = count > 0 ? 'model-badge used' : 'model-badge';
+          }
+        } else if (m.key === 'anthropic-apikey') {
+          // Green when all free paths are dead — we must be on paid API
+          const oauthDead = (statusData.quota_state?.oauth_7d?.status === 'rejected');
+          const directIsActive = zenQuotaExceeded && oauthDead;
+          active = directIsActive || isLive || wasLive;
+          dotClass = active ? 'model-dot active' : (count > 0 ? 'model-dot idle-used' : 'model-dot');
+          badgeClass = active ? 'model-badge active' : (count > 0 ? 'model-badge used' : 'model-badge');
+        } else if (m.key === 'gemini-pro') {
+          // Gemini — cyan when configured+idle, green when active
+          const geminiActive = statusData?.providers?.gemini?.status === 'active';
+          active = isLive || wasLive || geminiActive;
+          dotClass = active ? 'model-dot active' : 'model-dot idle-used'; // always show (alwaysShow=true)
+          badgeClass = active ? 'model-badge active' : 'model-badge used';
+        } else {
+          active = isLive || wasLive;
+          dotClass = active ? 'model-dot active' : (count > 0 ? 'model-dot idle-used' : 'model-dot');
+          badgeClass = active ? 'model-badge active' : (count > 0 ? 'model-badge used' : 'model-badge');
+        }
+
+        const oauthDead = (statusData?.quota_state?.oauth_7d?.status === 'rejected');
+        const directIsActive = m.key === 'anthropic-apikey' && zenQuotaExceeded && oauthDead;
+        const badgeText = directIsActive && count === 0 ? 'active (paid)' :
+                          count > 0 ? formatNum(count) + ' calls' :
+                          m.key === 'gemini-pro' ? '1M ctx · ready' :
+                          (m.key === 'opencode-zen' && zenQuotaExceeded ? 'quota exceeded' : 'idle');
+        const rawCost = stats ? stats.cost_usd : 0;
+        const cost = rawCost > 0
+          ? (m.notional ? '<span title="Max20 flat-rate — not billed">~$' + rawCost.toFixed(2) + ' <span style=\'font-size:9px;opacity:0.5\'>saved</span></span>'
+                        : '<span>$' + rawCost.toFixed(2) + '</span>')
+          : '';
+
+        html += '<div class="model-row">' +
+          '<div class="' + dotClass + '"></div>' +
+          '<span class="model-name">' + escapeHtml(m.label) + '</span>' +
+          (rawCost > 0 && count > 0 ? '<span class="model-cost">' + cost + '</span>' : '') +
+          '<span class="' + badgeClass + '">' + badgeText + '</span>' +
+          '</div>';
+      }
+      modelList.innerHTML = html;
+
+      // Update quality gate stats
+      const passed = qualData.minimax_passed || 0;
+      const escalated = qualData.minimax_escalated || 0;
+      const total = passed + escalated;
+      const rate = total > 0 ? Math.round((passed / total) * 100) : 0;
+      const rateEl = $('quality-rate');
+      const passedEl = $('quality-passed');
+      const escalatedEl = $('quality-escalated');
+      if (rateEl) rateEl.textContent = total > 0 ? rate + '%' : '—';
+      if (passedEl) passedEl.textContent = formatNum(passed);
+      if (escalatedEl) {
+        escalatedEl.textContent = formatNum(escalated);
+        escalatedEl.style.color = escalated > 0 ? 'var(--amber)' : '';
+      }
+
+      // === Quota Status Section ===
+      const quotaList = $('quota-list');
+      if (quotaList && statusData) {
+        const qs = statusData.quota_state || {};
+        const zenOk = statusData.zen_ok || 0;
+        const zenFail = statusData.zen_fail || 0;
+        const now = Date.now() / 1000;
+
+        function fmtTime(ts) {
+          if (!ts) return '—';
+          const d = new Date(ts * 1000);
+          const h = d.getHours().toString().padStart(2,'0');
+          const m = d.getMinutes().toString().padStart(2,'0');
+          const day = d.toLocaleDateString('en', {weekday:'short'});
+          return `${day} ${h}:${m}`;
+        }
+        function fmtCountdown(secs) {
+          if (!secs || secs <= 0) return null;
+          const h = Math.floor(secs / 3600);
+          const m = Math.floor((secs % 3600) / 60);
+          return h > 0 ? `${h}h ${m}m` : `${m}m`;
+        }
+
+        const quotaRows = [
+          {
+            label: '⚫ Zen (OpenCode)',
+            get() {
+              const zen = qs.zen || {};
+              if (zen.status === 'exceeded' && zen.seconds_remaining > 0) {
+                const cd = fmtCountdown(zen.seconds_remaining);
+                return { text: `Quota exceeded — resets ${fmtTime(zen.reset_ts)}${cd ? ` (${cd})` : ''}`, color: 'var(--amber)' };
+              } else if (zenOk > 0) {
+                return { text: `✅ Active — ${zenOk} calls OK`, color: 'var(--green)' };
+              } else if (zen.status === 'exceeded' && zen.seconds_remaining <= 0) {
+                return { text: '✅ Quota likely reset', color: 'var(--green)' };
+              }
+              return { text: zenFail > 0 ? `Failing (${zenFail} errors)` : 'Unknown', color: 'var(--text-muted)' };
+            }
+          },
+          {
+            label: '🟣 Max20 OAuth (7-day)',
+            get() {
+              const o7 = qs.oauth_7d || {};
+              if (o7.status === 'rejected') {
+                const cd = fmtCountdown(o7.seconds_remaining);
+                return { text: `Quota maxed (100%) — resets ${fmtTime(o7.reset_ts)}${cd ? ` (${cd})` : ''}`, color: 'var(--red)' };
+              } else if (o7.status === 'allowed') {
+                const pct = Math.round((o7.utilization || 0) * 100);
+                return { text: `✅ Available — ${pct}% used`, color: 'var(--green)' };
+              }
+              return { text: 'Not tested yet', color: 'var(--text-muted)' };
+            }
+          },
+          {
+            label: '🟣 Max20 OAuth (5-hour)',
+            get() {
+              const o5 = qs.oauth_5h || {};
+              if (o5.status === 'allowed') {
+                const pct = Math.round((o5.utilization || 0) * 100);
+                return { text: `✅ Available — ${pct}% used, resets ${fmtTime(o5.reset_ts)}`, color: 'var(--green)' };
+              } else if (o5.status === 'rejected') {
+                return { text: `Exceeded — resets ${fmtTime(o5.reset_ts)}`, color: 'var(--amber)' };
+              }
+              return { text: 'Not tested yet', color: 'var(--text-muted)' };
+            }
+          },
+          {
+            label: '🔴 Anthropic Direct API',
+            get() { return { text: 'Unlimited (paid per token)', color: 'var(--text-muted)' }; }
+          }
+        ];
+
+        // Fetch LB session distribution to enrich quota display
+        let lbDist = {};
+        let lbTotal = 0;
+        try {
+          const lbR = await fetch('/api/proxy/lb');
+          if (lbR.ok) {
+            const lbData = await lbR.json();
+            lbDist = lbData.session_distribution || {};
+            lbTotal = lbData.total_tracked_sessions || 0;
+          }
+        } catch(e) {}
+
+        const providerKeyMap = { '⚫ Zen (OpenCode)': 'zen', '🟣 Max20 OAuth (Opus)': 'oauth', '🟣 Max20 OAuth (7-day)': 'oauth', '🔷 Gemini 3.1 Pro': 'gemini', '🔴 Anthropic Direct (paid)': 'direct' };
+
+        quotaList.innerHTML = quotaRows.map(row => {
+          const info = row.get();
+          const pKey = providerKeyMap[row.label] || '';
+          const sessions = lbDist[pKey] || 0;
+          const sessionBadge = sessions > 0 ? `<span style="font-size:10px;color:var(--accent);margin-left:6px">${sessions} session${sessions>1?'s':''}</span>` : '';
+          return `<div style="display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:11px;color:var(--text-muted);font-weight:500">${row.label}${sessionBadge}</div>
+            <div style="font-size:12px;color:${info.color}">${info.text}</div>
+          </div>`;
+        }).join('<div style="border-top:1px solid var(--border);margin:2px 0"></div>');
+
+        // LB summary line at bottom
+        if (lbTotal > 0) {
+          quotaList.innerHTML += `<div style="border-top:1px solid var(--border);margin:4px 0"></div>
+            <div style="font-size:11px;color:var(--text-muted)">v9 LB · ${lbTotal} tracked session${lbTotal>1?'s':''}</div>`;
+        }
+      }
+
+    } catch(e) {}
+  }
+
+  async function fetchSessionHealth() {
+    const el = $('session-health-list');
+    if (!el) return;
+    try {
+      const r = await authedFetch('/api/sessions/size');
+      if (!r.ok) return;
+      const data = await r.json();
+      if (!data || !data.active) {
+        el.innerHTML = '<div style="color:var(--text-muted);font-size:12px;">No sessions found</div>';
+        return;
+      }
+      const fmt = bytes => bytes >= 1048576 ? (bytes / 1048576).toFixed(1) + ' MB'
+                         : bytes >= 1024 ? (bytes / 1024).toFixed(0) + ' KB'
+                         : bytes + ' B';
+      const fmtAge = ms => {
+        const s = Math.floor((Date.now() - ms) / 1000);
+        if (s < 60) return s + 's ago';
+        if (s < 3600) return Math.floor(s / 60) + 'm ago';
+        return Math.floor(s / 3600) + 'h ago';
+      };
+      const active = data.active;
+      const tokEst = Math.round(active.bytes / 4);
+      const tokK = tokEst >= 1000 ? (tokEst / 1000).toFixed(0) + 'K' : tokEst;
+      // Color: green <1MB, amber 1-3MB, red >3MB
+      const szColor = active.bytes > 3145728 ? 'var(--red)'
+                    : active.bytes > 1048576 ? 'var(--amber)'
+                    : 'var(--green)';
+      // Bar width as % of 6MB danger zone
+      const barPct = Math.min(100, Math.round(active.bytes / 6291456 * 100));
+      const totalFmt = fmt(data.totalBytes);
+      const sessionCount = (data.sessions || []).length;
+      el.innerHTML =
+        '<div style="display:flex;flex-direction:column;gap:4px">' +
+          '<div style="font-size:11px;color:var(--text-muted);font-weight:500">Active Session</div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center">' +
+            '<span style="font-size:13px;font-weight:600;color:' + szColor + '">' + fmt(active.bytes) + '</span>' +
+            '<span style="font-size:11px;color:var(--text-muted)">~' + tokK + ' tokens</span>' +
+          '</div>' +
+          '<div style="background:var(--border);border-radius:3px;height:4px;overflow:hidden">' +
+            '<div style="background:' + szColor + ';width:' + barPct + '%;height:100%;border-radius:3px;transition:width 0.5s"></div>' +
+          '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted)">' + fmtAge(active.mtime) + ' · ' + sessionCount + ' sessions · ' + totalFmt + ' total</div>' +
+        '</div>';
+    } catch(e) {}
+  }
+
+  // ── Coder Status (GPU1/5090 Qwen3-Coder) ──
+  async function fetchCoderStatus() {
+    try {
+      const resp = await fetch('/api/coder/slots');
+      const slots = await resp.json();
+      const dot = document.getElementById('coder-dot');
+      const codeTab = document.querySelector('.tab[data-tab="code"]');
+      if (!dot || !slots || slots.error) {
+        if (dot) { dot.classList.add('idle'); dot.title = 'Qwen3-Coder: offline'; }
+        return;
+      }
+      // slots is an array of slot objects — check if any is processing
+      const activeSlot = (Array.isArray(slots) ? slots : []).find(s => s.is_processing || s.state === 1);
+      if (activeSlot) {
+        const wasIdle = dot.classList.contains('idle');
+        dot.classList.remove('idle');
+        const toks = activeSlot.tokens_predicted || 0;
+        const prompt = activeSlot.prompt_tokens || activeSlot.n_past || 0;
+        dot.title = `Qwen3-Coder: generating (${toks} tokens, ${prompt} prompt)`;
+        // Clear old code block when a NEW generation starts
+        if (wasIdle) {
+          const oldBlock = document.getElementById('coder-live-code');
+          if (oldBlock) oldBlock.remove();
+          coderRawText = '';
+        }
+        // Auto-switch to Code tab when coder starts generating
+        if (codeTab && !codeTab.classList.contains('active')) {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+          codeTab.classList.add('active');
+          const pane = document.getElementById('pane-code');
+          if (pane) pane.classList.add('active');
+        }
+        // Update code pane with live status + token counter
+        const codePane = document.getElementById('pane-code');
+        if (codePane) {
+          // Hide placeholder
+          const ph = codePane.querySelector('.ready-state');
+          if (ph) ph.style.display = 'none';
+          let statusEl = document.getElementById('coder-live-status');
+          if (!statusEl) {
+            statusEl = document.createElement('div');
+            statusEl.id = 'coder-live-status';
+            statusEl.style.cssText = 'padding:10px 14px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.15);border-radius:8px;margin-bottom:12px;font-family:monospace;font-size:12px;color:#a0a0b0;';
+            codePane.prepend(statusEl);
+          }
+          const tps = activeSlot.timings?.predicted_per_second || 0;
+          const elapsed = activeSlot.timings?.predicted_ms ? (activeSlot.timings.predicted_ms / 1000).toFixed(1) : '0';
+          statusEl.innerHTML = '<div style="color:#34d399;font-weight:600;margin-bottom:6px;">⚡ Qwen3-Coder 30B <span style="color:#666;font-weight:400;">(GPU1 · RTX 5090)</span></div>' +
+            '<div style="display:flex;gap:20px;">' +
+            '<span>📝 Prompt: <strong>' + prompt.toLocaleString() + '</strong> tok</span>' +
+            '<span>🔄 Output: <strong>' + toks.toLocaleString() + '</strong> tok</span>' +
+            (tps > 0 ? '<span>⚡ Speed: <strong>' + tps.toFixed(0) + '</strong> tok/s</span>' : '') +
+            (elapsed !== '0' ? '<span>⏱️ ' + elapsed + 's</span>' : '') +
+            '</div>';
+        }
+      } else {
+        const wasActive = !dot.classList.contains('idle');
+        dot.classList.add('idle');
+        dot.title = 'Qwen3-Coder: idle';
+        const statusEl = document.getElementById('coder-live-status');
+        if (statusEl) {
+          // Show completion message briefly before removing
+          if (wasActive) {
+            statusEl.innerHTML = '<div style="color:#34d399;">✅ Qwen3-Coder finished generating</div>';
+            setTimeout(() => { if (statusEl.parentNode) statusEl.remove(); }, 5000);
+            // Switch back to Output tab after a beat
+            setTimeout(() => {
+              const outputTab = document.querySelector('.tab[data-tab="output"]');
+              if (outputTab && document.querySelector('.tab[data-tab="code"].active')) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                outputTab.classList.add('active');
+                document.getElementById('pane-output')?.classList.add('active');
+              }
+            }, 4000);
+          } else {
+            statusEl.remove();
+          }
+        }
+      }
+    } catch(e) {
+      const dot = document.getElementById('coder-dot');
+      if (dot) { dot.classList.add('idle'); dot.title = 'Qwen3-Coder: offline'; }
+    }
+  }
+
+  function startDataFetching() {
+    fetchCosts();
+    fetchProviders();
+    fetchMemory();
+    fetchContext();
+    fetchSubagents();
+    fetchCrons();
+    fetchModelActivity();
+    fetchSessionHealth();
+    fetchCoderStatus();
+    setInterval(fetchCosts, 30000);
+    setInterval(fetchProviders, 60000);
+    setInterval(fetchMemory, 60000);
+    setInterval(fetchContext, 15000);
+    setInterval(fetchSubagents, 10000);  // Sub-agents refresh fast to catch running states
+    setInterval(fetchCrons, 120000);
+    setInterval(fetchModelActivity, 5000);
+    setInterval(fetchSessionHealth, 30000);
+    setInterval(fetchCoderStatus, 2000);  // Coder status: fast poll to catch active generation
+  }
+
+  // ── Telemetry ──
+  function handleTelemetry(data) {
+    const sys = data.system || data;
+    if (sys.cpu != null) {
+      const pct = Math.round(typeof sys.cpu === 'number' ? sys.cpu : parseFloat(sys.cpu));
+      cpuBar.style.width = pct + '%';
+      cpuVal.textContent = pct + '%';
+      setBarClass(cpuBar, pct);
+    }
+    if (sys.ram != null || sys.memUsed != null) {
+      const ramPct = sys.ram != null ? Math.round(sys.ram) : null;
+      if (ramPct != null) {
+        ramBar.style.width = ramPct + '%';
+        ramVal.textContent = ramPct + '%';
+        setBarClass(ramBar, ramPct);
+      } else if (sys.memUsed) {
+        ramVal.textContent = sys.memUsed;
+      }
+    }
+
+    const gpus = data.gpu || [];
+    if (gpus.length > 0) {
+      gpuList.innerHTML = gpus.map((g, idx) => {
+        const name = (g.name || 'GPU ' + g.id).replace(/NVIDIA |GeForce /g, '');
+        const shortName = 'GPU' + idx;
+        const util = g.utilization != null ? Math.round(g.utilization) : 0;
+        const temp = g.temperature != null ? Math.round(g.temperature) : null;
+        const memUsed = g.memoryUsed != null ? (g.memoryUsed / 1024).toFixed(1) : null;
+        const memTotal = g.memoryTotal != null ? (g.memoryTotal / 1024).toFixed(1) : null;
+        const power = g.powerDraw != null ? Math.round(g.powerDraw) : null;
+        const powerLimit = g.powerLimit != null ? Math.round(g.powerLimit) : null;
+        const utilColor = util >= 80 ? '#ef4444' : util >= 60 ? '#f59e0b' : util >= 20 ? '#22d3ee' : '#34d399';
+        const tempColor = temp != null ? (temp >= 75 ? '#ef4444' : temp >= 60 ? '#f59e0b' : '#34d399') : '#666';
+        const vramPct = (memUsed && memTotal) ? (parseFloat(memUsed) / parseFloat(memTotal) * 100) : 0;
+        const vramColor = vramPct >= 90 ? '#ef4444' : vramPct >= 75 ? '#f59e0b' : '#22d3ee';
+        const R = 28; const C = 2 * Math.PI * R;
+        const utilOffset = C * (1 - util / 100);
+        return '<div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;">' +
+          '<div style="display:flex;align-items:center;gap:14px;">' +
+            '<div style="position:relative;width:68px;height:68px;flex-shrink:0;">' +
+              '<svg viewBox="0 0 68 68" style="width:68px;height:68px;transform:rotate(-90deg);">' +
+                '<circle cx="34" cy="34" r="' + R + '" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>' +
+                '<circle cx="34" cy="34" r="' + R + '" fill="none" stroke="' + utilColor + '" stroke-width="5" ' +
+                  'stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + utilOffset.toFixed(1) + '" ' +
+                  'stroke-linecap="round" style="transition:stroke-dashoffset 1s ease,stroke 0.5s ease;filter:drop-shadow(0 0 4px ' + utilColor + '40);"/>' +
+              '</svg>' +
+              '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">' +
+                '<div style="font-size:16px;font-weight:700;color:' + utilColor + ';line-height:1;">' + util + '%</div>' +
+                '<div style="font-size:8px;color:#888;text-transform:uppercase;letter-spacing:0.5px;">load</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="font-size:11px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">' +
+                '<span>⚡ ' + shortName + ' — ' + name + '</span>' +
+                (temp != null ? '<span style="color:' + tempColor + ';font-size:10px;">🌡 ' + temp + '°C</span>' : '') +
+              '</div>' +
+              '<div style="margin-bottom:5px;">' +
+                '<div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;margin-bottom:2px;">' +
+                  '<span>VRAM</span>' +
+                  '<span>' + (memUsed || '?') + ' / ' + (memTotal || '?') + ' GB</span>' +
+                '</div>' +
+                '<div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">' +
+                  '<div style="height:100%;width:' + vramPct.toFixed(1) + '%;background:linear-gradient(90deg,' + vramColor + ',' + vramColor + 'cc);border-radius:3px;transition:width 1s ease;box-shadow:0 0 6px ' + vramColor + '30;"></div>' +
+                '</div>' +
+              '</div>' +
+              (power != null ? '<div style="font-size:9px;color:#64748b;">⚡ ' + power + 'W' + (powerLimit ? ' / ' + powerLimit + 'W' : '') + '</div>' : '') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // ── Context Window (updated from streaming events) ──
+  function updateContext(used, max, compactions) {
+    state.contextUsed = used;
+    state.contextMax = max || state.contextMax;
+    const pct = Math.round((used / state.contextMax) * 100);
+    const usedK = used >= 1000 ? (used / 1000).toFixed(0) + 'K' : used + '';
+    const maxK = state.contextMax >= 1000 ? (state.contextMax / 1000).toFixed(0) + 'K' : state.contextMax + '';
+
+    // 4-tier color: green (0-39) → yellow (40-59) → orange (60-79) → red (80+)
+    const tiers = ['ctx-yellow', 'ctx-orange', 'ctx-red'];
+    const tierClass = pct >= 80 ? 'ctx-red' : pct >= 60 ? 'ctx-orange' : pct >= 40 ? 'ctx-yellow' : '';
+
+    // Update percentage text + color
+    contextPct.textContent = pct + '%';
+    contextPct.classList.remove(...tiers);
+    if (tierClass) contextPct.classList.add(tierClass);
+
+    // Update bar + color
+    contextBar.style.width = Math.min(pct, 100) + '%';
+    contextBar.classList.remove(...tiers, 'pulse');
+    if (tierClass) contextBar.classList.add(tierClass);
+    if (pct >= 90) contextBar.classList.add('pulse');
+
+    // Update details
+    contextUsedEl.textContent = usedK + ' tokens';
+    contextMaxEl.textContent = '/ ' + maxK;
+
+    // Compactions badge
+    if (compactions != null && compactions > 0) {
+      contextCompactions.textContent = '🧹 ' + compactions + 'x';
+      contextCompactions.title = compactions + ' compaction(s) this session';
+    } else {
+      contextCompactions.textContent = '';
+    }
+  }
+
+  // ── Enhanced UI: Hook into existing data to drive new visuals ──
+
+  // Context radial gauge
+  const ctxGaugeFill = document.getElementById('context-gauge-fill');
+  const ctxCircumference = 2 * Math.PI * 34; // r=34
+
+  // Patch updateContext to also drive the radial gauge
+  const _origUpdateContext = updateContext;
+  function updateContextEnhanced(used, max, compactions) {
+    _origUpdateContext(used, max, compactions);
+    if (ctxGaugeFill && max) {
+      const pct = Math.min((used / max) * 100, 100);
+      const offset = ctxCircumference * (1 - pct / 100);
+      ctxGaugeFill.style.strokeDashoffset = offset;
+      // Color classes
+      const tiers = ['ctx-yellow', 'ctx-orange', 'ctx-red'];
+      const tierClass = pct >= 80 ? 'ctx-red' : pct >= 60 ? 'ctx-orange' : pct >= 40 ? 'ctx-yellow' : '';
+      ctxGaugeFill.classList.remove(...tiers, 'pulse');
+      if (tierClass) ctxGaugeFill.classList.add(tierClass);
+      if (pct >= 90) ctxGaugeFill.classList.add('pulse');
+    }
+  }
+  // Replace the function
+  updateContext = updateContextEnhanced;
+
+  // CPU/RAM circular gauges
+  const cpuGaugeFill = document.getElementById('cpu-gauge-fill');
+  const cpuGaugeVal = document.getElementById('cpu-gauge-val');
+  const ramGaugeFill = document.getElementById('ram-gauge-fill');
+  const ramGaugeVal = document.getElementById('ram-gauge-val');
+  const sysHealthDot = document.getElementById('sys-health-dot');
+  const sysCircumference = 2 * Math.PI * 26; // r=26
+
+  function updateSysGauge(fillEl, valEl, pct) {
+    if (!fillEl || !valEl) return;
+    const p = Math.min(Math.max(pct, 0), 100);
+    const offset = sysCircumference * (1 - p / 100);
+    fillEl.style.strokeDashoffset = offset;
+    valEl.textContent = p + '%';
+    fillEl.classList.remove('warning', 'danger');
+    if (p >= 85) fillEl.classList.add('danger');
+    else if (p >= 65) fillEl.classList.add('warning');
+  }
+
+  // Observe changes to existing hidden elements
+  let lastCpuPct = 0, lastRamPct = 0;
+  const origHandleTelemetry = handleTelemetry;
+
+  // Token bar segments update
+  function updateTokenBar() {
+    const inp = parseInt((costInput.textContent || '0').replace(/,/g, '')) || 0;
+    const out = parseInt((costOutput.textContent || '0').replace(/,/g, '')) || 0;
+    const cache = parseInt((costCache.textContent || '0').replace(/,/g, '')) || 0;
+    const total = inp + out + cache;
+    if (total > 0) {
+      document.getElementById('token-seg-input').style.width = (inp / total * 100) + '%';
+      document.getElementById('token-seg-output').style.width = (out / total * 100) + '%';
+      document.getElementById('token-seg-cache').style.width = (cache / total * 100) + '%';
+    }
+  }
+
+  // Memory display mirrors
+  function syncMemoryDisplay() {
+    const mc = document.getElementById('memory-count');
+    const mcd = document.getElementById('memory-count-display');
+    const gn = document.getElementById('graph-nodes');
+    const gnd = document.getElementById('graph-nodes-display');
+    const ge = document.getElementById('graph-edges');
+    const ged = document.getElementById('graph-edges-display');
+    if (mc && mcd) mcd.textContent = mc.textContent;
+    if (gn && gnd) gnd.textContent = gn.textContent;
+    if (ge && ged) ged.textContent = ge.textContent;
+  }
+
+  // Savings display
+  function updateSavingsDisplay() {
+    const planEl = document.getElementById('cost-plan');
+    const savingsEl = document.getElementById('cost-savings');
+    if (planEl && savingsEl && planEl.textContent) {
+      const match = planEl.textContent.match(/~\$(\d+)/);
+      if (match) {
+        savingsEl.innerHTML = '💎 Saving <span class="savings-amount">~$' + match[1] + '</span> (Max20 flat plan)';
+      }
+    }
+  }
+
+  // Poll-based sync for elements updated by existing JS
+  setInterval(() => {
+    // CPU/RAM from hidden elements
+    const cpuText = cpuVal.textContent;
+    const ramText = ramVal.textContent;
+    if (cpuText && cpuText !== '—') {
+      const p = parseInt(cpuText);
+      if (!isNaN(p)) updateSysGauge(cpuGaugeFill, cpuGaugeVal, p);
+      lastCpuPct = p;
+    }
+    if (ramText && ramText !== '—') {
+      const p = parseInt(ramText);
+      if (!isNaN(p)) updateSysGauge(ramGaugeFill, ramGaugeVal, p);
+      lastRamPct = p;
+    }
+    // System health
+    if (sysHealthDot) {
+      const worst = Math.max(lastCpuPct, lastRamPct);
+      sysHealthDot.classList.remove('warn', 'danger');
+      if (worst >= 85) sysHealthDot.classList.add('danger');
+      else if (worst >= 65) sysHealthDot.classList.add('warn');
+    }
+    // Token bar
+    updateTokenBar();
+    // Memory mirrors
+    syncMemoryDisplay();
+    // Savings
+    updateSavingsDisplay();
+  }, 2000);
+
+  // GPU card rendering is now handled directly in the main renderer above
+
+  // Expose for external calls and websocket extension
+  window.updateContext = updateContextEnhanced;
+  window.appendStreamingText = appendStreamingText;
+
+  // ── Clock ──
+  function startClockUpdate() {
+    function tick() {
+      hdrClock.textContent = timeStr();
+      hdrUptime.textContent = formatDuration(Date.now() - state.sessionStart);
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  // ── Mobile Panel Drawers (TriFold support) ──
+  window.toggleMobilePanel = function(side) {
+    const left = document.getElementById('panel-left');
+    const right = document.getElementById('panel-right');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const btnLeft = document.getElementById('btn-left-panel');
+    const btnRight = document.getElementById('btn-right-panel');
+
+    if (side === 'left') {
+      const isOpen = left.classList.contains('mobile-visible');
+      closeMobilePanels();
+      if (!isOpen) {
+        left.classList.add('mobile-visible');
+        backdrop.classList.add('visible');
+        btnLeft.classList.add('active');
+      }
+    } else {
+      const isOpen = right.classList.contains('mobile-visible');
+      closeMobilePanels();
+      if (!isOpen) {
+        right.classList.add('mobile-visible');
+        backdrop.classList.add('visible');
+        btnRight.classList.add('active');
+      }
+    }
+  };
+
+  window.closeMobilePanels = function() {
+    document.getElementById('panel-left').classList.remove('mobile-visible');
+    document.getElementById('panel-right').classList.remove('mobile-visible');
+    document.getElementById('drawer-backdrop').classList.remove('visible');
+    document.getElementById('btn-left-panel')?.classList.remove('active');
+    document.getElementById('btn-right-panel')?.classList.remove('active');
+  };
+
+  // Close drawers on window resize (e.g., TriFold unfold/fold)
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1100) closeMobilePanels();
+  });
+
+  // ── Init ──
+  const savedToken = getSecret();
+  if (savedToken) {
+    authenticate(savedToken);
+  }
+  // else: login screen is already visible
+
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-// Content script for Memory Capture Extension
+// Content script for Alfred's Eye - Second Brain
 (function() {
     'use strict';
     
@@ -299,7 +299,7 @@
     
     // Initialize the content script
     function init() {
-        console.log('MemCapture\'s Eye - Second Brain content script initialized');
+        console.log('Alfred\'s Eye - Second Brain content script initialized');
         
         setupEventListeners();
         initializeContentCapture();

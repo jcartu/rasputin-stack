@@ -63,7 +63,7 @@ CLI tool for querying the graph:
 python3 graph_query.py "who is connected to CompanyA?"
 python3 graph_query.py --cypher "MATCH (p:Person)-[:WORKS_AT]->(o:Organization) RETURN p.name, o.name LIMIT 10"
 python3 graph_query.py --entity "UserName" --hops 2
-python3 graph_query.py --topic "igaming" --since "2026-02-01"
+python3 graph_query.py --topic "digital-ops" --since "2026-02-01"
 ```
 
 ### HTTP API: `graph_api.py`  

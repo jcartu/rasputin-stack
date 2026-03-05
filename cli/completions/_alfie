@@ -1,0 +1,176 @@
+#compdef alfie
+# ALFIE CLI zsh completion script
+# Install: alfie completion zsh --install
+# Or: source <(alfie completion zsh)
+
+_alfie() {
+    local -a commands
+    commands=(
+        'chat:Chat with ALFIE'
+        'search:Search ALFIE'\''s second brain'
+        'session:Manage chat sessions'
+        'file:File operations'
+        'export:Export ALFIE data'
+        'import:Import ALFIE data'
+        'config:Manage configuration'
+        'completion:Generate shell completions'
+        'status:Check ALFIE status'
+        'consensus:Multi-model consensus query'
+        'verify:Verify claims'
+        'procedure:Manage procedures'
+    )
+    
+    _arguments -C \
+        '-h[Show help]' \
+        '--help[Show help]' \
+        '-v[Show version]' \
+        '--version[Show version]' \
+        '-q[Quiet mode]' \
+        '--quiet[Quiet mode]' \
+        '--no-color[Disable colors]' \
+        '-c[Config file]:config file:_files' \
+        '--config[Config file]:config file:_files' \
+        '1:command:->command' \
+        '*::arg:->args'
+    
+    case "$state" in
+        command)
+            _describe -t commands 'alfie commands' commands
+            ;;
+        args)
+            case ${words[1]} in
+                chat)
+                    _arguments \
+                        '-m[Model to use]:model:(local-120b local-20b anthropic/claude-3.5-sonnet openai/gpt-4-turbo)' \
+                        '--model[Model to use]:model:(local-120b local-20b anthropic/claude-3.5-sonnet openai/gpt-4-turbo)' \
+                        '-t[Temperature]:temperature:' \
+                        '--temperature[Temperature]:temperature:' \
+                        '--no-context[Disable context]' \
+                        '--max-tokens[Max tokens]:tokens:' \
+                        '-s[System prompt]:prompt:' \
+                        '--system[System prompt]:prompt:' \
+                        '-o[Output format]:format:(text json markdown)' \
+                        '--output[Output format]:format:(text json markdown)' \
+                        '--history[Load history]:file:_files' \
+                        '*:message:'
+                    ;;
+                search)
+                    _arguments \
+                        '-n[Limit results]:limit:' \
+                        '--limit[Limit results]:limit:' \
+                        '-t[Score threshold]:threshold:' \
+                        '--threshold[Score threshold]:threshold:' \
+                        '-c[Collection]:collection:' \
+                        '--collection[Collection]:collection:' \
+                        '-o[Output format]:format:(text json table)' \
+                        '--output[Output format]:format:(text json table)' \
+                        '--stats[Show stats]' \
+                        '*:query:'
+                    ;;
+                session)
+                    local -a session_commands
+                    session_commands=(
+                        'list:List sessions'
+                        'show:Show session details'
+                        'delete:Delete a session'
+                        'new:Create new session'
+                        'resume:Resume a session'
+                    )
+                    _describe -t session_commands 'session commands' session_commands
+                    ;;
+                file)
+                    local -a file_commands
+                    file_commands=(
+                        'list:List files'
+                        'read:Read a file'
+                        'write:Write to a file'
+                        'search:Search files'
+                        'info:Show file info'
+                    )
+                    _describe -t file_commands 'file commands' file_commands
+                    ;;
+                export)
+                    local -a export_commands
+                    export_commands=(
+                        'sessions:Export sessions'
+                        'memories:Export memories'
+                        'config:Export config'
+                        'workspace:Export workspace'
+                    )
+                    _describe -t export_commands 'export commands' export_commands
+                    ;;
+                import)
+                    local -a import_commands
+                    import_commands=(
+                        'sessions:Import sessions'
+                        'config:Import config'
+                        'workspace:Import workspace'
+                    )
+                    _describe -t import_commands 'import commands' import_commands
+                    ;;
+                config)
+                    local -a config_commands
+                    config_commands=(
+                        'get:Get config value'
+                        'set:Set config value'
+                        'reset:Reset to defaults'
+                        'list:List all config'
+                        'edit:Edit interactively'
+                    )
+                    _describe -t config_commands 'config commands' config_commands
+                    ;;
+                completion)
+                    local -a completion_commands
+                    completion_commands=(
+                        'bash:Generate bash completion'
+                        'zsh:Generate zsh completion'
+                        'setup:Show setup instructions'
+                    )
+                    _describe -t completion_commands 'completion commands' completion_commands
+                    ;;
+                consensus)
+                    _arguments \
+                        '-t[Query type]:type:(factual analytical creative)' \
+                        '--type[Query type]:type:(factual analytical creative)' \
+                        '--temperature[Temperature]:temp:' \
+                        '--timeout[Timeout ms]:timeout:' \
+                        '-o[Output format]:format:(text json)' \
+                        '--output[Output format]:format:(text json)' \
+                        '--models[Models to use]:models:' \
+                        '--no-local[Skip local models]' \
+                        '--no-cloud[Skip cloud models]' \
+                        '*:query:'
+                    ;;
+                verify)
+                    _arguments \
+                        '-c[Category]:category:(factual statistical temporal)' \
+                        '--category[Category]:category:(factual statistical temporal)' \
+                        '-s[Sources JSON]:sources:' \
+                        '--sources[Sources JSON]:sources:' \
+                        '-o[Output format]:format:(text json)' \
+                        '--output[Output format]:format:(text json)' \
+                        '--threshold[Confidence threshold]:threshold:' \
+                        '*:claim:'
+                    ;;
+                procedure|proc)
+                    local -a proc_commands
+                    proc_commands=(
+                        'list:List procedures'
+                        'search:Search procedures'
+                        'show:Show procedure details'
+                        'stats:Show statistics'
+                        'create:Create procedure'
+                    )
+                    _describe -t proc_commands 'procedure commands' proc_commands
+                    ;;
+                status)
+                    _arguments \
+                        '--json[Output JSON]' \
+                        '--verbose[Show detailed status]'
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_alfie "$@"

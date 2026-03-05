@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Autopsy • Rasputin Nexus</title>
+  <link rel="stylesheet" href="shared-styles.css">
+  <style>
+    body {
+      background: #0a0e15;
+      color: #c5d1eb;
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #1e2836;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #7a8ba0;
+      margin-top: 8px;
+    }
+
+    .badge-novel {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255, 0, 100, 0.1);
+      border: 1px solid rgba(255, 0, 100, 0.3);
+      border-radius: 6px;
+      font-size: 12px;
+      color: #ff0064;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(30, 40, 54, 0.8) 0%, rgba(20, 28, 40, 0.9) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00d4ff 0%, #0099ff 100%);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7a8ba0;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #00d4ff;
+    }
+
+    .stat-unit {
+      font-size: 14px;
+      color: #7a8ba0;
+      margin-left: 4px;
+    }
+
+    .reports-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .report-card {
+      background: linear-gradient(135deg, rgba(30, 40, 54, 0.8) 0%, rgba(20, 28, 40, 0.9) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .report-card:hover {
+      border-color: rgba(0, 212, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 212, 255, 0.1);
+    }
+
+    .report-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00d4ff 0%, #ff0064 50%, #a855f7 100%);
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .report-summary {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c5d1eb;
+    }
+
+    .report-timestamp {
+      font-size: 12px;
+      color: #7a8ba0;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .metric-item {
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7a8ba0;
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #00d4ff;
+    }
+
+    .insights-section {
+      margin: 20px 0;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #00d4ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 3px solid;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .insight-item.success {
+      border-color: #00ff88;
+    }
+
+    .insight-item.warning {
+      border-color: #ffaa00;
+    }
+
+    .insight-item.error {
+      border-color: #ff0064;
+    }
+
+    .insight-item.info {
+      border-color: #00d4ff;
+    }
+
+    .insight-item.optimization {
+      border-color: #a855f7;
+    }
+
+    .insight-icon {
+      font-size: 20px;
+    }
+
+    .insight-text {
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .optimization-item {
+      padding: 16px;
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .optimization-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .optimization-type {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a855f7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .priority-badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .priority-high {
+      background: rgba(255, 0, 100, 0.2);
+      color: #ff0064;
+    }
+
+    .priority-medium {
+      background: rgba(255, 170, 0, 0.2);
+      color: #ffaa00;
+    }
+
+    .optimization-suggestion {
+      font-size: 14px;
+      color: #c5d1eb;
+      margin-bottom: 4px;
+    }
+
+    .optimization-impact {
+      font-size: 12px;
+      color: #7a8ba0;
+      font-style: italic;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #7a8ba0;
+    }
+
+    .spinner {
+      border: 3px solid rgba(0, 212, 255, 0.1);
+      border-top: 3px solid #00d4ff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #7a8ba0;
+    }
+
+    .empty-state h3 {
+      color: #c5d1eb;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar"></div>
+  
+  <div class="dashboard">
+    <div class="header">
+      <div>
+        <h1>🔬 Session Autopsy</h1>
+        <p class="subtitle">Automatic post-session analysis • <span class="badge-novel">Novel Feature</span></p>
+      </div>
+      <button onclick="loadData()" style="padding: 10px 20px; background: linear-gradient(135deg, #00d4ff, #0099ff); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Sessions</div>
+        <div class="stat-value" id="total-sessions">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Duration</div>
+        <div class="stat-value" id="avg-duration">0<span class="stat-unit">s</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Cost</div>
+        <div class="stat-value" id="avg-cost">$0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Insights</div>
+        <div class="stat-value" id="total-insights">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Optimizations</div>
+        <div class="stat-value" id="total-optimizations">0</div>
+      </div>
+    </div>
+
+    <!-- Reports -->
+    <div id="reports-container">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading autopsy reports...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared-nav.js"></script>
+  <script>
+    async function loadData() {
+      try {
+        // Load stats
+        const statsRes = await fetch('/api/autopsy/stats');
+        const stats = await statsRes.json();
+        
+        document.getElementById('total-sessions').textContent = stats.totalSessions || 0;
+        document.getElementById('avg-duration').innerHTML = (stats.avgDuration / 1000).toFixed(1) + '<span class="stat-unit">s</span>';
+        document.getElementById('avg-cost').textContent = '$' + (stats.avgCost || '0.0000');
+        document.getElementById('total-insights').textContent = stats.totalInsights || 0;
+        document.getElementById('total-optimizations').textContent = stats.totalOptimizations || 0;
+
+        // Load recent reports
+        const reportsRes = await fetch('/api/autopsy/recent?limit=20');
+        const reports = await reportsRes.json();
+
+        const container = document.getElementById('reports-container');
+
+        if (reports.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <h3>No autopsy reports yet</h3>
+              <p>Complete some sessions to see automatic analysis here.</p>
+              <p style="margin-top: 20px; font-size: 12px;">This is a <strong>novel feature</strong> — no other AI agent platform does automatic post-session analysis!</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = '<div class="reports-container">' +
+          reports.map(report => renderReport(report)).join('') +
+          '</div>';
+
+      } catch (err) {
+        console.error('Failed to load autopsy data:', err);
+        document.getElementById('reports-container').innerHTML = `
+          <div class="empty-state">
+            <h3>Error loading reports</h3>
+            <p>${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderReport(report) {
+      const insights = report.insights.map(insight => `
+        <div class="insight-item ${insight.type}">
+          <span class="insight-icon">${insight.icon}</span>
+          <div class="insight-text">
+            ${insight.message}
+            ${insight.details ? `<div style="margin-top: 4px; font-size: 12px; color: #7a8ba0;">${insight.details}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      const optimizations = report.optimizations.map(opt => `
+        <div class="optimization-item">
+          <div class="optimization-header">
+            <span class="optimization-type">${opt.type}</span>
+            <span class="priority-badge priority-${opt.priority}">${opt.priority}</span>
+          </div>
+          <div class="optimization-suggestion">${opt.suggestion}</div>
+          <div class="optimization-impact">💡 ${opt.impact}</div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="report-card">
+          <div class="report-header">
+            <div class="report-summary">${report.summary}</div>
+            <div class="report-timestamp">${new Date(report.timestamp).toLocaleString()}</div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-label">Duration</div>
+              <div class="metric-value">${(report.metrics.duration / 1000).toFixed(1)}s</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Cost</div>
+              <div class="metric-value">$${report.metrics.cost.toFixed(4)}</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Messages</div>
+              <div class="metric-value">${report.metrics.messageCount}</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Tool Calls</div>
+              <div class="metric-value">${report.metrics.toolCallCount}</div>
+            </div>
+            ${report.metrics.errorCount > 0 ? `
+            <div class="metric-item">
+              <div class="metric-label">Errors</div>
+              <div class="metric-value" style="color: #ff0064">${report.metrics.errorCount}</div>
+            </div>
+            ` : ''}
+          </div>
+
+          ${insights ? `
+          <div class="insights-section">
+            <div class="section-title">🔍 Insights</div>
+            ${insights}
+          </div>
+          ` : ''}
+
+          ${optimizations ? `
+          <div class="insights-section">
+            <div class="section-title">⚡ Optimization Suggestions</div>
+            ${optimizations}
+          </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // Load data on page load
+    loadData();
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadData, 30000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1654 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rasputin Nexus — Wide Research</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: oklch(0.06 0.01 270);
+        --bg2: oklch(0.11 0.02 270);
+        --bg3: oklch(0.08 0.015 265);
+        --bg4: oklch(0.15 0.025 270);
+        --text: oklch(0.92 0.01 280);
+        --text2: oklch(0.62 0.015 280);
+        --text3: oklch(0.48 0.01 280);
+        --accent: oklch(0.72 0.19 160);
+        --accent-dim: oklch(0.72 0.19 160/0.15);
+        --purple: oklch(0.65 0.18 280);
+        --purple-dim: oklch(0.65 0.18 280/0.12);
+        --border: oklch(0.24 0.015 280);
+        --border2: oklch(0.3 0.015 280);
+        --success: oklch(0.72 0.17 150);
+        --error: oklch(0.65 0.22 25);
+        --warn: oklch(0.78 0.15 85);
+        --blue: oklch(0.68 0.14 240);
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Space Grotesk', sans-serif;
+        position: relative;
+      }
+      /* Animated background - green/teal gradients */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 20% 50%, oklch(0.12 0.06 160/0.3) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 20%, oklch(0.1 0.04 180/0.2) 0%, transparent 50%);
+        z-index: -1;
+        pointer-events: none;
+        animation: bgShift 20s ease-in-out infinite;
+      }
+      @keyframes bgShift {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(-20px, 10px);
+        }
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border2);
+        border-radius: 3px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        grid-template-rows: 52px 1fr;
+        height: 100vh;
+      }
+
+      /* ── Topbar ── */
+      .topbar {
+        grid-column: 1/-1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: oklch(0.08 0.015 265/0.35);
+        backdrop-filter: blur(10px) saturate(150%);
+        border-bottom: 1px solid oklch(0.38 0.04 270/0.15);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .topbar::-webkit-scrollbar {
+        display: none;
+      }
+      .topbar-logo {
+        font-size: 16px;
+        font-weight: 700;
+        background: linear-gradient(135deg, oklch(0.68 0.3 290), oklch(0.78 0.22 195));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        white-space: nowrap;
+        text-decoration: none;
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+      }
+      .topbar-nav {
+        display: flex;
+        gap: 6px;
+        margin-left: 8px;
+        flex-wrap: nowrap;
+      }
+      .topbar-nav a {
+        font-size: 11.5px;
+        padding: 5px 11px;
+        border: 1px solid oklch(0.25 0.02 280/0.6);
+        border-radius: 20px;
+        transition: all 0.2s;
+        color: oklch(0.65 0.06 280);
+        text-decoration: none;
+        white-space: nowrap;
+        background: oklch(0.12 0.01 280/0.4);
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+      }
+      .topbar-nav a:hover {
+        color: oklch(0.9 0.15 195);
+        border-color: oklch(0.6 0.15 195/0.6);
+        background: oklch(0.18 0.04 195/0.3);
+        box-shadow: 0 0 12px oklch(0.6 0.15 195/0.15);
+        transform: translateY(-1px);
+      }
+      .topbar-nav a.active {
+        color: oklch(0.9 0.15 195);
+        border-color: oklch(0.6 0.15 195/0.5);
+        background: oklch(0.18 0.04 195/0.2);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .brave-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        background: var(--bg3);
+        color: var(--text3);
+        border: 1px solid var(--border);
+      }
+      .brave-badge.active {
+        color: var(--warn);
+        border-color: oklch(0.78 0.15 85/0.3);
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        background: var(--bg2);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .sidebar-header {
+        padding: 14px 14px 10px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sidebar-header h3 {
+        font-size: 11px;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+      }
+      .sidebar-count {
+        font-size: 10px;
+        color: var(--text3);
+        background: var(--bg3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .sidebar-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+      }
+      .past-job {
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 4px;
+        transition: all 0.3s;
+        border: 1px solid oklch(0.3 0.03 270/0.3);
+        background: oklch(0.11 0.02 270/0.6);
+        backdrop-filter: blur(8px);
+      }
+      .past-job:hover {
+        border-color: oklch(0.5 0.1 195/0.4);
+        box-shadow: 0 8px 32px oklch(0 0 0/0.3);
+        transform: translateY(-2px);
+      }
+      .past-job.active {
+        background: var(--accent-dim);
+        border-color: oklch(0.72 0.19 160/0.3);
+        box-shadow: 0 4px 16px oklch(0.72 0.19 160/0.3);
+      }
+      .past-job .q {
+        font-size: 12px;
+        font-weight: 500;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+      }
+      .past-job .meta {
+        font-size: 10px;
+        color: var(--text3);
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .dot-complete {
+        background: var(--success);
+      }
+      .dot-running {
+        background: var(--warn);
+        animation: pulse 1.2s infinite;
+      }
+      .dot-error {
+        background: var(--error);
+      }
+      .dot-pending {
+        background: var(--text3);
+      }
+
+      /* ── Main ── */
+      .main {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 24px 60px;
+      }
+
+      /* ── Hero Input ── */
+      .hero {
+        max-width: 720px;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .hero h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        margin-bottom: 6px;
+        background: linear-gradient(135deg, var(--accent), var(--purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .hero p {
+        color: var(--text2);
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .input-box {
+        display: flex;
+        gap: 10px;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 6px 6px 6px 18px;
+        transition: border-color 0.2s;
+      }
+      .input-box:focus-within {
+        border-color: var(--accent);
+      }
+      .input-box input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 15px;
+        font-family: inherit;
+        outline: none;
+      }
+      .input-box input::placeholder {
+        color: var(--text3);
+      }
+      .btn-go {
+        background: var(--accent);
+        color: oklch(0.13 0.015 160);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-go:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+      .btn-go:active {
+        transform: translateY(0);
+      }
+      .btn-go:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        filter: none;
+      }
+      .btn-go svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* ── Progress ── */
+      .progress {
+        max-width: 720px;
+        width: 100%;
+        margin-bottom: 20px;
+        display: none;
+      }
+      .progress.visible {
+        display: block;
+      }
+      .steps-bar {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 12px;
+      }
+      .step-seg {
+        flex: 1;
+        height: 5px;
+        border-radius: 3px;
+        background: var(--bg3);
+        transition: background 0.4s;
+      }
+      .step-seg.done {
+        background: var(--success);
+      }
+      .step-seg.active {
+        background: var(--accent);
+        animation: glow 2s infinite;
+      }
+      .step-seg.err {
+        background: var(--error);
+      }
+      .steps-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .step-label {
+        font-size: 10px;
+        color: var(--text3);
+        text-align: center;
+        flex: 1;
+        transition: color 0.3s;
+      }
+      .step-label.active {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .step-label.done {
+        color: var(--success);
+      }
+      .step-label.err {
+        color: var(--error);
+      }
+      .progress-detail {
+        font-size: 12px;
+        color: var(--text2);
+        padding: 8px 12px;
+        background: var(--bg2);
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      /* ── Queries ── */
+      .queries {
+        max-width: 720px;
+        width: 100%;
+        margin-bottom: 16px;
+        display: none;
+      }
+      .queries.visible {
+        display: block;
+      }
+      .queries h3 {
+        font-size: 12px;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .chip {
+        background: oklch(0.11 0.02 270/0.6);
+        border: 1px solid oklch(0.3 0.03 270/0.3);
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 11px;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text2);
+        backdrop-filter: blur(8px);
+        transition: all 0.3s;
+      }
+      .chip:hover {
+        border-color: oklch(0.5 0.1 195/0.4);
+        transform: translateY(-1px);
+      }
+
+      /* ── Sources ── */
+      .sources {
+        max-width: 720px;
+        width: 100%;
+        margin-bottom: 20px;
+        display: none;
+      }
+      .sources.visible {
+        display: block;
+      }
+      .sources h3 {
+        font-size: 12px;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sources h3 .ct {
+        font-size: 10px;
+        background: var(--bg3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--text2);
+      }
+      .src-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 6px;
+      }
+      .src {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        background: oklch(0.11 0.02 270/0.6);
+        border: 1px solid oklch(0.3 0.03 270/0.3);
+        border-radius: 8px;
+        font-size: 11px;
+        backdrop-filter: blur(8px);
+        transition: all 0.3s;
+        overflow: hidden;
+      }
+      .src:hover {
+        border-color: oklch(0.5 0.1 195/0.4);
+        box-shadow: 0 4px 16px oklch(0 0 0/0.2);
+        transform: translateY(-1px);
+      }
+      .src .dot {
+        flex-shrink: 0;
+      }
+      .src-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .src-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+        font-size: 11px;
+      }
+      .src-meta {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        margin-top: 2px;
+      }
+      .src-badge {
+        font-size: 9px;
+        padding: 1px 5px;
+        border-radius: 3px;
+        background: var(--bg3);
+        color: var(--text3);
+        font-family: 'JetBrains Mono', monospace;
+        text-transform: uppercase;
+      }
+      .src-badge.wikipedia {
+        color: var(--blue);
+      }
+      .src-badge.hackernews {
+        color: oklch(0.7 0.15 30);
+      }
+      .src-badge.arxiv {
+        color: var(--error);
+      }
+      .src-badge.reddit {
+        color: oklch(0.7 0.15 25);
+      }
+      .src-badge.stackoverflow {
+        color: oklch(0.75 0.12 60);
+      }
+      .src-badge.perplexity {
+        color: var(--accent);
+      }
+      .src-len {
+        font-size: 9px;
+        color: var(--text3);
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      /* ── Report ── */
+      .report {
+        max-width: 720px;
+        width: 100%;
+        display: none;
+      }
+      .report.visible {
+        display: block;
+      }
+      .report-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .report-bar h2 {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .report-actions {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-family: 'JetBrains Mono', monospace;
+        background: var(--bg3);
+        color: var(--text2);
+      }
+      .btn-sm {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--text2);
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 11px;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-sm:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+
+      /* Key findings */
+      .findings {
+        background: var(--accent-dim);
+        border: 1px solid oklch(0.72 0.19 160/0.2);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        display: none;
+      }
+      .findings.visible {
+        display: block;
+      }
+      .findings h3 {
+        font-size: 13px;
+        color: var(--accent);
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .findings li {
+        font-size: 13px;
+        margin-bottom: 5px;
+        line-height: 1.5;
+        color: var(--text);
+      }
+
+      /* Report markdown */
+      .md {
+        line-height: 1.75;
+        font-size: 14px;
+        color: oklch(0.88 0.01 280);
+      }
+      .md h1 {
+        font-size: 22px;
+        margin: 28px 0 12px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .md h2 {
+        font-size: 17px;
+        margin: 24px 0 10px;
+        font-weight: 600;
+        color: var(--accent);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+      }
+      .md h3 {
+        font-size: 14px;
+        margin: 18px 0 8px;
+        font-weight: 600;
+        color: var(--purple);
+      }
+      .md p {
+        margin-bottom: 12px;
+      }
+      .md ul,
+      ol {
+        margin: 0 0 12px 20px;
+      }
+      .md li {
+        margin-bottom: 4px;
+      }
+      .md code {
+        background: var(--bg3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--warn);
+      }
+      .md pre {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        margin: 12px 0;
+        overflow-x: auto;
+      }
+      .md pre code {
+        background: none;
+        padding: 0;
+        color: var(--text);
+      }
+      .md blockquote {
+        border-left: 3px solid var(--accent);
+        padding: 8px 0 8px 16px;
+        color: var(--text2);
+        margin: 12px 0;
+        background: var(--accent-dim);
+        border-radius: 0 6px 6px 0;
+      }
+      .md a {
+        color: var(--purple);
+        border-bottom: 1px dotted var(--purple);
+      }
+      .md a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .md hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 24px 0;
+      }
+      .md strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .md table {
+        border-collapse: collapse;
+        margin: 12px 0;
+        width: 100%;
+      }
+      .md th,
+      .md td {
+        border: 1px solid var(--border);
+        padding: 6px 10px;
+        font-size: 13px;
+        text-align: left;
+      }
+      .md th {
+        background: var(--bg3);
+        font-weight: 600;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 4px oklch(0.72 0.19 160/0.3);
+        }
+        50% {
+          box-shadow: 0 0 12px oklch(0.72 0.19 160/0.5);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      .fade-in-delay-1 {
+        animation: fadeIn 0.5s ease-out 0.1s forwards;
+        opacity: 0;
+      }
+      .fade-in-delay-2 {
+        animation: fadeIn 0.5s ease-out 0.2s forwards;
+        opacity: 0;
+      }
+      .fade-in-delay-3 {
+        animation: fadeIn 0.5s ease-out 0.3s forwards;
+        opacity: 0;
+      }
+      /* Sidebar empty state */
+      .sidebar-empty {
+        padding: 40px 20px;
+        text-align: center;
+        color: var(--text3);
+        font-size: 12px;
+      }
+      .sidebar-empty .icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+        opacity: 0.5;
+      }
+      /* How it works section */
+      .how-it-works {
+        max-width: 720px;
+        width: 100%;
+        margin: 24px auto;
+        display: none;
+      }
+      .how-it-works.visible {
+        display: block;
+      }
+      .steps-horizontal {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .step-h {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .step-num {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        background: var(--accent);
+        color: oklch(0.13 0.015 160);
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .step-text {
+        color: var(--text2);
+      }
+      .step-arrow {
+        color: var(--text3);
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .trending-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+        gap: 8px;
+      }
+      .trending-card {
+        background: oklch(0.11 0.02 270/0.6);
+        border: 1px solid oklch(0.3 0.03 270/0.3);
+        border-radius: 8px;
+        padding: 10px 12px;
+        backdrop-filter: blur(8px);
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+      .trending-card:hover {
+        border-color: oklch(0.5 0.1 195/0.4);
+        box-shadow: 0 4px 16px oklch(0 0 0/0.2);
+        transform: translateY(-1px);
+      }
+      .trending-card .topic-title {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+      .trending-card .topic-desc {
+        font-size: 10px;
+        color: var(--text3);
+        line-height: 1.3;
+      }
+      .recent-results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 8px;
+      }
+      .recent-card {
+        background: oklch(0.11 0.02 270/0.6);
+        border: 1px solid oklch(0.3 0.03 270/0.3);
+        border-radius: 8px;
+        padding: 10px 12px;
+        backdrop-filter: blur(8px);
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+      .recent-card:hover {
+        border-color: oklch(0.5 0.1 195/0.4);
+        box-shadow: 0 4px 16px oklch(0 0 0/0.2);
+        transform: translateY(-1px);
+      }
+      .recent-title {
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .recent-preview {
+        font-size: 10px;
+        color: var(--text3);
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      @media (max-width: 768px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          display: none;
+        }
+        .main {
+          padding: 20px 16px 40px;
+        }
+        .hero h1 {
+          font-size: 24px;
+        }
+        .src-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <div class="topbar">
+        <a href="/" class="topbar-logo">🧠 RASPUTIN NEXUS</a>
+        <div class="topbar-nav">
+          <a href="/" title="Main control center with GPU monitoring, chat, and system metrics"
+            >📊 Dashboard</a
+          >
+          <a href="/browser.html" title="Control a headless browser">🌐 Browser</a>
+          <a href="/execute.html" title="Run code in sandboxed Docker">⚡ Execute</a>
+          <a href="/research.html" class="active" title="Deep research via Perplexity"
+            >🔬 Research</a
+          >
+          <a href="/playground.html" title="Test prompts against multiple models">🎯 Playground</a>
+          <a href="/council.html" title="Multi-model AI debate consensus">🏛️ Council</a>
+          <a href="/replay.html" title="Step through past sessions">🔄 Replay</a>
+          <a href="/agents.html" title="Monitor and spawn sub-agents">🤖 Agents</a>
+          <a href="/knowledge.html" title="Browse workspace files">📚 Knowledge</a>
+          <a href="/templates.html" title="One-click workflow templates">📋 Templates</a>
+          <a href="/remote.html" title="Remote device management">🖥️ Remote</a>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <h3>History</h3>
+          <span class="sidebar-count" id="job-count">0</span>
+        </div>
+        <div class="sidebar-list" id="past-jobs"></div>
+      </div>
+
+      <div class="main" id="main">
+        <div class="hero">
+          <h1>Wide Research</h1>
+          <p>
+            Multi-source deep research — searches, reads, and synthesizes across Wikipedia, HN,
+            arXiv, StackOverflow, and Reddit.
+          </p>
+          <div class="input-box">
+            <input
+              type="text"
+              id="question"
+              placeholder="What do you want to research?"
+              autofocus
+            />
+            <button class="btn-go" id="btn-start" onclick="startResearch()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+              Research
+            </button>
+          </div>
+          <div
+            id="suggestedTopics"
+            style="
+              display: flex;
+              gap: 8px;
+              flex-wrap: wrap;
+              margin-top: 16px;
+              justify-content: center;
+            "
+          >
+            <button
+              onclick="quickResearch('Latest AI breakthroughs in 2026')"
+              style="
+                padding: 6px 14px;
+                border-radius: 20px;
+                border: 1px solid oklch(0.25 0.02 280/0.6);
+                background: oklch(0.12 0.01 280/0.4);
+                color: oklch(0.72 0.012 270);
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 12px;
+                transition: all 0.2s;
+              "
+            >
+              🤖 Latest AI breakthroughs
+            </button>
+            <button
+              onclick="quickResearch('Cryptocurrency market analysis 2026')"
+              style="
+                padding: 6px 14px;
+                border-radius: 20px;
+                border: 1px solid oklch(0.25 0.02 280/0.6);
+                background: oklch(0.12 0.01 280/0.4);
+                color: oklch(0.72 0.012 270);
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 12px;
+                transition: all 0.2s;
+              "
+            >
+              💰 Crypto market analysis
+            </button>
+            <button
+              onclick="quickResearch('RTX 5090 vs RTX 6000 Ada performance comparison')"
+              style="
+                padding: 6px 14px;
+                border-radius: 20px;
+                border: 1px solid oklch(0.25 0.02 280/0.6);
+                background: oklch(0.12 0.01 280/0.4);
+                color: oklch(0.72 0.012 270);
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 12px;
+                transition: all 0.2s;
+              "
+            >
+              🎮 GPU comparison
+            </button>
+            <button
+              onclick="quickResearch('Best practices for AI agent orchestration')"
+              style="
+                padding: 6px 14px;
+                border-radius: 20px;
+                border: 1px solid oklch(0.25 0.02 280/0.6);
+                background: oklch(0.12 0.01 280/0.4);
+                color: oklch(0.72 0.012 270);
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 12px;
+                transition: all 0.2s;
+              "
+            >
+              🧠 Agent orchestration
+            </button>
+          </div>
+        </div>
+
+        <div class="how-it-works visible fade-in" id="how-it-works">
+          <h3
+            style="
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              color: var(--text3);
+              margin-bottom: 10px;
+              font-weight: 600;
+            "
+          >
+            How it works
+          </h3>
+          <div class="steps-horizontal">
+            <div class="step-h">
+              <span class="step-num">1</span>
+              <span class="step-text">Generate Queries</span>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-h">
+              <span class="step-num">2</span>
+              <span class="step-text">Search Sources</span>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-h">
+              <span class="step-num">3</span>
+              <span class="step-text">Extract & Synthesize</span>
+            </div>
+          </div>
+
+          <h3
+            style="
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              color: var(--text3);
+              margin: 20px 0 10px;
+              font-weight: 600;
+            "
+          >
+            Trending topics
+          </h3>
+          <div class="trending-grid">
+            <div
+              class="trending-card"
+              onclick="quickResearch('Latest breakthroughs in quantum computing 2026')"
+            >
+              <div class="topic-title">Quantum Computing</div>
+              <div class="topic-desc">Latest breakthroughs in quantum hardware and algorithms</div>
+            </div>
+            <div
+              class="trending-card"
+              onclick="quickResearch('AI agent orchestration best practices')"
+            >
+              <div class="topic-title">AI Agents</div>
+              <div class="topic-desc">Best practices for multi-agent orchestration systems</div>
+            </div>
+            <div
+              class="trending-card"
+              onclick="quickResearch('Rust vs Go performance comparison 2026')"
+            >
+              <div class="topic-title">Rust vs Go</div>
+              <div class="topic-desc">Performance and ecosystem comparison for 2026</div>
+            </div>
+            <div
+              class="trending-card"
+              onclick="quickResearch('NVIDIA Blackwell architecture deep dive')"
+            >
+              <div class="topic-title">GPU Architecture</div>
+              <div class="topic-desc">Deep dive into NVIDIA's Blackwell generation</div>
+            </div>
+          </div>
+
+          <h3
+            style="
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              color: var(--text3);
+              margin: 20px 0 10px;
+              font-weight: 600;
+            "
+          >
+            Recent results
+          </h3>
+          <div class="recent-results" id="recent-results">
+            <div
+              class="recent-card"
+              style="
+                border: 1px dashed oklch(0.3 0.03 270/0.5);
+                background: oklch(0.08 0.015 265);
+                cursor: default;
+              "
+            >
+              <div class="recent-title" style="color: var(--text3)">No research history yet</div>
+              <div class="recent-preview">
+                Your completed research reports will appear here — try running a search above to get
+                started
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress" id="progress">
+          <div class="steps-bar" id="steps-bar">
+            <div class="step-seg" data-step="1"></div>
+            <div class="step-seg" data-step="2"></div>
+            <div class="step-seg" data-step="3"></div>
+            <div class="step-seg" data-step="4"></div>
+            <div class="step-seg" data-step="5"></div>
+          </div>
+          <div class="steps-labels">
+            <div class="step-label" data-step="1" id="sl-1">Generate Queries</div>
+            <div class="step-label" data-step="2" id="sl-2">Search Sources</div>
+            <div class="step-label" data-step="3" id="sl-3">Extract Content</div>
+            <div class="step-label" data-step="4" id="sl-4">AI Synthesis</div>
+            <div class="step-label" data-step="5" id="sl-5">Complete</div>
+          </div>
+          <div class="progress-detail" id="progress-detail">Initializing...</div>
+        </div>
+
+        <div class="queries" id="queries-panel">
+          <h3>🔍 Search Queries</h3>
+          <div class="chips" id="chips"></div>
+        </div>
+
+        <div class="sources" id="sources-panel">
+          <h3>📄 Sources <span class="ct" id="src-count">0</span></h3>
+          <div class="src-grid" id="src-grid"></div>
+        </div>
+
+        <div class="report" id="report-panel">
+          <div class="report-bar">
+            <h2>📋 Research Report</h2>
+            <div class="report-actions">
+              <span class="badge" id="duration"></span>
+              <span class="badge" id="src-summary"></span>
+              <button class="btn-sm" onclick="exportMd()">📥 Export MD</button>
+              <button class="btn-sm" onclick="exportFromServer()">💾 Download</button>
+              <button class="btn-sm" onclick="shareResult()">🔗 Share</button>
+            </div>
+          </div>
+          <div class="findings" id="findings">
+            <h3>🎯 Key Findings</h3>
+            <ul id="findings-list"></ul>
+          </div>
+          <div class="md" id="report-md"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const SECRET = 'rasputin-neural-2026';
+      let ws = null,
+        currentJobId = null,
+        currentReport = null,
+        pollTimer = null;
+
+      // ── WebSocket ──
+      function connectWS() {
+        try {
+          const p = location.protocol === 'https:' ? 'wss:' : 'ws:';
+          ws = new WebSocket(`${p}//${location.host}`);
+          ws.onopen = () => ws.send(JSON.stringify({ type: 'auth', secret: SECRET }));
+          ws.onmessage = (e) => {
+            try {
+              handleMsg(JSON.parse(e.data));
+            } catch (_) {}
+          };
+          ws.onclose = () => setTimeout(connectWS, 3000);
+          ws.onerror = () => {};
+        } catch (_) {
+          setTimeout(connectWS, 5000);
+        }
+      }
+
+      function handleMsg(m) {
+        if (m.jobId && m.jobId !== currentJobId) return;
+        switch (m.type) {
+          case 'research_progress':
+            setProgress(m);
+            break;
+          case 'research_queries':
+            setQueries(m.queries);
+            break;
+          case 'research_sources':
+            setSources(m.sources);
+            break;
+          case 'research_source_update':
+            updateSrc(m);
+            break;
+          case 'research_synthesis_chunk':
+            updateSynthesis(m.chunk, m.fullText);
+            break;
+          case 'research_complete':
+            loadReport(m.jobId);
+            break;
+          case 'research_error':
+            setError(m.error);
+            break;
+        }
+      }
+
+      // ── Streaming synthesis ──
+      function updateSynthesis(chunk, fullText) {
+        const report = $('report-panel');
+        if (!report.classList.contains('visible')) {
+          report.classList.add('visible', 'fade-in');
+          $('report-bar').style.display = 'flex';
+          $('report-md').innerHTML = '';
+        }
+        $('report-md').innerHTML = renderMd(fullText);
+        // Auto-scroll the main container during streaming
+        const main = $('main');
+        main.scrollTop = main.scrollHeight;
+      }
+
+      // ── Progress ──
+      const STEP_NAMES = [
+        '',
+        'Generate Queries',
+        'Search Sources',
+        'Extract Content',
+        'AI Synthesis',
+        'Complete',
+      ];
+      function setProgress(p) {
+        const prog = $('progress');
+        if (!prog.classList.contains('visible')) {
+          prog.classList.add('visible', 'fade-in');
+        }
+        document.querySelectorAll('.step-seg').forEach((s) => {
+          const n = +s.dataset.step;
+          s.className = 'step-seg';
+          if (n < p.step) s.classList.add('done');
+          else if (n === p.step) s.classList.add(p.stepName === 'error' ? 'err' : 'active');
+        });
+        document.querySelectorAll('.step-label').forEach((s) => {
+          const n = +s.dataset.step;
+          s.className = 'step-label';
+          if (n < p.step) s.classList.add('done');
+          else if (n === p.step) s.classList.add(p.stepName === 'error' ? 'err' : 'active');
+        });
+        $('progress-detail').textContent = p.details || STEP_NAMES[p.step] || 'Working...';
+      }
+      function setError(err) {
+        document.querySelectorAll('.step-seg.active').forEach((s) => {
+          s.classList.remove('active');
+          s.classList.add('err');
+        });
+        document.querySelectorAll('.step-label.active').forEach((s) => {
+          s.classList.remove('active');
+          s.classList.add('err');
+        });
+        $('progress-detail').textContent = 'Error: ' + err;
+        enableBtn();
+      }
+
+      // ── Queries ──
+      function setQueries(qs) {
+        const panel = $('queries-panel');
+        if (!panel.classList.contains('visible')) {
+          panel.classList.add('visible', 'fade-in');
+        }
+        $('chips').innerHTML = qs.map((q) => `<div class="chip">${esc(q)}</div>`).join('');
+      }
+
+      // ── Sources ──
+      function setSources(srcs) {
+        const panel = $('sources-panel');
+        if (!panel.classList.contains('visible')) {
+          panel.classList.add('visible', 'fade-in');
+        }
+        $('src-count').textContent = srcs.length;
+        $('src-grid').innerHTML = srcs
+          .map(
+            (s, i) => `<div class="src" id="src-${i}">
+    <div class="dot dot-${s.status || 'pending'}"></div>
+    <div class="src-info">
+      <div class="src-title"><a href="${esc(s.url)}" target="_blank">${esc(s.title || urlShort(s.url))}</a></div>
+      <div class="src-meta"><span class="src-badge ${s.source || ''}">${esc(s.source || 'web')}</span><span class="src-len" id="slen-${i}"></span></div>
+    </div>
+  </div>`
+          )
+          .join('');
+      }
+      function updateSrc(u) {
+        const el = $(`src-${u.index}`);
+        if (!el) return;
+        const dot = el.querySelector('.dot');
+        if (dot) dot.className = 'dot dot-' + (u.status || 'pending');
+        const len = $(`slen-${u.index}`);
+        if (len && u.length) len.textContent = fmtLen(u.length);
+      }
+
+      // ── Report ──
+      async function loadReport(jid) {
+        if (pollTimer) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+        const r = await (await fetch(`/api/research/${jid}`, { credentials: 'include' })).json();
+        currentReport = r;
+        // progress done
+        document.querySelectorAll('.step-seg').forEach((s) => (s.className = 'step-seg done'));
+        document.querySelectorAll('.step-label').forEach((s) => {
+          s.className = 'step-label done';
+        });
+        $('progress-detail').textContent = 'Research complete!';
+        // show sources final state
+        if (r.sources?.length) {
+          setSources(r.sources);
+          r.sources.forEach((s, i) =>
+            updateSrc({ index: i, status: s.status, length: s.textLength })
+          );
+        }
+        // report
+        const report = $('report-panel');
+        if (!report.classList.contains('visible')) {
+          report.classList.add('visible', 'fade-in');
+        }
+        $('duration').textContent = fmtDur(r.duration);
+        const ok = r.sources?.filter((s) => s.status === 'done').length || 0;
+        $('src-summary').textContent = `${ok} sources`;
+        if (r.keyFindings?.length) {
+          $('findings').classList.add('visible');
+          $('findings-list').innerHTML = r.keyFindings.map((f) => `<li>${esc(f)}</li>`).join('');
+        }
+        $('report-md').innerHTML = renderMd(r.synthesis || 'No synthesis available.');
+        enableBtn();
+        loadHistory();
+        // scroll to report
+        $('report-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ── Actions ──
+      function quickResearch(topic) {
+        document.getElementById('question').value = topic;
+        document.getElementById('suggestedTopics').style.display = 'none';
+        startResearch();
+      }
+
+      async function startResearch() {
+        const q = $('question').value.trim();
+        if (!q) return;
+        resetUI();
+        $('btn-start').disabled = true;
+        $('btn-start').querySelector('svg').style.display = 'none';
+        const res = await fetch('/api/research', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ question: q }),
+        });
+        const d = await res.json();
+        if (d.error) {
+          setError(d.error);
+          return;
+        }
+        currentJobId = d.jobId;
+        // Start polling as backup for WS
+        pollTimer = setInterval(() => pollJob(currentJobId), 3000);
+      }
+      async function pollJob(jid) {
+        try {
+          const r = await (await fetch(`/api/research/${jid}`, { credentials: 'include' })).json();
+          if (r.progress) setProgress(r.progress);
+          if (r.queries?.length && !$('queries-panel').classList.contains('visible'))
+            setQueries(r.queries);
+          if (r.sources?.length) {
+            if (!$('sources-panel').classList.contains('visible')) setSources(r.sources);
+            r.sources.forEach((s, i) =>
+              updateSrc({ index: i, status: s.status, length: s.textLength })
+            );
+          }
+          if (r.status === 'complete') loadReport(jid);
+          else if (r.status === 'error') setError(r.error || 'Unknown error');
+        } catch (_) {}
+      }
+      function resetUI() {
+        ['queries-panel', 'sources-panel', 'report-panel', 'progress'].forEach((id) =>
+          $(id).classList.remove('visible')
+        );
+        $('findings').classList.remove('visible');
+        $('how-it-works').classList.remove('visible');
+        if (pollTimer) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+      }
+      function enableBtn() {
+        $('btn-start').disabled = false;
+        $('btn-start').querySelector('svg').style.display = '';
+      }
+
+      async function loadHistory() {
+        try {
+          const r = await (await fetch('/api/research', { credentials: 'include' })).json();
+          const jobs = r.jobs || [];
+          $('job-count').textContent = jobs.length;
+          if (jobs.length === 0) {
+            $('past-jobs').innerHTML =
+              '<div class="sidebar-empty"><div class="icon">📚</div><div>No research history yet</div><div style="margin-top:6px;font-size:11px">Start by asking a research question above</div></div>';
+            return;
+          }
+          $('past-jobs').innerHTML = jobs
+            .map((j) => {
+              const cls =
+                j.status === 'complete'
+                  ? 'complete'
+                  : j.status === 'error'
+                    ? 'error'
+                    : j.status === 'running'
+                      ? 'running'
+                      : 'pending';
+              const time = j.completedAt
+                ? ago(j.completedAt)
+                : j.status === 'running'
+                  ? 'In progress...'
+                  : '';
+              return `<div class="past-job ${j.id === currentJobId ? 'active' : ''}" onclick="openJob('${j.id}')">
+        <div class="q"><span class="dot dot-${cls}"></span> ${esc(j.question)}</div>
+        <div class="meta">${time}</div>
+      </div>`;
+            })
+            .join('');
+          // Update recent results
+          const completed = jobs.filter((j) => j.status === 'complete').slice(0, 3);
+          if (completed.length > 0) {
+            $('recent-results').innerHTML = completed
+              .map(
+                (j) => `
+        <div class="recent-card" onclick="openJob('${j.id}')">
+          <div class="recent-title">${esc(j.question)}</div>
+          <div class="recent-preview">${ago(j.completedAt)} · ${j.sources?.length || 0} sources</div>
+        </div>
+      `
+              )
+              .join('');
+          }
+        } catch (_) {}
+      }
+      async function openJob(jid) {
+        currentJobId = jid;
+        const r = await (await fetch(`/api/research/${jid}`, { credentials: 'include' })).json();
+        currentReport = r;
+        $('question').value = r.question || '';
+        resetUI();
+        if (r.queries?.length) setQueries(r.queries);
+        if (r.sources?.length) {
+          setSources(r.sources);
+          r.sources.forEach((s, i) =>
+            updateSrc({ index: i, status: s.status, length: s.textLength })
+          );
+        }
+        if (r.status === 'complete') {
+          setProgress({ step: 4, stepName: 'complete', details: 'Research complete!' });
+          loadReport(jid);
+        } else if (r.status === 'error') {
+          setProgress({ step: r.progress?.step || 1, stepName: 'error', details: r.error || '' });
+          setError(r.error || 'Unknown');
+        } else if (r.status === 'running') {
+          setProgress(r.progress || { step: 1, stepName: 'running', details: 'In progress...' });
+          pollTimer = setInterval(() => pollJob(jid), 3000);
+        }
+        loadHistory();
+      }
+
+      function exportMd() {
+        if (!currentReport) return;
+        const r = currentReport;
+        let md = `# Research Report: ${r.question}\n\n`;
+        md += `> Generated: ${new Date(r.completedAt || r.startedAt).toISOString()} | Duration: ${fmtDur(r.duration)}\n\n`;
+        if (r.keyFindings?.length)
+          md += `## 🎯 Key Findings\n\n${r.keyFindings.map((f) => `- ${f}`).join('\n')}\n\n`;
+        md += `## 🔍 Search Queries\n\n${(r.queries || []).map((q, i) => `${i + 1}. ${q}`).join('\n')}\n\n`;
+        md += `## 📄 Sources\n\n${(r.sources || []).map((s) => `- [${s.title || s.url}](${s.url}) *(${s.source || 'web'})*`).join('\n')}\n\n`;
+        md += `## 📋 Analysis\n\n${r.synthesis || ''}\n`;
+        const b = new Blob([md], { type: 'text/markdown' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(b);
+        a.download = `research-${(r.question || 'report').slice(0, 40).replace(/[^a-z0-9]+/gi, '-')}.md`;
+        a.click();
+      }
+
+      function exportFromServer() {
+        if (!currentReport) return;
+        window.open('/api/export/research/' + currentReport.id, '_blank');
+      }
+      function shareResult() {
+        if (!currentReport) return;
+        fetch('/api/share', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ type: 'research', id: currentReport.id }),
+        })
+          .then((r) => r.json())
+          .then((d) => {
+            const url = location.origin + d.url;
+            navigator.clipboard
+              .writeText(url)
+              .then(() => alert('Share link copied: ' + url))
+              .catch(() => prompt('Share link:', url));
+          })
+          .catch((e) => alert('Share failed: ' + e.message));
+      }
+
+      // ── Markdown renderer (better) ──
+      function renderMd(text) {
+        let h = text;
+        // Escape HTML
+        h = h.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        // Code blocks
+        h = h.replace(
+          /```(\w*)\n([\s\S]*?)```/g,
+          (_, lang, code) => `<pre><code class="lang-${lang}">${code.trim()}</code></pre>`
+        );
+        // Inline code
+        h = h.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+        // Headers
+        h = h.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+        h = h.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+        h = h.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+        h = h.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+        // Bold/italic
+        h = h.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        h = h.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        h = h.replace(/(?<!\*)\*([^\*\n]+)\*(?!\*)/g, '<em>$1</em>');
+        // Links
+        h = h.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" target="_blank" rel="noopener">$1</a>'
+        );
+        // Blockquotes
+        h = h.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+        h = h.replace(/<\/blockquote>\n<blockquote>/g, '\n');
+        // Numbered lists
+        h = h.replace(/^(\d+)\. (.+)$/gm, '<oli>$2</oli>');
+        h = h.replace(
+          /((?:<oli>.*<\/oli>\n?)+)/g,
+          (m) =>
+            '<ol>' + m.replace(/<\/?oli>/g, (s) => (s === '<oli>' ? '<li>' : '</li>')) + '</ol>'
+        );
+        // Bullet lists
+        h = h.replace(/^[-*] (.+)$/gm, '<uli>$1</uli>');
+        h = h.replace(
+          /((?:<uli>.*<\/uli>\n?)+)/g,
+          (m) =>
+            '<ul>' + m.replace(/<\/?uli>/g, (s) => (s === '<uli>' ? '<li>' : '</li>')) + '</ul>'
+        );
+        // HR
+        h = h.replace(/^---+$/gm, '<hr>');
+        // Paragraphs
+        h = h.replace(/\n\n+/g, '</p><p>');
+        h = '<p>' + h + '</p>';
+        // Clean up
+        h = h.replace(/<p>\s*<(h[1-4]|ul|ol|pre|blockquote|hr)/g, '<$1');
+        h = h.replace(/<\/(h[1-4]|ul|ol|pre|blockquote)>\s*<\/p>/g, '</$1>');
+        h = h.replace(/<p><\/p>/g, '');
+        h = h.replace(/<p><hr><\/p>/g, '<hr>');
+        h = h.replace(/<hr><\/p>/g, '<hr>');
+        return h;
+      }
+
+      // ── Util ──
+      function $(id) {
+        return document.getElementById(id);
+      }
+      function esc(s) {
+        return (s || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+      function urlShort(u) {
+        try {
+          const x = new URL(u);
+          return x.hostname + x.pathname.slice(0, 30);
+        } catch (_) {
+          return u?.slice(0, 40) || '';
+        }
+      }
+      function fmtLen(n) {
+        return n > 1000 ? (n / 1000).toFixed(1) + 'k' : n + '';
+      }
+      function fmtDur(ms) {
+        if (!ms) return '–';
+        const s = ms / 1000;
+        return s < 60
+          ? s.toFixed(1) + 's'
+          : s < 3600
+            ? (s / 60).toFixed(1) + 'm'
+            : (s / 3600).toFixed(1) + 'h';
+      }
+      function ago(ts) {
+        const d = Date.now() - ts;
+        if (d < 60000) return 'just now';
+        if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
+        if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
+        return Math.floor(d / 86400000) + 'd ago';
+      }
+
+      $('question').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !$('btn-start').disabled) startResearch();
+      });
+
+      connectWS();
+      loadHistory();
+    </script>
+  </body>
+</html>

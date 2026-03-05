@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALFIE Nexus — Session Replay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(0.15 0.02 280);
+  --surface: oklch(0.19 0.02 280);
+  --surface2: oklch(0.23 0.02 280);
+  --border: oklch(0.30 0.02 280);
+  --text: oklch(0.92 0.01 280);
+  --text-dim: oklch(0.65 0.01 280);
+  --accent: oklch(0.70 0.18 280);
+  --user: oklch(0.65 0.15 250);
+  --assistant: oklch(0.65 0.15 155);
+  --tool: oklch(0.70 0.15 65);
+  --system: oklch(0.55 0.10 280);
+  --error: oklch(0.65 0.20 25);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Space Grotesk',sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* Header */
+.header { display:flex; align-items:center; gap:12px; padding:10px 20px; background:oklch(0.08 0.015 265/0.35); backdrop-filter:blur(10px) saturate(150%); border-bottom:1px solid oklch(0.38 0.04 270/0.15); flex-shrink:0; position:sticky; top:0; z-index:100; }
+.header-logo { font-size:16px; font-weight:700; background:linear-gradient(135deg,oklch(0.68 0.30 290),oklch(0.78 0.22 195)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; white-space:nowrap; text-decoration:none; }
+.header-logo:hover { opacity:0.85; }
+.header-divider { width:1px; height:20px; background:oklch(0.38 0.04 270/0.2); }
+.nav-link { color:oklch(0.70 0.18 280); font-size:12px; text-decoration:none; padding:5px 12px; border:1px solid oklch(0.30 0.02 280); border-radius:6px; white-space:nowrap; transition:all .2s; }
+.nav-link:hover { border-color:oklch(0.70 0.18 280); background:oklch(0.70 0.18 280/0.1); }
+.nav-link.active { background:oklch(0.70 0.18 280/0.15); border-color:oklch(0.70 0.18 280); color:oklch(0.78 0.22 195); }
+.header-spacer { flex:1; }
+select, button { font-family:inherit; font-size:13px; background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:6px 12px; cursor:pointer; transition:all 0.15s; }
+select:hover, button:hover { border-color:var(--accent); }
+button.active { background:var(--accent); color:oklch(0.15 0.02 280); border-color:var(--accent); }
+.session-picker { flex:1; max-width:500px; }
+.session-info { font-size:12px; color:var(--text-dim); margin-left:auto; white-space:nowrap; }
+
+/* Controls */
+.controls { display:flex; align-items:center; gap:8px; padding:8px 24px; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; }
+.controls button { min-width:36px; font-size:16px; padding:4px 10px; }
+.step-label { font-size:12px; color:var(--text-dim); min-width:80px; text-align:center; font-family:'JetBrains Mono',monospace; }
+.timeline { flex:1; height:6px; background:var(--surface2); border-radius:3px; cursor:pointer; position:relative; overflow:hidden; }
+.timeline-fill { height:100%; background:var(--accent); border-radius:3px; transition:width 0.1s; }
+.speed-btns { display:flex; gap:2px; }
+.speed-btns button { font-size:11px; min-width:32px; padding:3px 6px; }
+.auto-scroll-btn { font-size:11px; }
+
+/* Messages */
+.messages { flex:1; overflow-y:auto; padding:16px 24px; display:flex; flex-direction:column; gap:8px; scroll-behavior:smooth; }
+.msg { padding:10px 14px; border-radius:8px; border-left:3px solid transparent; max-width:90%; font-size:13px; line-height:1.5; opacity:0.3; transition:opacity 0.3s; }
+.msg.visible { opacity:1; }
+.msg.current { box-shadow:0 0 0 1px var(--accent); }
+.msg[data-role="user"] { border-left-color:var(--user); background:oklch(0.19 0.04 250); align-self:flex-end; }
+.msg[data-role="assistant"] { border-left-color:var(--assistant); background:oklch(0.19 0.04 155); }
+.msg[data-role="tool"] { border-left-color:var(--tool); background:oklch(0.19 0.04 65); }
+.msg[data-role="system"], .msg[data-role="session"], .msg[data-role="model_change"] { border-left-color:var(--system); background:var(--surface2); font-size:11px; color:var(--text-dim); }
+.msg-header { display:flex; gap:8px; align-items:center; margin-bottom:4px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+.msg-header .role { color:var(--text-dim); }
+.msg-header .ts { color:var(--text-dim); font-weight:400; margin-left:auto; font-family:'JetBrains Mono',monospace; }
+.msg-content { white-space:pre-wrap; word-break:break-word; font-size:13px; }
+.msg-content code { font-family:'JetBrains Mono',monospace; background:oklch(0.12 0.02 280); padding:1px 4px; border-radius:3px; font-size:12px; }
+
+/* Tool calls */
+.tool-card { margin-top:6px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.tool-card-header { display:flex; align-items:center; gap:6px; padding:6px 10px; background:var(--surface2); cursor:pointer; font-size:12px; font-family:'JetBrains Mono',monospace; }
+.tool-card-header::before { content:'▶'; font-size:9px; transition:transform 0.2s; }
+.tool-card.open .tool-card-header::before { transform:rotate(90deg); }
+.tool-card-body { display:none; padding:8px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; background:oklch(0.12 0.01 280); max-height:300px; overflow:auto; white-space:pre-wrap; word-break:break-all; }
+.tool-card.open .tool-card-body { display:block; }
+
+/* Loading */
+.loading { display:flex; align-items:center; justify-content:center; flex:1; color:var(--text-dim); font-size:14px; }
+.empty { text-align:center; padding:48px; color:var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/" class="header-logo">🧠 ALFIE NEXUS</a>
+  <div class="header-divider"></div>
+  <a href="/" class="nav-link">📊 Dashboard</a>
+  <a href="/browser.html" class="nav-link">🌐 Browser</a>
+  <a href="/execute.html" class="nav-link">⚡ Execute</a>
+  <a href="/research.html" class="nav-link">🔬 Research</a>
+  <a href="/playground.html" class="nav-link">🎯 Playground</a>
+  <a href="/replay.html" class="nav-link active">🔄 Replay</a>
+  <a href="/agents.html" class="nav-link">🤖 Agents</a>
+  <a href="/knowledge.html" class="nav-link">📚 Knowledge</a>
+  <a href="/templates.html" class="nav-link">📝 Templates</a>
+  <div class="header-spacer"></div>
+  <select class="session-picker" id="sessionPicker"><option>Loading sessions...</option></select>
+  <button onclick="loadSession()" id="loadBtn">Load</button>
+  <div class="session-info" id="sessionInfo">—</div>
+</div>
+
+<div class="controls" id="controlsBar" style="display:none">
+  <button onclick="stepPrev()" title="Previous">⏮</button>
+  <button onclick="togglePlay()" id="playBtn" title="Play/Pause">▶</button>
+  <button onclick="stepNext()" title="Next">⏭</button>
+  <div class="step-label" id="stepLabel">0 / 0</div>
+  <div class="timeline" id="timeline" onclick="scrub(event)"><div class="timeline-fill" id="timelineFill"></div></div>
+  <div class="speed-btns">
+    <button class="active" data-speed="1" onclick="setSpeed(1,this)">1×</button>
+    <button data-speed="2" onclick="setSpeed(2,this)">2×</button>
+    <button data-speed="4" onclick="setSpeed(4,this)">4×</button>
+  </div>
+  <button class="auto-scroll-btn active" id="scrollBtn" onclick="toggleScroll()">📜 Auto</button>
+  <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer" onclick="exportSession()">📥 Export</button>
+  <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer" onclick="shareSession()">🔗 Share</button>
+</div>
+
+<div class="messages" id="messages"><div class="empty">Select a session and click Load to begin replay.</div></div>
+
+<script>
+let sessions = [], messages = [], currentStep = -1, playing = false, playTimer = null, speed = 1, autoScroll = true;
+
+async function fetchSessions() {
+  const r = await fetch('/api/sessions');
+  const d = await r.json();
+  sessions = d.sessions || [];
+  const picker = document.getElementById('sessionPicker');
+  picker.innerHTML = sessions.slice(0, 200).map(s => {
+    const date = new Date(s.modified).toLocaleString();
+    const size = s.size > 1048576 ? (s.size/1048576).toFixed(1)+'MB' : (s.size/1024).toFixed(0)+'KB';
+    return `<option value="${s.id}">${s.id.slice(0,8)}… — ${date} (${size})</option>`;
+  }).join('');
+}
+
+async function loadSession() {
+  const id = document.getElementById('sessionPicker').value;
+  if (!id) return;
+  document.getElementById('messages').innerHTML = '<div class="loading">Loading session...</div>';
+  stop();
+  try {
+    const r = await fetch(`/api/replay/${id}`, { method: 'POST' });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    messages = d.messages;
+    currentStep = -1;
+    document.getElementById('sessionInfo').textContent = `${messages.length} messages`;
+    document.getElementById('controlsBar').style.display = 'flex';
+    renderMessages();
+    updateUI();
+  } catch (e) {
+    document.getElementById('messages').innerHTML = `<div class="empty" style="color:var(--error)">Error: ${e.message}</div>`;
+  }
+}
+
+function renderMessages() {
+  const container = document.getElementById('messages');
+  container.innerHTML = '';
+  messages.forEach((m, i) => {
+    const div = document.createElement('div');
+    const role = m.role || m.type || 'unknown';
+    div.className = 'msg';
+    div.dataset.role = role;
+    div.dataset.index = i;
+
+    const ts = m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '';
+    let headerRole = role;
+    if (m.toolName) headerRole = `tool: ${m.toolName}`;
+    if (m.model) headerRole += ` (${m.model})`;
+
+    div.innerHTML = `<div class="msg-header"><span class="role">${esc(headerRole)}</span><span class="ts">${ts}</span></div>`;
+
+    // Content
+    const content = m.content;
+    if (content) {
+      if (Array.isArray(content)) {
+        content.forEach(block => {
+          if (block.type === 'text' && block.text) {
+            const cd = document.createElement('div');
+            cd.className = 'msg-content';
+            cd.textContent = block.text.slice(0, 3000);
+            div.appendChild(cd);
+          }
+          if (block.type === 'tool_use' || block.type === 'toolCall') {
+            div.appendChild(makeToolCard(block.name, block.input || block.arguments));
+          }
+        });
+      } else if (typeof content === 'string') {
+        const cd = document.createElement('div');
+        cd.className = 'msg-content';
+        cd.textContent = content.slice(0, 3000);
+        div.appendChild(cd);
+      }
+    }
+
+    // Usage
+    if (m.usage) {
+      const u = m.usage;
+      const badge = document.createElement('div');
+      badge.style.cssText = 'font-size:10px;color:var(--text-dim);margin-top:4px;font-family:JetBrains Mono,monospace';
+      badge.textContent = `tokens: in=${u.input||u.input_tokens||'?'} out=${u.output||u.output_tokens||'?'}` + (u.cost?.total ? ` cost=$${u.cost.total.toFixed(4)}` : '');
+      div.appendChild(badge);
+    }
+
+    container.appendChild(div);
+  });
+}
+
+function makeToolCard(name, input) {
+  const card = document.createElement('div');
+  card.className = 'tool-card';
+  const header = document.createElement('div');
+  header.className = 'tool-card-header';
+  header.textContent = ` ${name || 'tool_call'}`;
+  header.onclick = () => card.classList.toggle('open');
+  const body = document.createElement('div');
+  body.className = 'tool-card-body';
+  body.textContent = typeof input === 'string' ? input : JSON.stringify(input, null, 2);
+  card.appendChild(header);
+  card.appendChild(body);
+  return card;
+}
+
+function goToStep(step) {
+  step = Math.max(-1, Math.min(step, messages.length - 1));
+  currentStep = step;
+  document.querySelectorAll('.msg').forEach(el => {
+    const idx = parseInt(el.dataset.index);
+    el.classList.toggle('visible', idx <= step);
+    el.classList.toggle('current', idx === step);
+  });
+  if (autoScroll && step >= 0) {
+    const el = document.querySelector(`.msg[data-index="${step}"]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  updateUI();
+}
+
+function stepNext() { goToStep(currentStep + 1); if (currentStep >= messages.length - 1) stop(); }
+function stepPrev() { goToStep(currentStep - 1); }
+
+function togglePlay() {
+  if (playing) { stop(); } else { play(); }
+}
+function play() {
+  if (currentStep >= messages.length - 1) currentStep = -1;
+  playing = true;
+  document.getElementById('playBtn').textContent = '⏸';
+  tick();
+}
+function stop() {
+  playing = false;
+  if (playTimer) { clearTimeout(playTimer); playTimer = null; }
+  document.getElementById('playBtn').textContent = '▶';
+}
+function tick() {
+  if (!playing) return;
+  stepNext();
+  if (playing) playTimer = setTimeout(tick, 600 / speed);
+}
+
+function setSpeed(s, btn) {
+  speed = s;
+  document.querySelectorAll('.speed-btns button').forEach(b => b.classList.toggle('active', b === btn));
+}
+
+function scrub(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  goToStep(Math.round(pct * (messages.length - 1)));
+}
+
+function toggleScroll() {
+  autoScroll = !autoScroll;
+  document.getElementById('scrollBtn').classList.toggle('active', autoScroll);
+}
+
+function updateUI() {
+  const total = messages.length;
+  document.getElementById('stepLabel').textContent = `${currentStep + 1} / ${total}`;
+  const pct = total > 0 ? ((currentStep + 1) / total * 100) : 0;
+  document.getElementById('timelineFill').style.width = pct + '%';
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'l') stepNext();
+  else if (e.key === 'ArrowLeft' || e.key === 'h') stepPrev();
+  else if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+});
+
+function exportSession() {
+  const picker = document.getElementById('sessionPicker');
+  const sessionId = picker.value;
+  if (!sessionId) { alert('Select a session first'); return; }
+  window.open('/api/export/session/' + sessionId, '_blank');
+}
+function shareSession() {
+  const picker = document.getElementById('sessionPicker');
+  const sessionId = picker.value;
+  if (!sessionId) { alert('Select a session first'); return; }
+  fetch('/api/share', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({type:'session',id:sessionId}) })
+    .then(r=>r.json()).then(d=>{
+      const url = location.origin + d.url;
+      navigator.clipboard.writeText(url).then(()=>alert('Share link copied: '+url)).catch(()=>prompt('Share link:',url));
+    }).catch(e=>alert('Share failed: '+e.message));
+}
+
+fetchSessions();
+</script>
+</body>
+</html>

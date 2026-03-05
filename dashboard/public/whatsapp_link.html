@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WhatsApp Auth | Rasputin 2</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
+        body { background: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #canvas { background: white; padding: 20px; border-radius: 10px; margin: 20px; }
+        .status { margin-top: 20px; font-size: 1.2em; }
+        .hint { color: #888; font-size: 0.8em; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>⚡ RASPUTIN 2 WHATSAPP LINK</h1>
+    <canvas id="canvas"></canvas>
+    <div class="status" id="status">Waiting for stream...</div>
+    <div class="hint">Scan this with Linked Devices in WhatsApp</div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const canvas = document.getElementById('canvas');
+
+        async function updateQR() {
+            try {
+                const response = await fetch('/wa_auth.json');
+                const data = await response.json();
+                
+                if (data && data.qr) {
+                    QRCode.toCanvas(canvas, data.qr, { width: 300, margin: 2 }, (error) => {
+                        if (error) console.error(error);
+                        statusEl.innerText = "QR Code Ready";
+                    });
+                } else if (data && data.status === "success") {
+                    statusEl.innerText = "✅ Authenticated!";
+                    canvas.style.display = 'none';
+                }
+            } catch (e) {
+                statusEl.innerText = "Synchronizing stream...";
+            }
+        }
+
+        setInterval(updateQR, 2000);
+        updateQR();
+    </script>
+</body>
+</html>

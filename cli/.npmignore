@@ -1,0 +1,29 @@
+# Development files
+.git
+.gitignore
+.eslintrc*
+.prettierrc*
+*.test.js
+__tests__
+coverage
+.nyc_output
+
+# Build artifacts
+*.log
+*.tgz
+
+# Documentation sources (but keep README.md)
+docs/
+*.md
+!README.md
+
+# Editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

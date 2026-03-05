@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALFIE — Remote Management</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0f; color: #c8c8d4; font-family: 'Inter', -apple-system, system-ui, sans-serif; min-height: 100vh; }
+
+.topbar { background: #111118; border-bottom: 1px solid #1a1a25; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+.topbar-logo { font-size: 1.3rem; font-weight: 700; color: #e0e0f0; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.topbar-logo .emoji { font-size: 1.6rem; }
+.topbar-nav { display: flex; gap: 8px; margin-left: auto; }
+.topbar-nav a { color: oklch(0.70 0.18 200); font-size: 12px; text-decoration: none; padding: 4px 10px; border: 1px solid oklch(0.30 0.02 200); border-radius: 6px; }
+.topbar-nav a:hover { border-color: oklch(0.70 0.18 200); }
+.topbar-nav a.active { background: oklch(0.70 0.18 200 / 0.15); border-color: oklch(0.70 0.18 200); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+.status-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card { background: #13131c; border: 1px solid #1e1e2e; border-radius: 12px; padding: 20px; }
+.card h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 8px; }
+.card .value { font-size: 28px; font-weight: 700; }
+.card .value.online { color: #4ade80; }
+.card .value.offline { color: #888; }
+.card .value.healthy { color: #4ade80; }
+.card .value.unhealthy { color: #f87171; }
+
+h2 { font-size: 18px; font-weight: 600; color: #e0e0f0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+.devices-table { width: 100%; border-collapse: collapse; }
+.devices-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; padding: 8px 12px; border-bottom: 1px solid #1e1e2e; }
+.devices-table td { padding: 12px; border-bottom: 1px solid #1a1a25; font-size: 14px; }
+.devices-table tr:hover { background: #16162080; }
+
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+.status-dot.online { background: #4ade80; box-shadow: 0 0 6px #4ade8060; }
+.status-dot.offline { background: #555; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #555; }
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { max-width: 400px; margin: 0 auto 16px; }
+
+.setup-box { background: #13131c; border: 1px solid #1e1e2e; border-radius: 12px; padding: 20px; margin-top: 24px; }
+.setup-box h3 { color: #e0e0f0; margin-bottom: 12px; }
+.setup-box code { background: #0d0d14; border: 1px solid #1e1e2e; border-radius: 6px; padding: 12px 16px; display: block; font-size: 13px; color: #a78bfa; margin: 8px 0; word-break: break-all; font-family: 'JetBrains Mono', monospace; }
+.setup-box .label { font-size: 12px; color: #666; margin-top: 12px; }
+
+.refresh-btn { background: #1e1e2e; border: 1px solid #2a2a3a; color: #c8c8d4; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+.refresh-btn:hover { border-color: #4ade80; color: #4ade80; }
+
+.loading { color: #666; font-style: italic; }
+.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo"><span class="emoji">🧠</span> ALFIE</a>
+  <div class="topbar-nav">
+    <a href="/">📊 Dashboard</a>
+    <a href="/agents.html">🤖 Agents</a>
+    <a href="/remote.html" class="active">🖥️ Remote</a>
+  </div>
+</div>
+
+<div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <h2>🖥️ Remote Device Management</h2>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+
+  <div class="status-cards">
+    <div class="card">
+      <h3>Server Status</h3>
+      <div class="value" id="server-status"><span class="loading">Loading...</span></div>
+    </div>
+    <div class="card">
+      <h3>Connected Devices</h3>
+      <div class="value" id="device-count"><span class="loading">...</span></div>
+    </div>
+    <div class="card">
+      <h3>Device Group</h3>
+      <div class="value" style="font-size:18px" id="device-group"><span class="loading">...</span></div>
+    </div>
+    <div class="card">
+      <h3>MeshCentral URL</h3>
+      <div class="value" style="font-size:14px"><a href="http://localhost:8086" target="_blank" style="color:#a78bfa;text-decoration:none">localhost:8086</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📡 Connected Devices</h2>
+    <div id="devices-container">
+      <span class="loading">Loading devices...</span>
+    </div>
+  </div>
+
+  <div class="setup-box">
+    <h3>🔧 Add New Device</h3>
+    <p style="color:#888;font-size:13px;margin-bottom:12px">Run one of these commands on the target machine to install the ALFIE remote access agent:</p>
+    
+    <div class="label">Linux / macOS:</div>
+    <code>curl -sL https://m3sh.rasputin.to/setup | bash</code>
+    
+    <div class="label">Windows (PowerShell as Admin):</div>
+    <code>Invoke-WebRequest -Uri 'https://m3sh.rasputin.to/meshagents?id=3&meshid=mesh//EwkUbFoXqzF58kjNVmMxFOasMxy4VG7yCv2nklnSn0rieHuDIFSxPjcLRmM@jy7E&installflags=0' -OutFile meshagent.exe; Start-Process meshagent.exe -ArgumentList '-install' -Wait</code>
+    
+    <div class="label" style="margin-top:16px;color:#555">Note: m3sh.rasputin.to Cloudflare tunnel routing is pending setup.</div>
+  </div>
+</div>
+
+<script>
+const API_BASE = '';
+
+async function fetchJSON(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    console.error(`Fetch ${url}:`, e);
+    return null;
+  }
+}
+
+async function loadStatus() {
+  const data = await fetchJSON('/api/remote/status');
+  const el = document.getElementById('server-status');
+  if (data && data.healthy) {
+    el.innerHTML = '<span class="healthy">● Healthy</span>';
+  } else {
+    el.innerHTML = '<span class="unhealthy">● Down</span>';
+  }
+}
+
+async function loadDevices() {
+  const data = await fetchJSON('/api/remote/devices');
+  const container = document.getElementById('devices-container');
+  const countEl = document.getElementById('device-count');
+  const groupEl = document.getElementById('device-group');
+
+  if (!data) {
+    container.innerHTML = '<span class="error">Failed to load devices</span>';
+    return;
+  }
+
+  groupEl.textContent = data.group || 'ALFIE Managed';
+  const devices = data.devices || [];
+  countEl.innerHTML = `<span class="${devices.length > 0 ? 'online' : 'offline'}">${devices.length}</span>`;
+
+  if (devices.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📡</div>
+        <p>No devices connected yet. Use the setup commands below to add your first device.</p>
+      </div>`;
+    return;
+  }
+
+  let html = '<table class="devices-table"><thead><tr><th>Status</th><th>Name</th><th>OS</th><th>IP</th><th>Last Seen</th></tr></thead><tbody>';
+  for (const d of devices) {
+    const online = (d.conn || 0) > 0;
+    const statusClass = online ? 'online' : 'offline';
+    const statusText = online ? 'Online' : 'Offline';
+    html += `<tr>
+      <td><span class="status-dot ${statusClass}"></span>${statusText}</td>
+      <td>${esc(d.name || 'Unknown')}</td>
+      <td>${esc(d.osdesc || d.os || 'Unknown')}</td>
+      <td>${esc(d.ip || '-')}</td>
+      <td>${d.lastconnect ? new Date(d.lastconnect * 1000).toLocaleString() : '-'}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function loadAll() {
+  loadStatus();
+  loadDevices();
+}
+
+loadAll();
+setInterval(loadAll, 30000);
+</script>
+</body>
+</html>

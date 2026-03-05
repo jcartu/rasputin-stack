@@ -1,0 +1,342 @@
+{
+  "id": "research-1771229640572-hqxq4r",
+  "question": "What is the best model stack / pipeline to use for OpenClaw right now if you have two RTX Pro 6000 Blackwell 96gb?",
+  "status": "error",
+  "progress": {
+    "step": 4,
+    "totalSteps": 5,
+    "stepName": "error",
+    "details": "LiteLLM timeout (180s)"
+  },
+  "queries": [
+    "OpenClaw robotics framework definition architecture overview",
+    "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+    "OpenClaw model stack 2024 2025 latest developments updates",
+    "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+    "OpenClaw practical implementation computer vision grasp detection model performance benchmarks"
+  ],
+  "searchMode": "perplexity",
+  "sources": [
+    {
+      "url": "https://emergent.sh/learn/what-is-openclaw",
+      "title": "https://emergent.sh/learn/what-is-openclaw",
+      "description": "",
+      "query": "OpenClaw robotics framework definition architecture overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://bengoertzel.substack.com/p/openclaw-amazing-hands-for-a-brain",
+      "title": "https://bengoertzel.substack.com/p/openclaw-amazing-hands-for-a-brain",
+      "description": "",
+      "query": "OpenClaw robotics framework definition architecture overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://milvus.io/blog/openclaw-formerly-clawdbot-moltbot-explained-a-complete-guide-to-the-autonomous-ai-agent.md",
+      "title": "https://milvus.io/blog/openclaw-formerly-clawdbot-moltbot-explained-a-complete-guide-to-the-autonomous-ai-agent.md",
+      "description": "",
+      "query": "OpenClaw robotics framework definition architecture overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.digitalocean.com/resources/articles/what-is-openclaw",
+      "title": "https://www.digitalocean.com/resources/articles/what-is-openclaw",
+      "description": "",
+      "query": "OpenClaw robotics framework definition architecture overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.cyberark.com/resources/agentic-ai-security/how-autonomous-ai-agents-like-openclaw-are-reshaping-enterprise-identity-security",
+      "title": "https://www.cyberark.com/resources/agentic-ai-security/how-autonomous-ai-agents-like-openclaw-are-reshaping-enterprise-identity-security",
+      "description": "",
+      "query": "OpenClaw robotics framework definition architecture overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.sophos.com/en-us/blog/the-openclaw-experiment-is-a-warning-shot-for-enterprise-ai-security",
+      "title": "https://www.sophos.com/en-us/blog/the-openclaw-experiment-is-a-warning-shot-for-enterprise-ai-security",
+      "description": "",
+      "query": "OpenClaw robotics framework definition architecture overview",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.monitors.com/products/nvidia-rtx-pro-6000-blackwell-96gb",
+      "title": "https://www.monitors.com/products/nvidia-rtx-pro-6000-blackwell-96gb",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.microcenter.com/product/694549/pny-nvidia-rtx-pro-6000-blackwell-workstation-edition-dual-fan-96gb-gddr7-pcie-50-graphics-card",
+      "title": "https://www.microcenter.com/product/694549/pny-nvidia-rtx-pro-6000-blackwell-workstation-edition-dual-fan-96gb-gddr7-pcie-50-graphics-card",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000-family/",
+      "title": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000-family/",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.tomshardware.com/pc-components/gpus/nvidias-rtx-pro-6000-blackwell-96gb-graphics-card-benchmarked-specs-allegedly-confirmed",
+      "title": "https://www.tomshardware.com/pc-components/gpus/nvidias-rtx-pro-6000-blackwell-96gb-graphics-card-benchmarked-specs-allegedly-confirmed",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.storagereview.com/review/nvidia-rtx-pro-6000-workstation-gpu-review-blackwell-architecture-and-96-gb-for-pro-workflows",
+      "title": "https://www.storagereview.com/review/nvidia-rtx-pro-6000-workstation-gpu-review-blackwell-architecture-and-96-gb-for-pro-workflows",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/NVIDIA-RTX-Blackwell-PRO-GPU-Architecture-v1.0.pdf",
+      "title": "https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/NVIDIA-RTX-Blackwell-PRO-GPU-Architecture-v1.0.pdf",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=ZCvjw8B6rcg",
+      "title": "https://www.youtube.com/watch?v=ZCvjw8B6rcg",
+      "description": "",
+      "query": "RTX Pro 6000 Blackwell 96GB specifications VRAM multi-GPU machine learning pipeline",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.news.aakashg.com/p/openclaw-guide",
+      "title": "https://www.news.aakashg.com/p/openclaw-guide",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.latent.space/p/ainews-moltbook-the-first-social",
+      "title": "https://www.latent.space/p/ainews-moltbook-the-first-social",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://graphlinq.io/blog-posts/graphlinq-the-autonomous-ai-agent-revolution-what-openclaw-teaches-us-about-the-future-of-smart-automation",
+      "title": "https://graphlinq.io/blog-posts/graphlinq-the-autonomous-ai-agent-revolution-what-openclaw-teaches-us-about-the-future-of-smart-automation",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://eu.36kr.com/en/p/3667047170044420",
+      "title": "https://eu.36kr.com/en/p/3667047170044420",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.sentra.io/blog/openclaw-moltbot-the-ai-agent-security-crisis-enterprises-must-address-now",
+      "title": "https://www.sentra.io/blog/openclaw-moltbot-the-ai-agent-security-crisis-enterprises-must-address-now",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://garymarcus.substack.com/p/openclaw-aka-moltbot-is-everywhere",
+      "title": "https://garymarcus.substack.com/p/openclaw-aka-moltbot-is-everywhere",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://sdtimes.com/ai/security-professionals-express-concern-over-openclaw/",
+      "title": "https://sdtimes.com/ai/security-professionals-express-concern-over-openclaw/",
+      "description": "",
+      "query": "OpenClaw model stack 2024 2025 latest developments updates",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://bizon-tech.com/blog/new-rtx-pro-6000-blackwell-gpus-tech-specs",
+      "title": "https://bizon-tech.com/blog/new-rtx-pro-6000-blackwell-gpus-tech-specs",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.pny.com/nvidia-rtx-6000-ada",
+      "title": "https://www.pny.com/nvidia-rtx-6000-ada",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.clarifai.com/blog/nvidia-rtx-6000-pro-gpu/",
+      "title": "https://www.clarifai.com/blog/nvidia-rtx-6000-pro-gpu/",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://cloud.google.com/blog/products/compute/g4-vms-powered-by-nvidia-rtx-6000-blackwell-gpus-are-ga",
+      "title": "https://cloud.google.com/blog/products/compute/g4-vms-powered-by-nvidia-rtx-6000-blackwell-gpus-are-ga",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/en-us/data-center/rtx-pro-6000-blackwell-server-edition/",
+      "title": "https://www.nvidia.com/en-us/data-center/rtx-pro-6000-blackwell-server-edition/",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.nvidia.com/en-us/products/workstations/rtx-a6000/",
+      "title": "https://www.nvidia.com/en-us/products/workstations/rtx-a6000/",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=e8gDaYrCiYQ",
+      "title": "https://www.youtube.com/watch?v=e8gDaYrCiYQ",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.tweaktown.com/news/110135/nvidias-new-rtx-6000d-appears-in-teardown-84gb-gddr7-in-china-compared-to-the-full-96gb/index.html",
+      "title": "https://www.tweaktown.com/news/110135/nvidias-new-rtx-6000d-appears-in-teardown-84gb-gddr7-in-china-compared-to-the-full-96gb/index.html",
+      "description": "",
+      "query": "expert recommendations dual GPU robotics vision models RTX 6000 deployment",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fcZMmP5dsl4",
+      "title": "https://www.youtube.com/watch?v=fcZMmP5dsl4",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://velvetshark.com/openclaw-multi-model-routing",
+      "title": "https://velvetshark.com/openclaw-multi-model-routing",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.codecademy.com/article/open-claw-tutorial-installation-to-first-chat-setup",
+      "title": "https://www.codecademy.com/article/open-claw-tutorial-installation-to-first-chat-setup",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=n1sfrc-RjyM",
+      "title": "https://www.youtube.com/watch?v=n1sfrc-RjyM",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://dev.to/bengreenberg/openclaw-is-incredible-setting-it-up-shouldnt-require-a-cs-degree-36nk",
+      "title": "https://dev.to/bengreenberg/openclaw-is-incredible-setting-it-up-shouldnt-require-a-cs-degree-36nk",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://openclawn.com/openclaw-ai-documentation-tour/",
+      "title": "https://openclawn.com/openclaw-ai-documentation-tour/",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    },
+    {
+      "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
+      "title": "https://github.com/VoltAgent/awesome-openclaw-skills",
+      "description": "",
+      "query": "OpenClaw practical implementation computer vision grasp detection model performance benchmarks",
+      "status": "done",
+      "textLength": 0,
+      "source": "perplexity"
+    }
+  ],
+  "synthesis": "",
+  "keyFindings": [],
+  "error": "LiteLLM timeout (180s)",
+  "startedAt": 1771229640573,
+  "completedAt": 1771229834263,
+  "duration": 193690
+}

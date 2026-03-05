@@ -1,0 +1,847 @@
+{
+  "updated": "2026-02-14T22:44:08+03:00",
+  "missions": [
+    {
+      "id": "god-stack",
+      "name": "GOD STACK \u2014 Ultimate AI Architecture",
+      "status": "active",
+      "priority": 1,
+      "progress": 65,
+      "description": "Reranker deployed, BM25 hybrid search live, OM hybrid pipeline integrated, LiteLLM 9-tier routing rebuilt. Remaining: MemGPT-style tiered memory, cross-model consensus.",
+      "created": "2026-02-13T03:28:00+03:00",
+      "updated": "2026-02-14T22:44:08+03:00",
+      "eta": "March"
+    },
+    {
+      "id": "platform-beta-brazil",
+      "name": "platform-beta Brazil Media Buying",
+      "description": "Root cause found: ZERO S2S postback on all 5 campaigns. $305 spent, 0 conversions. Fix requires CellXpert credentials (waiting on admin's team). PropellerAds API working, balance $195.",
+      "status": "active",
+      "progress": 25,
+      "eta": "Ongoing",
+      "tasks": [
+        {
+          "id": "bb1",
+          "name": "PropellerAds account setup & first campaign",
+          "status": "done"
+        },
+        {
+          "id": "bb2",
+          "name": "platform-beta affiliate panel access (Cellxpert)",
+          "status": "done"
+        },
+        {
+          "id": "bb3",
+          "name": "PT-BR landing pages identified (121 assets)",
+          "status": "done"
+        },
+        {
+          "id": "bb4",
+          "name": "Campaign #1: Push Notifications BR (nci=6074)",
+          "status": "done",
+          "note": "1.4M imps, 6.6K clicks, $84 spent, 0 regs \u2014 URL swapped to PT-BR"
+        },
+        {
+          "id": "bb5",
+          "name": "Campaign #2: Popunder BR",
+          "status": "done",
+          "note": "URL updated to PT-BR"
+        },
+        {
+          "id": "bb6",
+          "name": "Campaign #3: In-Page Push BR",
+          "status": "done",
+          "note": "URL updated to PT-BR"
+        },
+        {
+          "id": "bb7",
+          "name": "Campaign #4: Classic Push BR",
+          "status": "done",
+          "note": "URL updated to PT-BR"
+        },
+        {
+          "id": "bb8",
+          "name": "Get first registration",
+          "status": "pending"
+        },
+        {
+          "id": "bb9",
+          "name": "Get first FTD (qualified deposit)",
+          "status": "pending"
+        },
+        {
+          "id": "bb10",
+          "name": "Build PT-BR pre-lander with bonus wheel",
+          "status": "pending"
+        },
+        {
+          "id": "bb11",
+          "name": "Custom PT-BR push creatives",
+          "status": "pending"
+        },
+        {
+          "id": "bb12",
+          "name": "PropellerAds API automation",
+          "status": "pending",
+          "note": "API key coming from admin"
+        },
+        {
+          "id": "bb13",
+          "name": "RichAds signup + campaign",
+          "status": "pending"
+        },
+        {
+          "id": "bb14",
+          "name": "TrafficStars signup + campaign",
+          "status": "pending"
+        },
+        {
+          "id": "bb15",
+          "name": "Telegram channel campaigns (Brazil)",
+          "status": "pending"
+        },
+        {
+          "id": "bb16",
+          "name": "Scale to $2K/month across networks",
+          "status": "pending"
+        },
+        {
+          "id": "bb17",
+          "name": "Achieve positive ROI",
+          "status": "pending"
+        }
+      ],
+      "updated": "2026-02-14T22:44:08+03:00"
+    },
+    {
+      "id": "remote-daemon",
+      "name": "AI Remote Access Daemon",
+      "status": "active",
+      "progress": 75,
+      "desc": "Windows daemon giving ALFIE full remote control \u2014 mouse, keyboard, PowerShell, screen. One installer, works for anyone.",
+      "eta": "Feb 18",
+      "tasks": [
+        {
+          "name": "Research solutions",
+          "status": "done"
+        },
+        {
+          "name": "Design architecture (MeshCentral)",
+          "status": "done"
+        },
+        {
+          "name": "Deploy MeshCentral (Docker)",
+          "status": "done"
+        },
+        {
+          "name": "ALFIE bridge script (alfie_remote.py)",
+          "status": "done"
+        },
+        {
+          "name": "Windows one-click installer",
+          "status": "done"
+        },
+        {
+          "name": "Cloudflare tunnel (mesh.rasputin.to)",
+          "status": "active"
+        },
+        {
+          "name": "Test with admin Windows box",
+          "status": "planned"
+        },
+        {
+          "name": "Mac installer",
+          "status": "planned"
+        },
+        {
+          "name": "Linux installer",
+          "status": "planned"
+        }
+      ],
+      "description": "Windows daemon giving ALFIE full remote control \u2014 mouse, keyboard, PowerShell, screen. One installer, works for anyone."
+    },
+    {
+      "id": "ai-council",
+      "name": "AI Council & Synthesis System",
+      "status": "complete",
+      "progress": 100,
+      "desc": "Multi-model debate/consensus engine \u2014 Council + Synthesis modes",
+      "eta": "Feb 13",
+      "tasks": [
+        {
+          "name": "Audit current consensus",
+          "status": "done"
+        },
+        {
+          "name": "Test 16 model endpoints",
+          "status": "done"
+        },
+        {
+          "name": "Design Council + Synthesis + Auto modes",
+          "status": "done"
+        },
+        {
+          "name": "Build ai_council.py (16 models, 3 modes)",
+          "status": "done"
+        },
+        {
+          "name": "Test all 3 modes with real queries",
+          "status": "done"
+        },
+        {
+          "name": "Optimize council speed (swap DeepSeek R1)",
+          "status": "planned"
+        },
+        {
+          "name": "Integrate into dashboard",
+          "status": "planned"
+        }
+      ],
+      "description": "Multi-model consensus panel \u2014 GPT, Claude, Gemini, Grok debate and synthesize answers. Built and deployed."
+    },
+    {
+      "id": "selfplay",
+      "name": "Self-Play Training (SWE-RL)",
+      "status": "done",
+      "progress": 100,
+      "eta": "Mar 11",
+      "desc": "Generate tasks, solve, train on successes. +10.4 SWE-bench. Infinite scaling.",
+      "tasks": [],
+      "description": "Generate tasks, solve, train on successes. +10.4 SWE-bench. Infinite scaling."
+    },
+    {
+      "id": "amem",
+      "name": "A-MEM Memory Upgrade",
+      "status": "done",
+      "progress": 100,
+      "eta": "Feb 25",
+      "desc": "Auto-commit events, episodic memory, reflection. Learn from experience.",
+      "tasks": [],
+      "description": "Auto-commit events, episodic memory, reflection. Learn from experience."
+    },
+    {
+      "id": "routellm",
+      "name": "RouteLLM Smart Routing",
+      "status": "done",
+      "progress": 100,
+      "eta": "Feb 18",
+      "desc": "Route simple\u2192local/cheap, complex\u2192Opus. 40-60% cost reduction.",
+      "tasks": [],
+      "description": "Route simple \u2192 local/cheap, complex \u2192 Opus. 40-60% cost reduction."
+    },
+    {
+      "id": "eagle3",
+      "name": "EAGLE-3 Speculative Decoding",
+      "status": "done",
+      "progress": 100,
+      "eta": "Feb 18",
+      "desc": "2-3x inference speedup on Blackwell GPUs, zero quality loss. Free performance.",
+      "tasks": [
+        {
+          "name": "Baseline: 195.87 tok/s Qwen3-32B",
+          "status": "done"
+        },
+        {
+          "name": "EAGLE-3 OOM \u2014 need to free 9GB (embedding server)",
+          "status": "active"
+        },
+        {
+          "name": "EAGLE-3: 97.7 tok/s (1.4x speedup @ 80% VRAM)",
+          "status": "done"
+        }
+      ],
+      "description": "2-3x inference speedup on Blackwell GPUs, zero quality loss. Free performance."
+    },
+    {
+      "id": "testing-tools",
+      "name": "Testing Tools (FullStack Pattern)",
+      "status": "done",
+      "progress": 100,
+      "eta": "Feb 18",
+      "desc": "BackendTestTool (tmux+HTTP+logs) + FrontendTestTool (Playwright+vision). Foundation for everything else.",
+      "tasks": [],
+      "description": "BackendTestTool (mocha+HTTP+logs) + FrontendTestTool (Playwright+vision). Foundation for everything else."
+    },
+    {
+      "id": "localllm",
+      "name": "Ultimate Local LLM Setup",
+      "status": "active",
+      "progress": 60,
+      "eta": "Feb 15",
+      "desc": "Near-Opus quality at 1/50th cost \u2014 dual GPU routing, speculative decoding, LiteLLM",
+      "tasks": [
+        {
+          "name": "Ollama + vLLM installed",
+          "status": "done"
+        },
+        {
+          "name": "Embedding server (GPU)",
+          "status": "done"
+        },
+        {
+          "name": "Deep research report",
+          "status": "done",
+          "note": "41KB \u2014 GPT-OSS-120B + EAGLE-3 = 360-450 tok/s"
+        },
+        {
+          "name": "Deploy GPT-OSS-120B on PRO 6000",
+          "status": "planned"
+        },
+        {
+          "name": "LiteLLM smart routing config",
+          "status": "planned"
+        },
+        {
+          "name": "EAGLE-3 speculative decoding",
+          "status": "planned"
+        },
+        {
+          "name": "TensorRT-LLM + NVFP4",
+          "status": "planned"
+        },
+        {
+          "name": "Wire into OpenClaw",
+          "status": "planned"
+        }
+      ],
+      "description": "Near-Opus quality at 1/50th cost \u2014 dual GPU routing, speculative decoding, LiteLLM."
+    },
+    {
+      "id": "arxiv",
+      "name": "Arxiv Research Crawl",
+      "status": "done",
+      "progress": 100,
+      "eta": "Feb 11",
+      "desc": "Deep crawl for agent papers \u2014 steal ideas from FullStack-Agent + 30-50 papers",
+      "tasks": [
+        {
+          "name": "FullStack-Agent repo cloned",
+          "status": "active"
+        },
+        {
+          "name": "Extract architecture patterns",
+          "status": "active"
+        },
+        {
+          "name": "Crawl arxiv cs.AI/SE/CL",
+          "status": "active"
+        },
+        {
+          "name": "Rate & prioritize findings",
+          "status": "planned"
+        },
+        {
+          "name": "Implementation roadmap",
+          "status": "planned"
+        },
+        {
+          "name": "78 papers found (15 must-implement)",
+          "status": "done"
+        }
+      ],
+      "description": "Deep crawl for agent papers \u2014 steal ideas from FullStack-Agent + 30-50 papers."
+    },
+    {
+      "id": "dashboard",
+      "name": "Nexus Dashboard",
+      "status": "complete",
+      "progress": 100,
+      "eta": "Feb 14",
+      "desc": "Bloomberg Terminal-density AI control center \u2014 23 features, 10 pages, full auth, real-time streaming, mobile responsive",
+      "tasks": [
+        {
+          "name": "Bloomberg-density real-time dashboard with streaming",
+          "status": "done"
+        },
+        {
+          "name": "GPU/CPU/RAM/Network/Disk monitoring with sparklines",
+          "status": "done"
+        },
+        {
+          "name": "ElevenLabs TTS integration",
+          "status": "done"
+        },
+        {
+          "name": "Rich chat interface with AI forwarding",
+          "status": "done"
+        },
+        {
+          "name": "Sub-agent spawning and monitoring",
+          "status": "done"
+        },
+        {
+          "name": "Missions/task tracking with CLI tool",
+          "status": "done"
+        },
+        {
+          "name": "Living neural particle background",
+          "status": "done"
+        },
+        {
+          "name": "Cookie-based auth (HMAC-SHA256)",
+          "status": "done"
+        },
+        {
+          "name": "Command bar (\u2318K Spotlight-style)",
+          "status": "done"
+        },
+        {
+          "name": "Browser automation (Puppeteer)",
+          "status": "done"
+        },
+        {
+          "name": "Sandboxed code execution (Docker)",
+          "status": "done"
+        },
+        {
+          "name": "Wide Research (Perplexity-powered)",
+          "status": "done"
+        },
+        {
+          "name": "Prompt playground (multi-model)",
+          "status": "done"
+        },
+        {
+          "name": "Session replay with step-through",
+          "status": "done"
+        },
+        {
+          "name": "Agent orchestration UI",
+          "status": "done"
+        },
+        {
+          "name": "Knowledge base viewer",
+          "status": "done"
+        },
+        {
+          "name": "Task templates (6 workflows)",
+          "status": "done"
+        },
+        {
+          "name": "Live activity ticker",
+          "status": "done"
+        },
+        {
+          "name": "Mobile responsive",
+          "status": "done"
+        },
+        {
+          "name": "Export/share system",
+          "status": "done"
+        },
+        {
+          "name": "Demo mode",
+          "status": "done"
+        },
+        {
+          "name": "Full QA: functional, security, design polish",
+          "status": "done"
+        },
+        {
+          "name": "Unified navigation across all 10 pages",
+          "status": "done"
+        }
+      ],
+      "description": "The dashboard you're looking at. Real-time system monitoring, chat, tools, missions."
+    },
+    {
+      "id": "manus",
+      "name": "MANUS+ Surpass",
+      "status": "active",
+      "progress": 98,
+      "eta": "Feb 25",
+      "desc": "Surpass Manus.ai \u2014 session replay, RouteLLM, self-healing workflows",
+      "tasks": [
+        {
+          "name": "Dashboard v4 (Bloomberg density)",
+          "status": "done"
+        },
+        {
+          "name": "TTS + streaming",
+          "status": "done"
+        },
+        {
+          "name": "Rich chat interface",
+          "status": "done"
+        },
+        {
+          "name": "Session replay",
+          "status": "planned"
+        },
+        {
+          "name": "RouteLLM semantic router",
+          "status": "planned"
+        },
+        {
+          "name": "Cost forecasting",
+          "status": "planned"
+        }
+      ],
+      "description": "Surpass Manus.ai \u2014 session replay, RouteLLM, self-healing workflows."
+    },
+    {
+      "id": "memory",
+      "name": "Second Brain Optimization",
+      "status": "active",
+      "progress": 80,
+      "eta": "Feb 18",
+      "desc": "Filter 306K email noise, multi-query decomposition, proactive querying",
+      "tasks": [
+        {
+          "name": "446K memories ingested",
+          "status": "done"
+        },
+        {
+          "name": "Gmail import complete",
+          "status": "done"
+        },
+        {
+          "name": "Smart multi-query",
+          "status": "planned"
+        },
+        {
+          "name": "Daily consolidation cron",
+          "status": "planned"
+        },
+        {
+          "name": "Preference extraction",
+          "status": "planned"
+        }
+      ],
+      "description": "Filter 306K email noise, multi-query decomposition, proactive querying."
+    },
+    {
+      "id": "youtube",
+      "name": "AI Video Monitor",
+      "status": "complete",
+      "progress": 100,
+      "eta": "Ongoing",
+      "desc": "50 YouTube channels tracked, auto-summarize new videos",
+      "tasks": [
+        {
+          "name": "23 channels active",
+          "status": "done"
+        },
+        {
+          "name": "Auto-download + summarize",
+          "status": "done"
+        },
+        {
+          "name": "Expand to podcasts",
+          "status": "planned"
+        }
+      ],
+      "description": "YouTube channel monitoring \u2014 Matthew Berman, AI Chuck, AllAboutAI. Auto-download & analyze."
+    },
+    {
+      "id": "platform-alpha",
+      "name": "platform-alpha Traffic Engine",
+      "status": "paused",
+      "progress": 30,
+      "eta": "Feb 28",
+      "desc": "996 SEO articles, 6 microsites, 40K social posts ready to deploy",
+      "tasks": [
+        {
+          "name": "Content generated (1.8M words)",
+          "status": "done"
+        },
+        {
+          "name": "Deploy sites (GitHub Pages)",
+          "status": "planned"
+        },
+        {
+          "name": "Create social accounts",
+          "status": "planned"
+        },
+        {
+          "name": "Launch traffic",
+          "status": "planned"
+        }
+      ],
+      "description": "996 SEO articles, 6 microsites, 40K social posts ready to deploy."
+    },
+    {
+      "id": "comms",
+      "name": "Self-Hosted Comms Platform",
+      "status": "planned",
+      "progress": 5,
+      "eta": "March",
+      "desc": "Replace Telegram \u2014 E2E encrypted, no third-party deps",
+      "tasks": [
+        {
+          "name": "Architecture design",
+          "status": "planned"
+        },
+        {
+          "name": "Matrix/Element evaluation",
+          "status": "planned"
+        }
+      ],
+      "description": "Replace Telegram \u2014 E2E encrypted, no third-party deps."
+    },
+    {
+      "id": "rasputin",
+      "name": "Rasputin/JARVIS Integration",
+      "status": "done",
+      "progress": 100,
+      "eta": "Done",
+      "desc": "48 JARVIS tools audited, 7 wrapper scripts, 8 working tools",
+      "tasks": [
+        {
+          "name": "Deep audit complete",
+          "status": "done"
+        },
+        {
+          "name": "7 wrapper scripts",
+          "status": "done"
+        },
+        {
+          "name": "Fix browser automation",
+          "status": "planned"
+        }
+      ],
+      "description": "Bridge JARVIS brain (48 tools) with ALFIE. API at localhost:8000. Complete."
+    },
+    {
+      "id": "multi-tenant",
+      "name": "Multi-Tenant Platform",
+      "description": "Open ALFIE to 5 users \u2014 Google Auth, data isolation, PWA, installable web app",
+      "status": "active",
+      "progress": 5,
+      "tasks": [
+        {
+          "id": "mt1",
+          "name": "Architecture spec document",
+          "status": "in-progress"
+        },
+        {
+          "id": "mt2",
+          "name": "Google OAuth 2.0 integration",
+          "status": "pending"
+        },
+        {
+          "id": "mt3",
+          "name": "Per-user Qdrant namespace isolation",
+          "status": "pending"
+        },
+        {
+          "id": "mt4",
+          "name": "PWA manifest + service worker",
+          "status": "pending"
+        },
+        {
+          "id": "mt5",
+          "name": "User onboarding flow",
+          "status": "pending"
+        },
+        {
+          "id": "mt6",
+          "name": "Security audit + data encryption",
+          "status": "pending"
+        },
+        {
+          "id": "mt7",
+          "name": "Resource quotas + rate limiting",
+          "status": "pending"
+        }
+      ],
+      "eta": "TBD"
+    },
+    {
+      "id": "voice-realtime",
+      "name": "Realtime Voice Comms",
+      "description": "Talk to ALFIE like ChatGPT 4o \u2014 sub-second voice with full Qdrant awareness",
+      "status": "active",
+      "progress": 25,
+      "tasks": [
+        {
+          "id": "vr1",
+          "name": "Architecture spec (STT \u2192 LLM \u2192 TTS pipeline)",
+          "status": "done"
+        },
+        {
+          "id": "vr2",
+          "name": "Local Whisper STT (GPU, <500ms)",
+          "status": "done"
+        },
+        {
+          "id": "vr3",
+          "name": "Fast inference model selection + context injection",
+          "status": "pending"
+        },
+        {
+          "id": "vr4",
+          "name": "ElevenLabs streaming TTS (<300ms TTFB)",
+          "status": "pending"
+        },
+        {
+          "id": "vr5",
+          "name": "WebRTC/WebSocket voice channel in dashboard",
+          "status": "pending"
+        },
+        {
+          "id": "vr6",
+          "name": "Qdrant context retrieval in <100ms",
+          "status": "pending"
+        },
+        {
+          "id": "vr7",
+          "name": "Mobile PWA microphone support",
+          "status": "pending"
+        },
+        {
+          "id": "vr8",
+          "name": "Interrupt handling (barge-in)",
+          "status": "pending"
+        }
+      ],
+      "eta": "TBD"
+    },
+    {
+      "id": "consumer-ui",
+      "name": "Consumer-Friendly Interface",
+      "description": "Manus/Genspark-inspired UI for normal users \u2014 beautiful, cyberpunk, but intuitive. Chat + build modes with sick visual transformations.",
+      "status": "active",
+      "progress": 0,
+      "tasks": [
+        {
+          "id": "cu1",
+          "name": "Competitive teardown \u2014 Manus, Genspark, ChatGPT, Cursor",
+          "status": "pending"
+        },
+        {
+          "id": "cu2",
+          "name": "Design concepts \u2014 multi-mode interface with animations",
+          "status": "pending"
+        },
+        {
+          "id": "cu3",
+          "name": "Chat mode (conversational AI)",
+          "status": "pending"
+        },
+        {
+          "id": "cu4",
+          "name": "Build mode (code/project workspace)",
+          "status": "pending"
+        },
+        {
+          "id": "cu5",
+          "name": "Research mode (deep dive)",
+          "status": "pending"
+        },
+        {
+          "id": "cu6",
+          "name": "Mode transition animations (morph/transform)",
+          "status": "pending"
+        },
+        {
+          "id": "cu7",
+          "name": "Mobile-first responsive design",
+          "status": "pending"
+        }
+      ],
+      "eta": "TBD"
+    },
+    {
+      "id": "morphing-dashboard",
+      "name": "Morphing Dashboard Modes",
+      "description": "OUR dashboard: click any tool (Council, Research, etc.) and the entire screen morphs around that mode while keeping telemetry visible. Futuristic mode-switching with animated transitions.",
+      "status": "active",
+      "progress": 0,
+      "tasks": [
+        {
+          "id": "md1",
+          "name": "Mode system architecture \u2014 state machine for screen morphing",
+          "status": "pending"
+        },
+        {
+          "id": "md2",
+          "name": "Design concepts for each mode transformation",
+          "status": "pending"
+        },
+        {
+          "id": "md3",
+          "name": "GSAP/Three.js transition animations between modes",
+          "status": "pending"
+        },
+        {
+          "id": "md4",
+          "name": "Persistent telemetry overlay that adapts per mode",
+          "status": "pending"
+        },
+        {
+          "id": "md5",
+          "name": "Council mode \u2014 debate arena with live voting",
+          "status": "pending"
+        },
+        {
+          "id": "md6",
+          "name": "Research mode \u2014 immersive deep-dive workspace",
+          "status": "pending"
+        },
+        {
+          "id": "md7",
+          "name": "Execute mode \u2014 full-screen terminal with GPU stats",
+          "status": "pending"
+        },
+        {
+          "id": "md8",
+          "name": "Chat mode \u2014 expanded conversation with context sidebar",
+          "status": "pending"
+        }
+      ],
+      "eta": "TBD"
+    },
+    {
+      "id": "10x-digital-ops",
+      "name": "10x digital-ops Business ($2M \u2192 $20M/mo)",
+      "status": "active",
+      "priority": 1,
+      "progress": 10,
+      "description": "Fix conversion tracking, automate CRM/retention, scale to new geos, AI-driven media buying. Platform market analysis done.",
+      "created": "2026-02-14T22:44:08+03:00",
+      "updated": "2026-02-14T22:44:08+03:00",
+      "eta": "Q3 2026"
+    },
+    {
+      "id": "star-citizen-sale",
+      "name": "Star Citizen Account Sale",
+      "status": "active",
+      "progress": 40,
+      "description": "Legatus Navium account, $32K melt. Listing drafted. RSI verification for Reddit blocked. Star Hangar follow-up pending.",
+      "created": "2026-02-14T22:44:08+03:00",
+      "updated": "2026-02-14T22:44:08+03:00",
+      "eta": "March"
+    },
+    {
+      "id": "moltbook-claim",
+      "name": "Moltbook Agent Claim",
+      "status": "active",
+      "progress": 70,
+      "description": "DM sent to Matt Schlicht to remove old Alfie claim. Waiting for reply. Rasputin registered, pending verification.",
+      "created": "2026-02-14T22:44:08+03:00",
+      "updated": "2026-02-14T22:44:08+03:00",
+      "eta": "Days"
+    },
+    {
+      "id": "security-lockdown",
+      "name": "Server Security Lockdown",
+      "status": "active",
+      "progress": 70,
+      "description": "SSH hardened, fail2ban active, ttyd killed, ngrok ttyd killed, file perms fixed, passwords moved to .env. Remaining: rotate QNAP password, kill root ngrok SSH, nftables firewall.",
+      "created": "2026-02-14T22:44:08+03:00",
+      "updated": "2026-02-14T22:44:08+03:00",
+      "eta": "Feb"
+    },
+    {
+      "id": "sunbreaker-cluster",
+      "name": "192GB VRAM Inference Cluster",
+      "status": "active",
+      "progress": 50,
+      "description": "SUNBREAKER ready (Docker+CUDA+vLLM). Machine 3 not connected. Deploy frontier models on demand.",
+      "created": "2026-02-14T22:44:08+03:00",
+      "updated": "2026-02-14T22:44:08+03:00",
+      "eta": "March"
+    }
+  ]
+}

@@ -1,0 +1,4230 @@
+{
+  "claude-sonnet-4-5": {
+    "name": "claude-sonnet-4-5",
+    "totalCalls": 3840,
+    "totalCost": 139.96756589999993,
+    "totalLatency": 0,
+    "totalTokens": 247915063,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771229856822,
+        "cost": 0.06193875,
+        "latency": 0,
+        "tokens": 124414,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229874517,
+        "cost": 0.05429865,
+        "latency": 0,
+        "tokens": 125460,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229889405,
+        "cost": 0.042554249999999995,
+        "latency": 0,
+        "tokens": 125610,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229896202,
+        "cost": 0.040683149999999994,
+        "latency": 0,
+        "tokens": 125805,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229901293,
+        "cost": 0.040283849999999996,
+        "latency": 0,
+        "tokens": 125988,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229906885,
+        "cost": 0.04021065,
+        "latency": 0,
+        "tokens": 126142,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229911788,
+        "cost": 0.0399306,
+        "latency": 0,
+        "tokens": 126267,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229922264,
+        "cost": 0.0423606,
+        "latency": 0,
+        "tokens": 126588,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229927387,
+        "cost": 0.040171649999999996,
+        "latency": 0,
+        "tokens": 126694,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229933167,
+        "cost": 0.04033215,
+        "latency": 0,
+        "tokens": 126906,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229948563,
+        "cost": 0.04045845,
+        "latency": 0,
+        "tokens": 127079,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229957058,
+        "cost": 0.042274950000000006,
+        "latency": 0,
+        "tokens": 127346,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229966541,
+        "cost": 0.04785345,
+        "latency": 0,
+        "tokens": 128316,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229971358,
+        "cost": 0.04242885,
+        "latency": 0,
+        "tokens": 128504,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229977600,
+        "cost": 0.0432885,
+        "latency": 0,
+        "tokens": 128899,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229984267,
+        "cost": 0.04441305,
+        "latency": 0,
+        "tokens": 129255,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771229989404,
+        "cost": 0.042316799999999995,
+        "latency": 0,
+        "tokens": 129450,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230001394,
+        "cost": 0.054871050000000005,
+        "latency": 0,
+        "tokens": 131092,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230006498,
+        "cost": 0.04386195,
+        "latency": 0,
+        "tokens": 131235,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230018777,
+        "cost": 0.0484632,
+        "latency": 0,
+        "tokens": 132610,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230033528,
+        "cost": 0.41703375000000004,
+        "latency": 0,
+        "tokens": 131301,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230039016,
+        "cost": 0.04294919999999999,
+        "latency": 0,
+        "tokens": 131517,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230047217,
+        "cost": 0.0432486,
+        "latency": 0,
+        "tokens": 131754,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230057371,
+        "cost": 0.045161099999999996,
+        "latency": 0,
+        "tokens": 132123,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230068614,
+        "cost": 0.0454032,
+        "latency": 0,
+        "tokens": 131868,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230083816,
+        "cost": 0.06352395000000001,
+        "latency": 0,
+        "tokens": 133763,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230088592,
+        "cost": 0.0470607,
+        "latency": 0,
+        "tokens": 133927,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230093430,
+        "cost": 0.0427692,
+        "latency": 0,
+        "tokens": 134096,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230099986,
+        "cost": 0.046326,
+        "latency": 0,
+        "tokens": 134672,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230106124,
+        "cost": 0.0433917,
+        "latency": 0,
+        "tokens": 134831,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230111657,
+        "cost": 0.0431667,
+        "latency": 0,
+        "tokens": 135024,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230119496,
+        "cost": 0.0470202,
+        "latency": 0,
+        "tokens": 135719,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230121666,
+        "cost": 0.0437118,
+        "latency": 0,
+        "tokens": 135878,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230126559,
+        "cost": 0.042971999999999996,
+        "latency": 0,
+        "tokens": 136012,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230131774,
+        "cost": 0.0435135,
+        "latency": 0,
+        "tokens": 136222,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230143426,
+        "cost": 0.0513255,
+        "latency": 0,
+        "tokens": 137052,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230148521,
+        "cost": 0.0449337,
+        "latency": 0,
+        "tokens": 137197,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230161775,
+        "cost": 0.0506649,
+        "latency": 0,
+        "tokens": 138598,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230169377,
+        "cost": 0.43926000000000004,
+        "latency": 0,
+        "tokens": 138023,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230184025,
+        "cost": 0.0434853,
+        "latency": 0,
+        "tokens": 138178,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230189809,
+        "cost": 0.04377465,
+        "latency": 0,
+        "tokens": 138332,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230196542,
+        "cost": 0.045636449999999995,
+        "latency": 0,
+        "tokens": 138919,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230201345,
+        "cost": 0.0438258,
+        "latency": 0,
+        "tokens": 139045,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230206766,
+        "cost": 0.044681399999999996,
+        "latency": 0,
+        "tokens": 139263,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230214181,
+        "cost": 0.0450618,
+        "latency": 0,
+        "tokens": 139642,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230219973,
+        "cost": 0.04429155,
+        "latency": 0,
+        "tokens": 139796,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230228808,
+        "cost": 0.05266005,
+        "latency": 0,
+        "tokens": 140553,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230234084,
+        "cost": 0.0462801,
+        "latency": 0,
+        "tokens": 140717,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230274714,
+        "cost": 0.04613924999999999,
+        "latency": 0,
+        "tokens": 141025,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230289071,
+        "cost": 0.0446559,
+        "latency": 0,
+        "tokens": 141173,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230294295,
+        "cost": 0.044163299999999996,
+        "latency": 0,
+        "tokens": 141291,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230298989,
+        "cost": 0.0440538,
+        "latency": 0,
+        "tokens": 141396,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230314120,
+        "cost": 0.044136749999999995,
+        "latency": 0,
+        "tokens": 141505,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230324907,
+        "cost": 0.047010899999999994,
+        "latency": 0,
+        "tokens": 141808,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230340060,
+        "cost": 0.45449625000000005,
+        "latency": 0,
+        "tokens": 141567,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230349073,
+        "cost": 0.04825785,
+        "latency": 0,
+        "tokens": 142117,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230356822,
+        "cost": 0.046304099999999994,
+        "latency": 0,
+        "tokens": 142359,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230364978,
+        "cost": 0.04695824999999999,
+        "latency": 0,
+        "tokens": 142646,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230377137,
+        "cost": 0.049025099999999995,
+        "latency": 0,
+        "tokens": 143037,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230389367,
+        "cost": 0.05794935,
+        "latency": 0,
+        "tokens": 144533,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230396211,
+        "cost": 0.0471882,
+        "latency": 0,
+        "tokens": 144777,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230401546,
+        "cost": 0.046431,
+        "latency": 0,
+        "tokens": 145002,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230407706,
+        "cost": 0.046506599999999995,
+        "latency": 0,
+        "tokens": 145215,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230414729,
+        "cost": 0.0476886,
+        "latency": 0,
+        "tokens": 145600,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230420372,
+        "cost": 0.0473955,
+        "latency": 0,
+        "tokens": 145905,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230426960,
+        "cost": 0.04787955,
+        "latency": 0,
+        "tokens": 146403,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230434382,
+        "cost": 0.0482196,
+        "latency": 0,
+        "tokens": 146718,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230451181,
+        "cost": 0.047291849999999996,
+        "latency": 0,
+        "tokens": 146922,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230459236,
+        "cost": 0.04939935,
+        "latency": 0,
+        "tokens": 147260,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230465941,
+        "cost": 0.047360700000000006,
+        "latency": 0,
+        "tokens": 147431,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230471822,
+        "cost": 0.0466575,
+        "latency": 0,
+        "tokens": 147589,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230478181,
+        "cost": 0.04871295,
+        "latency": 0,
+        "tokens": 147904,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230483726,
+        "cost": 0.0480723,
+        "latency": 0,
+        "tokens": 148124,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230491283,
+        "cost": 0.04888875,
+        "latency": 0,
+        "tokens": 148411,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230495951,
+        "cost": 0.046938299999999995,
+        "latency": 0,
+        "tokens": 148547,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230505861,
+        "cost": 0.05275845,
+        "latency": 0,
+        "tokens": 149863,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230586692,
+        "cost": 0.46783875,
+        "latency": 0,
+        "tokens": 124258,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771231498428,
+        "cost": 0.5577712499999999,
+        "latency": 0,
+        "tokens": 147097,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232186475,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232806771,
+        "cost": 0.43556625000000004,
+        "latency": 0,
+        "tokens": 114440,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237195562,
+        "cost": 0.499965,
+        "latency": 0,
+        "tokens": 128568,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237207422,
+        "cost": 0.054518849999999994,
+        "latency": 0,
+        "tokens": 129300,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237213242,
+        "cost": 0.043308900000000004,
+        "latency": 0,
+        "tokens": 129527,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237218888,
+        "cost": 0.0135672,
+        "latency": 0,
+        "tokens": 13211,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237222152,
+        "cost": 0.009333300000000001,
+        "latency": 0,
+        "tokens": 14066,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237226123,
+        "cost": 0.007806,
+        "latency": 0,
+        "tokens": 14349,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237230845,
+        "cost": 0.015101100000000003,
+        "latency": 0,
+        "tokens": 16340,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237234386,
+        "cost": 0.00906195,
+        "latency": 0,
+        "tokens": 16762,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237238139,
+        "cost": 0.009315299999999999,
+        "latency": 0,
+        "tokens": 17251,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237242683,
+        "cost": 0.0082695,
+        "latency": 0,
+        "tokens": 17453,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237281697,
+        "cost": 0.05897115,
+        "latency": 0,
+        "tokens": 21184,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237287613,
+        "cost": 0.0219897,
+        "latency": 0,
+        "tokens": 21450,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237291063,
+        "cost": 0.0093477,
+        "latency": 0,
+        "tokens": 21620,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237294740,
+        "cost": 0.0093468,
+        "latency": 0,
+        "tokens": 21807,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237299786,
+        "cost": 0.01034535,
+        "latency": 0,
+        "tokens": 22166,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237305993,
+        "cost": 0.0099303,
+        "latency": 0,
+        "tokens": 22364,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237313731,
+        "cost": 0.0172797,
+        "latency": 0,
+        "tokens": 23255,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237317724,
+        "cost": 0.0110739,
+        "latency": 0,
+        "tokens": 23422,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237320911,
+        "cost": 0.00938115,
+        "latency": 0,
+        "tokens": 23586,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237324214,
+        "cost": 0.0089475,
+        "latency": 0,
+        "tokens": 23699,
+        "quality": null,
+        "error": false
+      }
+    ]
+  },
+  "claude-opus-4-6": {
+    "name": "claude-opus-4-6",
+    "totalCalls": 8604,
+    "totalCost": 723.1353534999996,
+    "totalLatency": 0,
+    "totalTokens": 836779375,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771236466340,
+        "cost": 0.04248475,
+        "latency": 0,
+        "tokens": 77763,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236469845,
+        "cost": 0.04387825,
+        "latency": 0,
+        "tokens": 78215,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236477157,
+        "cost": 0.0523325,
+        "latency": 0,
+        "tokens": 78735,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236481487,
+        "cost": 0.045119,
+        "latency": 0,
+        "tokens": 78874,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236488362,
+        "cost": 0.04400149999999999,
+        "latency": 0,
+        "tokens": 79204,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236508724,
+        "cost": 0.06778100000000001,
+        "latency": 0,
+        "tokens": 80436,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236522500,
+        "cost": 0.048392,
+        "latency": 0,
+        "tokens": 80554,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236526373,
+        "cost": 0.0432835,
+        "latency": 0,
+        "tokens": 80669,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236534595,
+        "cost": 0.046264,
+        "latency": 0,
+        "tokens": 81312,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236541941,
+        "cost": 0.047931249999999995,
+        "latency": 0,
+        "tokens": 81654,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236545450,
+        "cost": 0.044293,
+        "latency": 0,
+        "tokens": 81760,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236558900,
+        "cost": 0.05007975,
+        "latency": 0,
+        "tokens": 82277,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236572362,
+        "cost": 0.056661249999999996,
+        "latency": 0,
+        "tokens": 82988,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236579733,
+        "cost": 0.053035,
+        "latency": 0,
+        "tokens": 83676,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236585689,
+        "cost": 0.04727649999999999,
+        "latency": 0,
+        "tokens": 84152,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236590177,
+        "cost": 0.04560675,
+        "latency": 0,
+        "tokens": 84379,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236593823,
+        "cost": 0.0458595,
+        "latency": 0,
+        "tokens": 84573,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236596846,
+        "cost": 0.048339999999999994,
+        "latency": 0,
+        "tokens": 85222,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236605522,
+        "cost": 0.05225925,
+        "latency": 0,
+        "tokens": 85952,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236611929,
+        "cost": 0.048781500000000005,
+        "latency": 0,
+        "tokens": 86181,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236619965,
+        "cost": 0.056772750000000004,
+        "latency": 0,
+        "tokens": 86800,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236633879,
+        "cost": 0.04823575,
+        "latency": 0,
+        "tokens": 86920,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236644444,
+        "cost": 0.05850975,
+        "latency": 0,
+        "tokens": 87578,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236657722,
+        "cost": 0.051725499999999994,
+        "latency": 0,
+        "tokens": 87800,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236662779,
+        "cost": 0.052684749999999995,
+        "latency": 0,
+        "tokens": 88514,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236666369,
+        "cost": 0.050485999999999996,
+        "latency": 0,
+        "tokens": 89000,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236670144,
+        "cost": 0.05045275,
+        "latency": 0,
+        "tokens": 89539,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236674106,
+        "cost": 0.0485105,
+        "latency": 0,
+        "tokens": 89695,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236677518,
+        "cost": 0.05143774999999999,
+        "latency": 0,
+        "tokens": 90294,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236682046,
+        "cost": 0.053581,
+        "latency": 0,
+        "tokens": 91056,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236685859,
+        "cost": 0.04968999999999999,
+        "latency": 0,
+        "tokens": 91196,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236690211,
+        "cost": 0.052077,
+        "latency": 0,
+        "tokens": 91693,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236695239,
+        "cost": 0.05434925,
+        "latency": 0,
+        "tokens": 92443,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236698411,
+        "cost": 0.05250225,
+        "latency": 0,
+        "tokens": 92949,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236715934,
+        "cost": 0.0785455,
+        "latency": 0,
+        "tokens": 95356,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236729810,
+        "cost": 0.054827749999999995,
+        "latency": 0,
+        "tokens": 95478,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236734398,
+        "cost": 0.05156325,
+        "latency": 0,
+        "tokens": 95641,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236737939,
+        "cost": 0.05711775,
+        "latency": 0,
+        "tokens": 96681,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236748168,
+        "cost": 0.07087125,
+        "latency": 0,
+        "tokens": 97886,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236761183,
+        "cost": 0.055452,
+        "latency": 0,
+        "tokens": 98006,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236765379,
+        "cost": 0.053240249999999996,
+        "latency": 0,
+        "tokens": 98251,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236769895,
+        "cost": 0.0534815,
+        "latency": 0,
+        "tokens": 98484,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236773271,
+        "cost": 0.055119249999999995,
+        "latency": 0,
+        "tokens": 98968,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236783177,
+        "cost": 0.0716305,
+        "latency": 0,
+        "tokens": 100106,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236796687,
+        "cost": 0.056562,
+        "latency": 0,
+        "tokens": 100226,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236801970,
+        "cost": 0.05370649999999999,
+        "latency": 0,
+        "tokens": 100407,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236813107,
+        "cost": 0.07297850000000002,
+        "latency": 0,
+        "tokens": 101340,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236826962,
+        "cost": 0.05780824999999999,
+        "latency": 0,
+        "tokens": 101462,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236839804,
+        "cost": 0.0776615,
+        "latency": 0,
+        "tokens": 102565,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236854818,
+        "cost": 0.0594015,
+        "latency": 0,
+        "tokens": 102685,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236858547,
+        "cost": 0.053786,
+        "latency": 0,
+        "tokens": 102793,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236872775,
+        "cost": 0.0797025,
+        "latency": 0,
+        "tokens": 103955,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236886770,
+        "cost": 0.06037575,
+        "latency": 0,
+        "tokens": 104073,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236897488,
+        "cost": 0.0766555,
+        "latency": 0,
+        "tokens": 105108,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236911266,
+        "cost": 0.060098,
+        "latency": 0,
+        "tokens": 105228,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236914939,
+        "cost": 0.05495125,
+        "latency": 0,
+        "tokens": 105319,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236917995,
+        "cost": 0.054521749999999994,
+        "latency": 0,
+        "tokens": 105391,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236929253,
+        "cost": 0.054892250000000004,
+        "latency": 0,
+        "tokens": 105477,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236934944,
+        "cost": 0.0568445,
+        "latency": 0,
+        "tokens": 105656,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236939926,
+        "cost": 0.05954525,
+        "latency": 0,
+        "tokens": 106199,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236943548,
+        "cost": 0.05636775,
+        "latency": 0,
+        "tokens": 106315,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236947389,
+        "cost": 0.05654,
+        "latency": 0,
+        "tokens": 106457,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236950912,
+        "cost": 0.056974750000000005,
+        "latency": 0,
+        "tokens": 106609,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236955036,
+        "cost": 0.0603255,
+        "latency": 0,
+        "tokens": 107249,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236958240,
+        "cost": 0.057529,
+        "latency": 0,
+        "tokens": 107407,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236961323,
+        "cost": 0.058574499999999995,
+        "latency": 0,
+        "tokens": 107760,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236964827,
+        "cost": 0.057731500000000005,
+        "latency": 0,
+        "tokens": 107981,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236967909,
+        "cost": 0.057758,
+        "latency": 0,
+        "tokens": 108141,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236974589,
+        "cost": 0.0619415,
+        "latency": 0,
+        "tokens": 108611,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236978974,
+        "cost": 0.060115249999999995,
+        "latency": 0,
+        "tokens": 108881,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236982603,
+        "cost": 0.05938875,
+        "latency": 0,
+        "tokens": 109183,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236988089,
+        "cost": 0.06001875,
+        "latency": 0,
+        "tokens": 109487,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236994317,
+        "cost": 0.06021575,
+        "latency": 0,
+        "tokens": 109763,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236998936,
+        "cost": 0.06094075,
+        "latency": 0,
+        "tokens": 110216,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237006757,
+        "cost": 0.06489375,
+        "latency": 0,
+        "tokens": 110871,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237010662,
+        "cost": 0.0595825,
+        "latency": 0,
+        "tokens": 111005,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237015039,
+        "cost": 0.059553249999999995,
+        "latency": 0,
+        "tokens": 111181,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237037084,
+        "cost": 0.13345600000000002,
+        "latency": 0,
+        "tokens": 120929,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237040959,
+        "cost": 0.067562,
+        "latency": 0,
+        "tokens": 121050,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237049566,
+        "cost": 0.06283675,
+        "latency": 0,
+        "tokens": 121136,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237065730,
+        "cost": 0.08306149999999998,
+        "latency": 0,
+        "tokens": 122154,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237069358,
+        "cost": 0.06803124999999999,
+        "latency": 0,
+        "tokens": 122276,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237073901,
+        "cost": 0.06417475,
+        "latency": 0,
+        "tokens": 122394,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237087161,
+        "cost": 0.06389525,
+        "latency": 0,
+        "tokens": 122514,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237095016,
+        "cost": 0.079225,
+        "latency": 0,
+        "tokens": 124628,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237104477,
+        "cost": 0.0820655,
+        "latency": 0,
+        "tokens": 125595,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237109278,
+        "cost": 0.06822199999999999,
+        "latency": 0,
+        "tokens": 125696,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237122850,
+        "cost": 0.06525725,
+        "latency": 0,
+        "tokens": 125816,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237126768,
+        "cost": 0.06673899999999999,
+        "latency": 0,
+        "tokens": 126095,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237130794,
+        "cost": 0.0659075,
+        "latency": 0,
+        "tokens": 126200,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237138226,
+        "cost": 0.0712095,
+        "latency": 0,
+        "tokens": 126646,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237161233,
+        "cost": 0.06493075000000001,
+        "latency": 0,
+        "tokens": 126664,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237227895,
+        "cost": 0.09615225,
+        "latency": 0,
+        "tokens": 130771,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237240548,
+        "cost": 0.09329225,
+        "latency": 0,
+        "tokens": 132558,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237253861,
+        "cost": 0.07287099999999999,
+        "latency": 0,
+        "tokens": 132680,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237265052,
+        "cost": 0.0892455,
+        "latency": 0,
+        "tokens": 133622,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237279539,
+        "cost": 0.07354174999999999,
+        "latency": 0,
+        "tokens": 133725,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237292660,
+        "cost": 0.06932174999999999,
+        "latency": 0,
+        "tokens": 133847,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237301381,
+        "cost": 0.08754100000000001,
+        "latency": 0,
+        "tokens": 135094,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237319118,
+        "cost": 0.0876335,
+        "latency": 0,
+        "tokens": 135881,
+        "quality": null,
+        "error": false
+      }
+    ]
+  },
+  "delivery-mirror": {
+    "name": "delivery-mirror",
+    "totalCalls": 458,
+    "totalCost": 0,
+    "totalLatency": 0,
+    "totalTokens": 0,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771102290395,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771102296247,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771102302875,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771109627171,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114354441,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114354635,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114354812,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114355014,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114355230,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114410223,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114410394,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114410580,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114410756,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771114410937,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116003510,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116003721,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116004351,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116004352,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116004352,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116004503,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116004685,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116004875,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116005078,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116005297,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116005490,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116005683,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116005874,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116006070,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116006266,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116006447,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116006646,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116006838,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116007027,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116007231,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116007436,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116062853,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116063066,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116063266,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771116063471,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771150785113,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771152564933,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153603584,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153603913,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153604357,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153604745,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153605051,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153605385,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153605687,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153605982,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153606746,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153606747,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153607507,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153607508,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153607572,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153608156,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153608818,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153608819,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153608896,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153609554,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153609658,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153610026,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153768536,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153769097,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153769098,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153769305,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153769658,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153769974,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153770283,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153770601,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153770907,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771153771271,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166016061,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166378573,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166378718,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166378841,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166378972,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166379122,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166379289,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166379435,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166379560,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166379674,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771166379820,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771167850894,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771167857876,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771167863208,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771178741410,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185297733,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185315412,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185315731,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185316004,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185316274,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185316505,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185316741,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185317068,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185317323,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185317598,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771188000935,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771189949693,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771198105508,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771198105628,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      }
+    ]
+  },
+  "anthropic/claude-opus-4.6": {
+    "name": "anthropic/claude-opus-4.6",
+    "totalCalls": 827,
+    "totalCost": 91.446519,
+    "totalLatency": 0,
+    "totalTokens": 97515951,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771169222315,
+        "cost": 0.0649245,
+        "latency": 0,
+        "tokens": 95419,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169236094,
+        "cost": 0.053290000000000004,
+        "latency": 0,
+        "tokens": 95542,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169240545,
+        "cost": 0.053755000000000004,
+        "latency": 0,
+        "tokens": 95635,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169248988,
+        "cost": 0.06074,
+        "latency": 0,
+        "tokens": 96096,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169295043,
+        "cost": 0.074035,
+        "latency": 0,
+        "tokens": 98023,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169308886,
+        "cost": 0.0603385,
+        "latency": 0,
+        "tokens": 98146,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169313329,
+        "cost": 0.0544005,
+        "latency": 0,
+        "tokens": 98276,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169341043,
+        "cost": 0.0628755,
+        "latency": 0,
+        "tokens": 99091,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169349050,
+        "cost": 0.0629455,
+        "latency": 0,
+        "tokens": 99413,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771169983109,
+        "cost": 0.719735,
+        "latency": 0,
+        "tokens": 135707,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170001514,
+        "cost": 0.6801250000000001,
+        "latency": 0,
+        "tokens": 135109,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170014879,
+        "cost": 0.0905725,
+        "latency": 0,
+        "tokens": 135942,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170020971,
+        "cost": 0.078456,
+        "latency": 0,
+        "tokens": 136221,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170027132,
+        "cost": 0.08170949999999999,
+        "latency": 0,
+        "tokens": 136671,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170039070,
+        "cost": 0.100306,
+        "latency": 0,
+        "tokens": 137860,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170053595,
+        "cost": 0.079291,
+        "latency": 0,
+        "tokens": 137981,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170064366,
+        "cost": 0.083081,
+        "latency": 0,
+        "tokens": 138449,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170105546,
+        "cost": 0.098051,
+        "latency": 0,
+        "tokens": 140059,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170120067,
+        "cost": 0.08936350000000001,
+        "latency": 0,
+        "tokens": 140668,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170139496,
+        "cost": 0.0863885,
+        "latency": 0,
+        "tokens": 141132,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771170146975,
+        "cost": 0.07972299999999999,
+        "latency": 0,
+        "tokens": 141403,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771175638778,
+        "cost": 0.30386500000000005,
+        "latency": 0,
+        "tokens": 59657,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771175646026,
+        "cost": 0.31475500000000006,
+        "latency": 0,
+        "tokens": 62239,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771175650489,
+        "cost": 0.045212,
+        "latency": 0,
+        "tokens": 62329,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177156667,
+        "cost": 0.5911000000000001,
+        "latency": 0,
+        "tokens": 117396,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177161158,
+        "cost": 0.58825,
+        "latency": 0,
+        "tokens": 117438,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177170070,
+        "cost": 0.06262,
+        "latency": 0,
+        "tokens": 117557,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177185534,
+        "cost": 0.0843885,
+        "latency": 0,
+        "tokens": 119434,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177195413,
+        "cost": 0.070505,
+        "latency": 0,
+        "tokens": 119134,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177203784,
+        "cost": 0.0694475,
+        "latency": 0,
+        "tokens": 120078,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177208930,
+        "cost": 0.0681175,
+        "latency": 0,
+        "tokens": 120192,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177216422,
+        "cost": 0.07248299999999999,
+        "latency": 0,
+        "tokens": 121743,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177221009,
+        "cost": 0.071903,
+        "latency": 0,
+        "tokens": 121939,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177225424,
+        "cost": 0.0656035,
+        "latency": 0,
+        "tokens": 122191,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177230170,
+        "cost": 0.0660085,
+        "latency": 0,
+        "tokens": 122324,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177236379,
+        "cost": 0.068599,
+        "latency": 0,
+        "tokens": 122617,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177241130,
+        "cost": 0.066729,
+        "latency": 0,
+        "tokens": 122771,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177244758,
+        "cost": 0.066721,
+        "latency": 0,
+        "tokens": 123068,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177251176,
+        "cost": 0.07561699999999999,
+        "latency": 0,
+        "tokens": 124082,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177257938,
+        "cost": 0.071557,
+        "latency": 0,
+        "tokens": 124238,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177262276,
+        "cost": 0.0675875,
+        "latency": 0,
+        "tokens": 124463,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177267590,
+        "cost": 0.06754049999999999,
+        "latency": 0,
+        "tokens": 124787,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177274186,
+        "cost": 0.06998549999999999,
+        "latency": 0,
+        "tokens": 125164,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177278876,
+        "cost": 0.06739200000000001,
+        "latency": 0,
+        "tokens": 125287,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177283647,
+        "cost": 0.066428,
+        "latency": 0,
+        "tokens": 125412,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177290110,
+        "cost": 0.067428,
+        "latency": 0,
+        "tokens": 125552,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177294288,
+        "cost": 0.06719800000000001,
+        "latency": 0,
+        "tokens": 125686,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177304694,
+        "cost": 0.06665199999999999,
+        "latency": 0,
+        "tokens": 125859,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177308808,
+        "cost": 0.06669699999999999,
+        "latency": 0,
+        "tokens": 126036,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177322708,
+        "cost": 0.06843199999999999,
+        "latency": 0,
+        "tokens": 126159,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177341443,
+        "cost": 0.6598400000000001,
+        "latency": 0,
+        "tokens": 128240,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177351346,
+        "cost": 0.076042,
+        "latency": 0,
+        "tokens": 127697,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177357645,
+        "cost": 0.07185899999999999,
+        "latency": 0,
+        "tokens": 128061,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177367135,
+        "cost": 0.070869,
+        "latency": 0,
+        "tokens": 128235,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177372425,
+        "cost": 0.07152399999999999,
+        "latency": 0,
+        "tokens": 128498,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177385906,
+        "cost": 0.08295949999999999,
+        "latency": 0,
+        "tokens": 129260,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177396054,
+        "cost": 0.0860495,
+        "latency": 0,
+        "tokens": 129942,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177406129,
+        "cost": 0.0831065,
+        "latency": 0,
+        "tokens": 130457,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177415685,
+        "cost": 0.08603150000000001,
+        "latency": 0,
+        "tokens": 130986,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177421331,
+        "cost": 0.072787,
+        "latency": 0,
+        "tokens": 131128,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177426185,
+        "cost": 0.072847,
+        "latency": 0,
+        "tokens": 131260,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177441258,
+        "cost": 0.069421,
+        "latency": 0,
+        "tokens": 131433,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177446488,
+        "cost": 0.06939599999999999,
+        "latency": 0,
+        "tokens": 131596,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177457876,
+        "cost": 0.07095599999999999,
+        "latency": 0,
+        "tokens": 131712,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177481148,
+        "cost": 0.68477,
+        "latency": 0,
+        "tokens": 133682,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177490392,
+        "cost": 0.66886,
+        "latency": 0,
+        "tokens": 133352,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177499806,
+        "cost": 0.07442449999999999,
+        "latency": 0,
+        "tokens": 133976,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177505626,
+        "cost": 0.0751095,
+        "latency": 0,
+        "tokens": 134229,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177511100,
+        "cost": 0.0733795,
+        "latency": 0,
+        "tokens": 134663,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177516394,
+        "cost": 0.0756095,
+        "latency": 0,
+        "tokens": 135193,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177523037,
+        "cost": 0.07501849999999999,
+        "latency": 0,
+        "tokens": 135685,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177533170,
+        "cost": 0.08317849999999999,
+        "latency": 0,
+        "tokens": 136981,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177544055,
+        "cost": 0.09816849999999999,
+        "latency": 0,
+        "tokens": 137959,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177549228,
+        "cost": 0.077083,
+        "latency": 0,
+        "tokens": 138117,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177558862,
+        "cost": 0.078888,
+        "latency": 0,
+        "tokens": 138298,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177565282,
+        "cost": 0.072586,
+        "latency": 0,
+        "tokens": 138433,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177575927,
+        "cost": 0.07303899999999999,
+        "latency": 0,
+        "tokens": 138606,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177580202,
+        "cost": 0.073044,
+        "latency": 0,
+        "tokens": 138775,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177592082,
+        "cost": 0.074679,
+        "latency": 0,
+        "tokens": 138894,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177608855,
+        "cost": 0.7187500000000001,
+        "latency": 0,
+        "tokens": 140786,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177617901,
+        "cost": 0.08395899999999999,
+        "latency": 0,
+        "tokens": 140470,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177623833,
+        "cost": 0.07492850000000001,
+        "latency": 0,
+        "tokens": 140608,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177637229,
+        "cost": 0.1038085,
+        "latency": 0,
+        "tokens": 142905,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177643292,
+        "cost": 0.0854085,
+        "latency": 0,
+        "tokens": 143037,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177650929,
+        "cost": 0.0795235,
+        "latency": 0,
+        "tokens": 143174,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177659762,
+        "cost": 0.08389049999999999,
+        "latency": 0,
+        "tokens": 143722,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177672221,
+        "cost": 0.0937855,
+        "latency": 0,
+        "tokens": 144489,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177679318,
+        "cost": 0.0821705,
+        "latency": 0,
+        "tokens": 144638,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177684041,
+        "cost": 0.07938599999999998,
+        "latency": 0,
+        "tokens": 144852,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177690268,
+        "cost": 0.08250750000000001,
+        "latency": 0,
+        "tokens": 145432,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177697240,
+        "cost": 0.07981250000000001,
+        "latency": 0,
+        "tokens": 145585,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177702046,
+        "cost": 0.0811275,
+        "latency": 0,
+        "tokens": 145896,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177720069,
+        "cost": 0.107323,
+        "latency": 0,
+        "tokens": 147438,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177725432,
+        "cost": 0.085633,
+        "latency": 0,
+        "tokens": 147592,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177733621,
+        "cost": 0.084805,
+        "latency": 0,
+        "tokens": 147818,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177738904,
+        "cost": 0.077473,
+        "latency": 0,
+        "tokens": 147946,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771177744788,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771180727916,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771183964103,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771185159387,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 0,
+        "quality": null,
+        "error": false
+      }
+    ]
+  },
+  "google/gemini-3-flash-preview": {
+    "name": "google/gemini-3-flash-preview",
+    "totalCalls": 2279,
+    "totalCost": 33.25824449999999,
+    "totalLatency": 0,
+    "totalTokens": 156243615,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771229771572,
+        "cost": 0.05968,
+        "latency": 0,
+        "tokens": 119330,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230022184,
+        "cost": 0.00847525,
+        "latency": 0,
+        "tokens": 119444,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230327902,
+        "cost": 0.008535399999999999,
+        "latency": 0,
+        "tokens": 119558,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230520153,
+        "cost": 0.0095555,
+        "latency": 0,
+        "tokens": 18701,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230525096,
+        "cost": 0.0036884499999999994,
+        "latency": 0,
+        "tokens": 23045,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230527040,
+        "cost": 0.011654499999999998,
+        "latency": 0,
+        "tokens": 23134,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230528888,
+        "cost": 0.0116955,
+        "latency": 0,
+        "tokens": 23211,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230530391,
+        "cost": 0.0037797,
+        "latency": 0,
+        "tokens": 23258,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230532870,
+        "cost": 0.0022636,
+        "latency": 0,
+        "tokens": 23340,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230536938,
+        "cost": 0.00234095,
+        "latency": 0,
+        "tokens": 23492,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230541495,
+        "cost": 0.011875499999999999,
+        "latency": 0,
+        "tokens": 23671,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230544643,
+        "cost": 0.0025134,
+        "latency": 0,
+        "tokens": 23836,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230549306,
+        "cost": 0.00265725,
+        "latency": 0,
+        "tokens": 24011,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230551052,
+        "cost": 0.00260555,
+        "latency": 0,
+        "tokens": 24040,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230554717,
+        "cost": 0.0029493999999999996,
+        "latency": 0,
+        "tokens": 24778,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230558686,
+        "cost": 0.00327415,
+        "latency": 0,
+        "tokens": 25427,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230561753,
+        "cost": 0.0017818499999999998,
+        "latency": 0,
+        "tokens": 25512,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230569473,
+        "cost": 0.0017775,
+        "latency": 0,
+        "tokens": 25553,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230575154,
+        "cost": 0.005445449999999999,
+        "latency": 0,
+        "tokens": 26759,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771230578314,
+        "cost": 0.0031783000000000002,
+        "latency": 0,
+        "tokens": 27094,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771231502673,
+        "cost": 0.06010649999999999,
+        "latency": 0,
+        "tokens": 120183,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771231924914,
+        "cost": 0.009382,
+        "latency": 0,
+        "tokens": 18614,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771231929800,
+        "cost": 0.010968999999999998,
+        "latency": 0,
+        "tokens": 21763,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232193610,
+        "cost": 0.060104,
+        "latency": 0,
+        "tokens": 116723,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232197820,
+        "cost": 0.058542000000000004,
+        "latency": 0,
+        "tokens": 116304,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232204961,
+        "cost": 0.060048,
+        "latency": 0,
+        "tokens": 117566,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232208195,
+        "cost": 0.00836055,
+        "latency": 0,
+        "tokens": 117492,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232415392,
+        "cost": 0.0033697499999999995,
+        "latency": 0,
+        "tokens": 21256,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232417549,
+        "cost": 0.0034034,
+        "latency": 0,
+        "tokens": 21317,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232419140,
+        "cost": 0.00347805,
+        "latency": 0,
+        "tokens": 21390,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232420736,
+        "cost": 0.0035417,
+        "latency": 0,
+        "tokens": 21496,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232422538,
+        "cost": 0.0035738499999999995,
+        "latency": 0,
+        "tokens": 21579,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232425707,
+        "cost": 0.0036971999999999994,
+        "latency": 0,
+        "tokens": 21874,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232427724,
+        "cost": 0.0037723499999999994,
+        "latency": 0,
+        "tokens": 21948,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232437052,
+        "cost": 0.01676525,
+        "latency": 0,
+        "tokens": 43975,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771232810868,
+        "cost": 0.058816999999999994,
+        "latency": 0,
+        "tokens": 117604,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771233410595,
+        "cost": 0.061135499999999995,
+        "latency": 0,
+        "tokens": 122241,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771234017244,
+        "cost": 0.058914499999999995,
+        "latency": 0,
+        "tokens": 117799,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771234613933,
+        "cost": 0.058970499999999995,
+        "latency": 0,
+        "tokens": 117911,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235265485,
+        "cost": 0.010043,
+        "latency": 0,
+        "tokens": 18981,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235267237,
+        "cost": 0.0236725,
+        "latency": 0,
+        "tokens": 47185,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235269024,
+        "cost": 0.0053343999999999996,
+        "latency": 0,
+        "tokens": 47263,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235270762,
+        "cost": 0.00662135,
+        "latency": 0,
+        "tokens": 49836,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235272548,
+        "cost": 0.0037659499999999997,
+        "latency": 0,
+        "tokens": 51466,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235274505,
+        "cost": 0.0265175,
+        "latency": 0,
+        "tokens": 52825,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235277042,
+        "cost": 0.00479835,
+        "latency": 0,
+        "tokens": 53490,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235278842,
+        "cost": 0.00498745,
+        "latency": 0,
+        "tokens": 53891,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235283298,
+        "cost": 0.00632505,
+        "latency": 0,
+        "tokens": 54684,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235287467,
+        "cost": 0.0063877,
+        "latency": 0,
+        "tokens": 55088,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235290392,
+        "cost": 0.0063023,
+        "latency": 0,
+        "tokens": 55390,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235294686,
+        "cost": 0.0071714,
+        "latency": 0,
+        "tokens": 55931,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235296723,
+        "cost": 0.0061151,
+        "latency": 0,
+        "tokens": 56033,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235299688,
+        "cost": 0.0061727,
+        "latency": 0,
+        "tokens": 56216,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235301864,
+        "cost": 0.0116931,
+        "latency": 0,
+        "tokens": 67257,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235304382,
+        "cost": 0.006617,
+        "latency": 0,
+        "tokens": 71800,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235306283,
+        "cost": 0.0068241,
+        "latency": 0,
+        "tokens": 72207,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235309032,
+        "cost": 0.00750875,
+        "latency": 0,
+        "tokens": 72775,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235315053,
+        "cost": 0.00896685,
+        "latency": 0,
+        "tokens": 73454,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235375374,
+        "cost": 0.0420465,
+        "latency": 0,
+        "tokens": 85097,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235380451,
+        "cost": 0.011020549999999999,
+        "latency": 0,
+        "tokens": 85652,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235524881,
+        "cost": 0.0036649,
+        "latency": 0,
+        "tokens": 21829,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235530046,
+        "cost": 0.0036330499999999996,
+        "latency": 0,
+        "tokens": 21889,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771235623803,
+        "cost": 0.061418499999999994,
+        "latency": 0,
+        "tokens": 122807,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236016530,
+        "cost": 0.0093905,
+        "latency": 0,
+        "tokens": 18726,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236018418,
+        "cost": 0.0017258500000000001,
+        "latency": 0,
+        "tokens": 19180,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236026988,
+        "cost": 0.0017647499999999998,
+        "latency": 0,
+        "tokens": 19218,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236029048,
+        "cost": 0.00209395,
+        "latency": 0,
+        "tokens": 19885,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236031131,
+        "cost": 0.0037386499999999996,
+        "latency": 0,
+        "tokens": 23506,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236035911,
+        "cost": 0.011913499999999999,
+        "latency": 0,
+        "tokens": 23717,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236038146,
+        "cost": 0.0023086999999999995,
+        "latency": 0,
+        "tokens": 23806,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236041310,
+        "cost": 0.014114999999999999,
+        "latency": 0,
+        "tokens": 27895,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236044823,
+        "cost": 0.00317775,
+        "latency": 0,
+        "tokens": 28013,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236047592,
+        "cost": 0.0034649999999999998,
+        "latency": 0,
+        "tokens": 28188,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236062589,
+        "cost": 0.009201999999999998,
+        "latency": 0,
+        "tokens": 18344,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236064538,
+        "cost": 0.01079,
+        "latency": 0,
+        "tokens": 21465,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236067257,
+        "cost": 0.0038635499999999994,
+        "latency": 0,
+        "tokens": 21645,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236069515,
+        "cost": 0.0039827,
+        "latency": 0,
+        "tokens": 21807,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236071725,
+        "cost": 0.004115499999999999,
+        "latency": 0,
+        "tokens": 22499,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236073819,
+        "cost": 0.004738,
+        "latency": 0,
+        "tokens": 23769,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236076093,
+        "cost": 0.0054508000000000004,
+        "latency": 0,
+        "tokens": 24551,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236078717,
+        "cost": 0.0051684999999999995,
+        "latency": 0,
+        "tokens": 24576,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236081212,
+        "cost": 0.00179905,
+        "latency": 0,
+        "tokens": 24746,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236083791,
+        "cost": 0.00212915,
+        "latency": 0,
+        "tokens": 25009,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236086148,
+        "cost": 0.0017747499999999999,
+        "latency": 0,
+        "tokens": 25063,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236088751,
+        "cost": 0.00878265,
+        "latency": 0,
+        "tokens": 38865,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236091354,
+        "cost": 0.020297,
+        "latency": 0,
+        "tokens": 40199,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236094123,
+        "cost": 0.0059559,
+        "latency": 0,
+        "tokens": 40378,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236096819,
+        "cost": 0.005758049999999999,
+        "latency": 0,
+        "tokens": 40466,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236100467,
+        "cost": 0.006545700000000001,
+        "latency": 0,
+        "tokens": 40795,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236102699,
+        "cost": 0.005954849999999999,
+        "latency": 0,
+        "tokens": 40787,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236105131,
+        "cost": 0.008739,
+        "latency": 0,
+        "tokens": 53249,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236110731,
+        "cost": 0.007010499999999999,
+        "latency": 0,
+        "tokens": 54028,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236117741,
+        "cost": 0.007700149999999999,
+        "latency": 0,
+        "tokens": 54676,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236189330,
+        "cost": 0.06147149999999999,
+        "latency": 0,
+        "tokens": 122913,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236247969,
+        "cost": 0.00683605,
+        "latency": 0,
+        "tokens": 123091,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236250328,
+        "cost": 0.007125599999999999,
+        "latency": 0,
+        "tokens": 123472,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236255375,
+        "cost": 0.00790115,
+        "latency": 0,
+        "tokens": 124534,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236257359,
+        "cost": 0.00743295,
+        "latency": 0,
+        "tokens": 124599,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771236562514,
+        "cost": 0.0074926,
+        "latency": 0,
+        "tokens": 124712,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771237217098,
+        "cost": 0.0624275,
+        "latency": 0,
+        "tokens": 124825,
+        "quality": null,
+        "error": false
+      }
+    ]
+  },
+  "qwen2.5:72b": {
+    "name": "qwen2.5:72b",
+    "totalCalls": 5,
+    "totalCost": 0,
+    "totalLatency": 0,
+    "totalTokens": 165918,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771192724558,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 32858,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771192778428,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 33070,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771193414524,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 33486,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771193472879,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 32845,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771193562564,
+        "cost": 0,
+        "latency": 0,
+        "tokens": 33659,
+        "quality": null,
+        "error": false
+      }
+    ]
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "name": "grok-4-1-fast-non-reasoning",
+    "totalCalls": 13,
+    "totalCost": 0.026048700000000008,
+    "totalLatency": 0,
+    "totalTokens": 480653,
+    "thumbsUp": 0,
+    "thumbsDown": 0,
+    "errors": 0,
+    "samples": [
+      {
+        "timestamp": 1771203801966,
+        "cost": 0.013265500000000001,
+        "latency": 0,
+        "tokens": 66429,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771203801967,
+        "cost": 0.0021160000000000003,
+        "latency": 0,
+        "tokens": 76499,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223726614,
+        "cost": 0.000352,
+        "latency": 0,
+        "tokens": 20090,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223737732,
+        "cost": 0.0005843,
+        "latency": 0,
+        "tokens": 22064,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223747462,
+        "cost": 0.0004192,
+        "latency": 0,
+        "tokens": 23191,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223751009,
+        "cost": 0.00020840000000000002,
+        "latency": 0,
+        "tokens": 23703,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223754552,
+        "cost": 0.0001419,
+        "latency": 0,
+        "tokens": 23979,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223758846,
+        "cost": 0.0020463,
+        "latency": 0,
+        "tokens": 33638,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223761138,
+        "cost": 0.0007008,
+        "latency": 0,
+        "tokens": 36575,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771223766763,
+        "cost": 0.0003824,
+        "latency": 0,
+        "tokens": 37262,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771224380522,
+        "cost": 0.0024397,
+        "latency": 0,
+        "tokens": 30452,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771224396069,
+        "cost": 0.0028836,
+        "latency": 0,
+        "tokens": 43047,
+        "quality": null,
+        "error": false
+      },
+      {
+        "timestamp": 1771224402970,
+        "cost": 0.0005086,
+        "latency": 0,
+        "tokens": 43724,
+        "quality": null,
+        "error": false
+      }
+    ]
+  }
+}

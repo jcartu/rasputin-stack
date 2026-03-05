@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✦ NEXUS ULTRA — 5-Stage Evolution Complete</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #05050a; color: #fff; overflow: hidden; }
+    #container { width: 100vw; height: 100vh; }
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #05050a, #0a0a12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 1;
+      transition: opacity 0.8s ease-out;
+      pointer-events: none;
+    }
+    .intro-overlay.hidden { opacity: 0; }
+    .intro-content {
+      text-align: center;
+      animation: intro-fade-in 1s ease-out;
+    }
+    @keyframes intro-fade-in {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .intro-title {
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #a78bfa, #06b6d4, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .intro-subtitle {
+      font-size: 20px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+    }
+    .intro-stages {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .intro-stage {
+      padding: 12px 20px;
+      background: rgba(167,139,250,0.12);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #a78bfa;
+      animation: intro-stage-pop 0.5s ease-out;
+      animation-fill-mode: backwards;
+    }
+    .intro-stage:nth-child(1) { animation-delay: 0.2s; }
+    .intro-stage:nth-child(2) { animation-delay: 0.4s; }
+    .intro-stage:nth-child(3) { animation-delay: 0.6s; }
+    .intro-stage:nth-child(4) { animation-delay: 0.8s; }
+    .intro-stage:nth-child(5) { animation-delay: 1s; }
+    @keyframes intro-stage-pop {
+      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Intro Animation -->
+  <div class="intro-overlay" id="intro">
+    <div class="intro-content">
+      <div class="intro-title">✦ NEXUS ULTRA ✦</div>
+      <div class="intro-subtitle">5-Stage Evolution Complete</div>
+      <div class="intro-stages">
+        <div class="intro-stage">Core</div>
+        <div class="intro-stage">Polish</div>
+        <div class="intro-stage">Media</div>
+        <div class="intro-stage">Artifacts</div>
+        <div class="intro-stage">Widgets</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="container"></div>
+
+  <script type="module">
+    import { NexusUltra } from './nexus-ultra.js';
+
+    // Hide intro after 3 seconds
+    setTimeout(() => {
+      document.getElementById('intro').classList.add('hidden');
+    }, 3000);
+
+    const chat = new NexusUltra({
+      container: document.getElementById('container'),
+      wsUrl: 'ws://localhost:9001',
+      user: { name: 'admin', avatar: '👤' },
+      ai: { name: 'Rasputin', avatar: '🧠' },
+      onSend: (text) => console.log('[Demo] Sent:', text),
+      onWidgetAction: (action, payload) => {
+        console.log('[Demo] Widget action:', action, payload);
+        alert(`Widget Action: ${action}\n\n${JSON.stringify(payload, null, 2)}`);
+      }
+    });
+
+    // Demo: Add showcase messages
+    setTimeout(() => {
+      // Welcome
+      chat.addMessage({
+        content: `# ✦ Welcome to Nexus Ultra ✦
+
+**5-Stage Evolution Complete:**
+
+1. **Core Functionality** — Markdown, D&D, Streaming ✓
+2. **Visual Polish** — Gumballer/Cyberpunk theme, smooth animations ✓
+3. **Media Support** — Images, video, voice waveforms ✓
+4. **Artifact Engine** — Claude-style slide-out panel ✓
+5. **Interactive Widgets** — In-chat buttons, charts, real-time feedback ✓
+
+---
+
+### Mathematical Expressions
+
+The Schrödinger equation: $i\\hbar\\frac{\\partial}{\\partial t}\\Psi = \\hat{H}\\Psi$
+
+Einstein's energy equation:
+
+$$E = mc^2$$
+
+---
+
+### Code Example
+
+\`\`\`python
+def quantum_superposition(state):
+    """Quantum computing demo"""
+    return np.abs(state)**2  # Probability density
+\`\`\`
+
+Try **dragging an image** or clicking the widgets below!`,
+        sender: 'Rasputin'
+      });
+
+      // Thinking demo
+      setTimeout(() => {
+        chat.showThinking(true);
+        setTimeout(() => {
+          chat.showThinking(false);
+          chat.addMessage({
+            content: 'Processing complete! Here are some interactive elements:',
+            sender: 'Rasputin'
+          });
+
+          // Widget demo
+          setTimeout(() => {
+            chat.addWidget({
+              title: '🚀 Deploy to Production',
+              description: 'Ready to deploy alfie-nexus v2.1 with 12 new features.',
+              action: 'deploy_production',
+              payload: { service: 'alfie-nexus', version: '2.1', features: 12 },
+              buttonText: '🚀 Deploy Now',
+              icon: '🚀'
+            });
+
+            setTimeout(() => {
+              chat.addWidget({
+                title: '🎯 Start Mission',
+                description:  Platform scraper ready to collect 500 sites from Trustpilot.',
+                action: 'start_mission',
+                payload: { mission:  Platform scraper', target: 500 },
+                buttonText: '🎯 Start Mission',
+                icon: '🎯'
+              });
+
+              setTimeout(() => {
+                chat.addProgress('Downloading datasets', 67);
+
+                setTimeout(() => {
+                  chat.addArtifact({
+                    title: 'Interactive Chart',
+                    type: 'html',
+                    content: `
+                      <!DOCTYPE html>
+                      <html>
+                      <head>
+                        <style>
+                          body { font-family: system-ui; padding: 20px; background: #fff; }
+                          h1 { color: #333; font-size: 24px; margin-bottom: 16px; }
+                          canvas { max-width: 100%; }
+                        </style>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+                      </head>
+                      <body>
+                        <h1>Traffic Analytics — Last 7 Days</h1>
+                        <canvas id="chart"></canvas>
+                        <script>
+                          const ctx = document.getElementById('chart').getContext('2d');
+                          new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                              labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                              datasets: [{
+                                label: 'Visitors',
+                                data: [1200, 1900, 1500, 2100, 2400, 1800, 2200],
+                                borderColor: '#a78bfa',
+                                backgroundColor: 'rgba(167,139,250,0.1)',
+                                tension: 0.4,
+                                fill: true
+                              }]
+                            },
+                            options: {
+                              responsive: true,
+                              plugins: {
+                                legend: { display: true },
+                                title: { display: false }
+                              }
+                            }
+                          });
+                        </script>
+                      </body>
+                      </html>
+                    `
+                  });
+
+                  setTimeout(() => {
+                    chat.addMessage({
+                      content: '✨ **All 5 iterations complete!**\n\nYou now have an ultra-premium chat interface exceeding Claude.ai quality.',
+                      sender: 'Rasputin'
+                    });
+                  }, 1000);
+                }, 1500);
+              }, 1500);
+            }, 1500);
+          }, 1000);
+        }, 2500);
+      }, 1500);
+    }, 3500);
+
+    // Expose for console testing
+    window.chat = chat;
+    console.log('✦ Chat instance: window.chat');
+  </script>
+</body>
+</html>

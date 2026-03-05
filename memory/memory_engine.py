@@ -247,7 +247,7 @@ def expand_queries(message):
     # 5. Semantic opposites / related concepts for better recall
     # Maps known topic areas to related search terms
     expansions = {
-        "ivf": ["fertility supplements embryo PGT genetic screening"],
+        "medical-procedure": ["health-goal supplements embryo PGT genetic screening"],
         "business": ["revenue deposits metrics analytics"],
         "car": ["Ferrari Porsche McLaren tuning racing Gumball"],
         "health": ["testosterone peptide HGH surgery recovery"],
@@ -418,7 +418,7 @@ def recall(message, max_results=10, force=False):
             "appointment", "email", "searched", "looked into", "researched",
             "doctor", "car", "health", "business", "brand_a", "brand_b",
             "contact_1", "contact_2", "contact_3",
-            "porsche", "ferrari", "mclaren", "chronos", "ivf", "fertility",
+            "porsche", "ferrari", "mclaren", "chronos", "medical-procedure", "health-goal",
             "property", "house", "apartment",
             "vpn", "astrill", "peptide", "testosterone", "surgery", "recovery",
             "ring", "proposal", "engaged", "wedding",

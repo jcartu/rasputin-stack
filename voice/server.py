@@ -45,10 +45,10 @@ _whisper_model = None
 def get_whisper():
     global _whisper_model
     if _whisper_model is None:
-        from faster_whisper import WhisperModel
+        from faster_whisper import Whimedical-sampleodel
         log.info(f"Loading Whisper {WHISPER_MODEL} on {WHISPER_DEVICE}...")
         t0 = time.time()
-        _whisper_model = WhisperModel(WHISPER_MODEL, device=WHISPER_DEVICE, compute_type=WHISPER_COMPUTE)
+        _whisper_model = Whimedical-sampleodel(WHISPER_MODEL, device=WHISPER_DEVICE, compute_type=WHISPER_COMPUTE)
         log.info(f"Whisper loaded in {time.time()-t0:.1f}s")
     return _whisper_model
 

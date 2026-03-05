@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALFIE Session Reports</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="shared-nav.js"></script>
+    <style>
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, min-min(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .report-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .report-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .report-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-light, #bd93f9);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .session-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-light, #bd93f9);
+            word-break: break-all;
+            margin-right: 0.5rem;
+        }
+        .timestamp {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+        .summary {
+            font-size: 1rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+        .metrics-bar {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+        }
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .metric i {
+            font-size: 0.9rem;
+        }
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+        }
+        .btn-small:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .btn-share {
+            background: rgba(189, 147, 249, 0.2);
+            border-color: rgba(189, 147, 249, 0.3);
+        }
+        .btn-share:hover {
+            background: rgba(189, 147, 249, 0.4);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .view-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            cursor: pointer;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+        .toggle-btn.active {
+            color: var(--accent-light, #bd93f9);
+            border-bottom-color: var(--accent-light, #bd93f9);
+        }
+    </style>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+    
+    <main class="container">
+        <header class="page-header">
+            <div>
+                <h1>Session Reports</h1>
+                <p class="subtitle">Completed session analysis, insights and sharing.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="generateBatch()">Analysis All Sessions</button>
+            </div>
+        </header>
+
+        <div class="view-toggle">
+            <button class="toggle-btn active" onclick="setView('recent')">Recent Autopsies</button>
+            <button class="toggle-btn" onclick="setView('exported')">Exported Reports</button>
+        </div>
+
+        <div id="reports-container" class="reports-grid">
+            <div class="loading">Analyzing session history...</div>
+        </div>
+    </main>
+
+    <script>
+        let currentView = 'recent';
+
+        async function fetchReports() {
+            const container = document.getElementById('reports-container');
+            container.innerHTML = '<div class="loading">Loading reports...</div>';
+            
+            try {
+                const endpoint = currentView === 'recent' ? '/api/autopsy/recent' : '/api/reports/list';
+                const response = await fetch(endpoint, {
+                    headers: { 'X-Dashboard-Secret': localStorage.getItem('alfie_secret') }
+                });
+                const data = await response.json();
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No reports found. Completed sessions will appear here automatically.</div>';
+                    return;
+                }
+
+                container.innerHTML = data.map(report => `
+                    <div class="report-card" onclick="viewReport('${report.sessionId || report.sessionKey}')">
+                        <div class="report-header">
+                            <span class="session-id">${report.sessionId || report.sessionKey}</span>
+                            <span class="timestamp">${new Date(report.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div class="summary">${report.summary || 'Session analysis in progress...'}</div>
+                        <div class="metrics-bar">
+                            <div class="metric">
+                                <span>⏱️</span> ${(report.metrics.duration / 1000).toFixed(1)}s
+                            </div>
+                            <div class="metric">
+                                <span>💰</span> $${report.metrics.cost.toFixed(4)}
+                            </div>
+                            <div class="metric">
+                                <span>🔧</span> ${report.metrics.toolCallCount}
+                            </div>
+                            <div class="metric">
+                                <span>🚨</span> ${report.metrics.errorCount}
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-small" onclick="event.stopPropagation(); downloadReport('${report.sessionId}', 'md')">MD</button>
+                            <button class="btn-small" onclick="event.stopPropagation(); downloadReport('${report.sessionId}', 'json')">JSON</button>
+                            <button class="btn-small btn-share" onclick="event.stopPropagation(); shareReport('${report.sessionId}')">Share</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="error">Failed to load reports. Ensure dashboard secret is set.</div>';
+            }
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(view));
+            });
+            fetchReports();
+        }
+
+        function viewReport(id) {
+            // Future: Open detail modal or page
+            window.open(`/replay.html?session=${id}`, '_blank');
+        }
+
+        async function shareReport(id) {
+            try {
+                const resp = await fetch('/api/reports/share', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Dashboard-Secret': localStorage.getItem('alfie_secret') 
+                    },
+                    body: JSON.stringify({ sessionKey: id })
+                });
+                const data = await resp.json();
+                const shareUrl = `${window.location.origin}/api/share/${data.token}`;
+                
+                // Copy to clipboard
+                await navigator.clipboard.writeText(shareUrl);
+                alert('Shareable link copied to clipboard!');
+            } catch (err) {
+                alert('Sharing failed: ' + err.message);
+            }
+        }
+
+        function downloadReport(id, format) {
+            window.open(`/api/reports/download/${id}?format=${format}`, '_blank');
+        }
+
+        async function generateBatch() {
+            if(!confirm("Analyze all previous sessions in history? This may take a moment.")) return;
+            // Batch generation logic via API
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchReports);
+    </script>
+</body>
+</html>
