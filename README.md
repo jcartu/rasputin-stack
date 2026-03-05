@@ -77,10 +77,10 @@ Built over ~6 months by one person. No team, no VC, no cloud bills.
 ## Hardware
 
 ```
-CPU:    AMD Ryzen 9 7950X (16C/32T)
+CPU:    Intel Xeon w9-3495X (56C/112T)
 RAM:    251 GB DDR5
-GPU 0:  NVIDIA L40S (48GB VRAM) — inference: Qwen 3.5 122B-A10B
-GPU 1:  NVIDIA RTX 5090 (32GB VRAM) — inference: Qwen3-Coder 30B + TTS
+GPU 0:  NVIDIA RTX PRO 6000 Blackwell (96GB VRAM) — inference: Qwen 3.5 122B-A10B
+GPU 1:  NVIDIA RTX PRO 6000 Blackwell (96GB VRAM) — embeddings, reranker, coding models
 Storage: 4TB NVMe
 OS:     Arch Linux
 ```
