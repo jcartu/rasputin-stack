@@ -258,8 +258,8 @@ GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMI
 ANALYSIS_PROMPT = """Analyze this YouTube video for the daily intelligence briefing.
 
 **Context about us:**
-- We run an autonomous AI agent (RASPUTIN) on a server with RTX PRO 6000 96GB + RTX 5090 32GB, 251GB RAM
-- Running Ollama with Qwen 72B + Qwen Coder 30B locally, Claude Opus 4.6 via API proxy
+- We run an autonomous AI agent (RASPUTIN) on a server with 2x RTX PRO 6000 Blackwell 96GB (192GB total) + RTX PRO 6000 Blackwell 96GB, 251GB RAM
+- Running Ollama with Qwen 3.5 122B MoE + Qwen Coder 30B locally, Claude Opus 4.6 via API proxy
 - We use OpenClaw agent framework, Qdrant vector DB + FalkorDB graph DB for memory (133K memories)
 - User runs a technology-focused business
 - We care about: local LLM inference speedups, new open-source models, agent frameworks, vLLM/inference optimization, GPU utilization, MCP servers, AI coding tools, crypto/DeFi, health/biohacking, supercars, home theater

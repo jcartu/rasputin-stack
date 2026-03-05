@@ -158,7 +158,7 @@ No changelog entry for proxy_v8_backup_*.
 # Local Qwen 3.5 122B-A10B (llama.cpp, IQ3_XXS)
 LOCAL_QWEN_URL = "http://127.0.0.1:11435/v1/chat/completions"
 
-# Local Qwen3-Coder 30B (GPU1/RTX 5090)
+# Local Qwen3-Coder 30B (GPU1/RTX PRO 6000 Blackwell)
 LOCAL_CODER_URL = "http://127.0.0.1:11436/v1/chat/completions"
 
 # Gemini via gemini-cli-anthropic proxy

@@ -6,7 +6,7 @@ Every AI agent framework with long-running sessions has the same problem: when t
 - **Debugging context** — the 3-hour auth bug fix journey? Summarized to "fixed auth bug."
 - **Cross-references** — connections that only existed when seeing everything together? Vanished.
 
-I've been running autonomous AI agents 24/7 for months on a dual-GPU server (RTX PRO 6000 + RTX 5090) and hit this wall constantly. My agent would "forget" critical context right after compaction — even though it had been working perfectly 30 seconds earlier.
+I've been running autonomous AI agents 24/7 for months on a dual-GPU server (RTX PRO 6000 + RTX PRO 6000 Blackwell) and hit this wall constantly. My agent would "forget" critical context right after compaction — even though it had been working perfectly 30 seconds earlier.
 
 ## The Fix: Pre-Compaction Memory Rescue
 

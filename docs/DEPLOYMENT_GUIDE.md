@@ -55,7 +55,7 @@ ALFIE (Autonomous Learning & Functional Intelligence Engine) is a comprehensive 
 | **CPU**     | 8 cores          | 16+ cores              |
 | **RAM**     | 32 GB            | 64+ GB                 |
 | **Storage** | 100 GB SSD       | 500+ GB NVMe           |
-| **GPU**     | NVIDIA 24GB VRAM | NVIDIA 48GB+ VRAM      |
+| **GPU**     | NVIDIA 96GB VRAM | NVIDIA 96GB+ VRAM (dual)      |
 | **OS**      | Ubuntu 22.04 LTS | Ubuntu 22.04/24.04 LTS |
 
 ### Software Dependencies

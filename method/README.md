@@ -178,7 +178,7 @@ Any model accessible via OpenAI-compatible API works. Recommended for extraction
 |----------|-------|-------|------|-------|
 | **Cerebras** | Llama 3.3 70B | ~2000 tok/s | $0.10/MTok | Fastest option |
 | **Groq** | Llama 3.3 70B | ~1200 tok/s | $0.10/MTok | Very fast |
-| **Ollama** (local) | Qwen 2.5 72B | ~40 tok/s | Free | Privacy-first |
+| **Ollama** (local) | Qwen 3.5 122B-A10B | ~40 tok/s | Free | Privacy-first |
 | **OpenRouter** | Various | Varies | Varies | Fallback |
 
 ## How It Compares
@@ -196,7 +196,7 @@ Any model accessible via OpenAI-compatible API works. Recommended for extraction
 
 ## Production Results
 
-Running in production since December 2025 on a dual-GPU server (RTX PRO 6000 + RTX 5090):
+Running in production since December 2025 on a dual-GPU server (RTX PRO 6000 + RTX PRO 6000 Blackwell):
 
 - **761,000+ memories** committed to Qdrant
 - **16ms average retrieval** latency

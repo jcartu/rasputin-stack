@@ -24,7 +24,7 @@ A **first-of-its-kind** feature that correlates AI agent session replay with rea
 
 **Capabilities:**
 - **Persistent GPU history** - JSONL format, one line per snapshot
-- **Dual-GPU tracking** - GPU0 (PRO 6000 96GB) + GPU1 (RTX 5090 32GB)
+- **Dual-GPU tracking** - GPU0 (PRO 6000 96GB) + GPU1 (RTX PRO 6000 Blackwell 96GB)
 - **Metrics per snapshot:**
   - Utilization per GPU (0-100%)
   - Memory usage (used/total)
@@ -106,7 +106,7 @@ A **first-of-its-kind** feature that correlates AI agent session replay with rea
 - **Canvas-based chart** (400px height)
 - **Three lines:**
   - Cyan: GPU0 (PRO 6000) utilization
-  - Magenta: GPU1 (RTX 5090) utilization
+  - Magenta: GPU1 (RTX PRO 6000 Blackwell 96GB) utilization
   - Yellow: Average utilization (emphasized)
 - **Grid overlay** - 20% increments for easy reading
 - **Live legend** - Shows which line is which GPU
@@ -244,7 +244,7 @@ A **first-of-its-kind** feature that correlates AI agent session replay with rea
 4. Conclusion: Don't add GPU, rebalance workload
 5. Action: Shift embedding server from GPU0 to GPU1
 
-**Value:** Avoid unnecessary hardware purchases ($5K RTX 5090)
+**Value:** Avoid unnecessary hardware purchases ($5K RTX PRO 6000 Blackwell)
 
 ---
 

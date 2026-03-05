@@ -48,7 +48,7 @@
 - **.env file keys are STALE** — auth-profiles.json (`/home/admin/.openclaw/agents/main/agent/auth-profiles.json`) is the real source of truth for API keys.
 - **Rewrite tone preference**: When drafting messages for admin to send to his brothers, write as one paragraph, no dashes (—), no AI-style formatting. Older brother telling younger brothers how it is.
 - **Manus competitor: build once, scale later** — Architecture decisions that are impossible to change later (tenant isolation, event protocol, API contract, stateless backend, interface-based services) must be right from day 1. Everything else can wait.
-- **Manus competitor: $0 build + $0 run** — OpenCode Black ($200/mo flat, already paying) for build. Ollama Qwen 72B + Coder 30B on GPUs for product inference. Zero per-token API costs.
+- **Manus competitor: $0 build + $0 run** — OpenCode Black ($200/mo flat, already paying) for build. Ollama Qwen 3.5 122B MoE + Coder 30B on GPUs for product inference. Zero per-token API costs.
 - **Grey-market regulatory news is NOT a fire drill** — worth a mention in intel digests, not 🚨 red alerts with action items.
 - **Don't repeat the same analysis/intel multiple times in one day** — Grok scanner dedup must be fixed.
 - **ELF draft is for review only** — admin will confirm if/when to send. Do NOT send autonomously.
@@ -230,8 +230,8 @@
   - **OpenCode** v1.2.5 — Opus 4.6 via Black sub, CLI AND external API (`opencode.ai/zen/v1/messages`). Both confirmed working.
   - **Claude Code** v2.1.2 — needs Anthropic API key
 - **GPU Inference Stack**:
-  - **RTX PRO 6000 Blackwell** (97,887 MiB): Qwen 72B (47GB)
-  - **RTX 5090** (32,607 MiB): Qwen Coder 30B (18GB)
+  - **RTX PRO 6000 Blackwell** (97,887 MiB): Qwen 3.5 122B MoE (47GB)
+  - **RTX PRO 6000 Blackwell** (32,607 MiB): Qwen Coder 30B (18GB)
 - **Manus Competitor Build Plan**: 4-stage sequential build. Stage 1 (Days 1-2): Multi-user chat. Stage 2 (Days 3-4): Agent mode + LangGraph. Stage 3 (Days 5-6): Split-screen UX. Stage 4 (Day 7): Hardening + deploy to manus.rasputin.to. $20-35 total cost. Filesystem-as-memory: SPEC.md, BUILD_STATE.md, CONTRACTS.md, decisions/, tasks/, shared/, logs/.
 - **jarvis-postgres BROKEN**: Real creds: DB=`jarvis_vault`, user=`jarvis`, password=`***REDACTED***`. Needs fix before ALFIE backend can connect to Postgres.
 - **OpenClaw Security Status (post-hardening)**: 0 CRITICAL (was 3), 4 WARN remaining. Config chattr +i locked.

@@ -6,7 +6,7 @@ Example configurations for the various services in the stack.
 
 ### llama.cpp (Qwen 3.5 122B-A10B, IQ3_XXS quantization)
 ```bash
-# Run on GPU 0 (L40S 48GB)
+# Run on GPU 0 (RTX PRO 6000 Blackwell 96GB)
 ./llama-server \
   --model qwen3.5-122b-a10b-iq3_xxs.gguf \
   --ctx-size 131072 \

@@ -49,7 +49,7 @@
 - **.env file keys are STALE** — auth-profiles.json (`/home/admin/.openclaw/agents/main/agent/auth-profiles.json`) is the real source of truth for API keys. `.env` ANTHROPIC_API_KEY and OPENROUTER_API_KEY differ from auth-profiles.
 - **Rewrite tone preference**: When drafting messages for admin to send to his brothers, write as one paragraph, no dashes (—), no AI-style formatting. Older brother telling younger brothers how it is.
 - **Manus competitor: build once, scale later** — Architecture decisions that are impossible to change later (tenant isolation, event protocol, API contract, stateless backend, interface-based services) must be right from day 1. Everything else (monitoring, CI/CD, CDN, rate limiting, billing) can wait.
-- **Manus competitor: $0 build + $0 run** — OpenCode Black ($200/mo flat, already paying) for build. Ollama Qwen 72B + Coder 30B on GPUs for product inference. Zero per-token API costs.
+- **Manus competitor: $0 build + $0 run** — OpenCode Black ($200/mo flat, already paying) for build. Ollama Qwen 3.5 122B MoE + Coder 30B on GPUs for product inference. Zero per-token API costs.
 - **Grey-market regulatory news is NOT a fire drill** — worth a mention in intel digests, not 🚨 red alerts with action items. admin knows he's grey, always has been. jurisdiction-alpha blocks are "just Tuesday."
 - **Don't repeat the same analysis/intel multiple times in one day** — admin explicitly called this out 3 times. Grok scanner dedup must be fixed.
 - **ELF draft is for review only** — admin will confirm if/when to send. Do NOT send autonomously.
@@ -174,15 +174,15 @@
 - **Antigravity uses `claude-opus-4-6-thinking` model ID**: The non-thinking `claude-opus-4-6` returns 404 on Antigravity.
 - **Manus competitor: build properly from scratch, not hack existing pieces together**: admin explicitly rejected wiring ALFIE UI + ALFIE backend + Russian Manus orchestrator. Wants clean architecture built for millions, MVP for 5.
 - **Manus competitor: architecture for millions, ship for 5**: Day-1 decisions that can't change later: tenant isolation, event protocol schema, API contract, stateless backend, interface-based services. Day-N swaps: Docker→K8s, local disk→S3, Ollama→vLLM, JWT→OAuth/SSO, direct WebSocket→Redis Streams.
-- **Manus competitor stack**: Next.js 15 + shadcn/ui + Tailwind + Zustand (frontend), FastAPI (backend), LangGraph (orchestrator), PostgreSQL (event-sourced sessions), Qdrant (per-user vector memory), Redis (cache/pubsub), Docker (sandbox per session), Ollama (Qwen 72B + Coder 30B).
+- **Manus competitor stack**: Next.js 15 + shadcn/ui + Tailwind + Zustand (frontend), FastAPI (backend), LangGraph (orchestrator), PostgreSQL (event-sourced sessions), Qdrant (per-user vector memory), Redis (cache/pubsub), Docker (sandbox per session), Ollama (Qwen 3.5 122B MoE + Coder 30B).
 - **Strip enterprise bloat from Russian Manus for MVP**: No Keycloak, Prometheus, Grafana, Loki, OTel, MinIO. Simple JWT auth + file storage on disk.
 - **Layered sequential build over parallel waves**: Deep reassessment concluded parallel agents are bad at integration ("the glue IS the product"). 4 sequential stages, each using 3-4 parallel agents with manual integration between stages.
 - **Keep Russian Manus backend, rebuild frontend from scratch**: Backend LangGraph orchestrator is solid and will be extended. Frontend rebuilt as clean split-screen Manus UX.
 - **Realistic timeline: 5-7 days for working MVP, not 24 hours**: Integration, debugging, frontend polish, and WebSocket streaming reliability are hard problems that can't be parallelized.
 - **Filesystem-as-memory for multi-day multi-agent build**: SPEC.md, BUILD_STATE.md, CONTRACTS.md, decisions/, tasks/, shared/, logs/.
-- **Local inference for CIS prototype**: Ollama Qwen 72B + Qwen Coder 30B on existing GPUs, $0/mo per-user cost.
+- **Local inference for CIS prototype**: Ollama Qwen 3.5 122B MoE + Qwen Coder 30B on existing GPUs, $0/mo per-user cost.
 - **Per-user Qdrant isolation needed**: Current `second_brain_v2` is one big collection — each prototype user needs own namespace or collection.
-- **$20-35 total build cost**: Leveraging OpenCode Black flat, Claude Code ~$5-10, Qwen 72B $0.
+- **$20-35 total build cost**: Leveraging OpenCode Black flat, Claude Code ~$5-10, Qwen 3.5 122B MoE $0.
 - **Use Tarasenko (migration lawyer) for ВНЖ conversion, not ELF**: Administrative document swap at МВД doesn't need legal-proceeding rates. ELF is backup if МВД flags the legal-notice.
 - **Use Ashley's existing repo, don't rebuild with Tarasenko**: Ashley has the Rasputin Production codebase in a working repo with active commits (Jan 9-10, 2026), battle-tested pg-event-publisher, and designed the architecture.
 - **Rasputin Production ≠ Manus competitor**: These are two separate projects.
@@ -313,8 +313,8 @@
   - **Codex CLI** — not installed
   - **Pi Coding Agent** — not installed
 - **GPU Inference Stack**:
-  - **RTX PRO 6000 Blackwell** (97,887 MiB total, ~86,687 MiB free) — Qwen 72B (47GB), `ollama/qwen2.5:72b`
-  - **RTX 5090** (32,607 MiB total, ~20,399 MiB free) — Qwen Coder 30B (18GB), `ollama/qwen3-coder:30b`
+  - **RTX PRO 6000 Blackwell** (97,887 MiB total, ~86,687 MiB free) — Qwen 3.5 122B MoE (47GB), `ollama/qwen3.5-122b-a10b`
+  - **RTX PRO 6000 Blackwell** (32,607 MiB total, ~20,399 MiB free) — Qwen Coder 30B (18GB), `ollama/qwen3-coder:30b`
   - Also loaded: gpt-oss-120b-uncensored (80GB), llama3.2-vision:11b (7.8GB), nomic-embed-text (274MB)
 - **Rasputin/JARVIS/ALFIE Architecture** (audited Feb 17):
   - **ALFIE (me/OpenClaw)**: Sonnet 5 runtime, 761K Qdrant memories, 90 workspace tools, 66 skills, Perplexity Sonar Pro, 2x VLLM servers

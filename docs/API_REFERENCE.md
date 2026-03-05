@@ -85,7 +85,7 @@ Get system statistics (CPU, memory, uptime).
   "cpu": {
     "usage": 45.2,
     "cores": 16,
-    "model": "AMD Ryzen 9 5950X"
+    "model": "Intel Xeon w9-3495X"
   },
   "memory": {
     "total": 64424509440,

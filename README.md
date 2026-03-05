@@ -18,7 +18,7 @@ A comprehensive AI agent infrastructure stack — autonomous agent orchestration
 │ (Router) │  (TTS)   │ (Qdrant)  │ (177+)   │  (Relay)   │
 ├──────────┴──────────┴───────────┴──────────┴────────────┤
 │              Local Inference (Ollama)                     │
-│         Qwen 72B (RTX PRO 6000) + Coder 30B (5090)      │
+│         Qwen 3.5 122B MoE (GPU0) + Coder 30B (GPU1) + TTS (GPU2)      │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -151,7 +151,7 @@ System health diagnostics and alerting.
 |-------|-----------|
 | Frontend | Next.js 14, React 19, TypeScript, shadcn/ui, Tailwind, Framer Motion |
 | Backend | Node.js, Express, PostgreSQL, JWT RBAC |
-| AI/ML | Ollama (Qwen 72B, Coder 30B), Qdrant, LangGraph |
+| AI/ML | Ollama (Qwen 3.5 122B MoE, Coder 30B), Qdrant, LangGraph |
 | Voice | Qwen3-TTS, WebRTC, Pipecat |
 | Proxy | Python/aiohttp, SSE streaming, multi-provider routing |
 | Desktop | Electron |
@@ -160,7 +160,7 @@ System health diagnostics and alerting.
 
 ## Key Design Decisions
 
-1. **Local-first inference** — 72B parameter models on bare metal GPUs, $0/month per-token cost
+1. **Local-first inference** — 122B MoE parameter models on bare metal GPUs, $0/month per-token cost
 2. **Multi-provider failover** — Flat-rate subscriptions first, free tiers second, per-token last
 3. **Hybrid memory** — Dense vectors (nomic-embed-text) + sparse BM25 + graph relationships
 4. **Event-sourced sessions** — Full audit trail of every agent action
@@ -183,8 +183,8 @@ cd voice/qwen3-tts-server && python -m api.main  # TTS
 
 Built for and tested on:
 - **CPU:** 112 cores, 251GB RAM
-- **GPU 0:** NVIDIA RTX PRO 6000 Blackwell (96GB) — Qwen 72B
-- **GPU 1:** NVIDIA RTX 5090 (32GB) — Qwen Coder 30B
+- **GPU 0:** NVIDIA RTX PRO 6000 Blackwell (96GB) — Qwen 3.5 122B MoE
+- **GPU 1:** NVIDIA RTX PRO 6000 Blackwell (96GB) — Qwen Coder 30B + embeddings
 - **OS:** Arch Linux
 - **Storage:** NVMe SSD
 

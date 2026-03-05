@@ -58,7 +58,7 @@ class OfficialQwen3TTSBackend(TTSBackend):
             logger.info(f"Loading Qwen3-TTS model '{self.model_name}' on {self.device}...")
 
             # Try loading with Flash Attention 2, fallback to SDPA or eager if not supported
-            # (e.g., RTX 5090/Blackwell GPUs don't have pre-built flash-attn wheels yet)
+            # (e.g., RTX PRO 6000 Blackwell/Blackwell GPUs don't have pre-built flash-attn wheels yet)
             attn_implementations = ["flash_attention_2", "sdpa", "eager"]
             model_loaded = False
 

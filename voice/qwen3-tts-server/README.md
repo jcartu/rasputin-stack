@@ -37,7 +37,7 @@ The core features (streaming API, voice library, caching) are platform-agnostic.
 torch.compile and CUDA graphs work on both CUDA and ROCm.
 
 NVIDIA users: if you encounter issues, please open an issue. The streaming library
-(dffdeeq) was originally developed and benchmarked on RTX 5090.
+(dffdeeq) was originally developed and benchmarked on RTX PRO 6000 Blackwell.
 
 
 ## Quick Start

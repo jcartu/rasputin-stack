@@ -82,9 +82,9 @@ Keep each section concise. Preserve exact file paths, function names, and error 
 MODELS = {
     # ---- LOCAL MODELS (Ollama) ----
     "qwen-72b": {
-        "name": "Qwen 2.5 72B",
+        "name": "Qwen 3.5 122B-A10B",
         "provider": "ollama",
-        "model": "qwen2.5:72b",
+        "model": "qwen3.5-122b-a10b",
         "gpu": "RTX PRO 6000 (96GB)",
         "cost_per_mtok_in": 0,
         "cost_per_mtok_out": 0,
@@ -95,7 +95,7 @@ MODELS = {
         "name": "Qwen 3 Coder 30B",
         "provider": "ollama",
         "model": "qwen3-coder:30b",
-        "gpu": "RTX 5090 (32GB)",
+        "gpu": "RTX PRO 6000 Blackwell (96GB)",
         "cost_per_mtok_in": 0,
         "cost_per_mtok_out": 0,
         "options": {"num_ctx": 65536, "num_predict": 16384, "temperature": 0.7},
@@ -110,7 +110,7 @@ MODELS = {
         "cost_per_mtok_out": 0,
         "options": {"num_ctx": 32768, "num_predict": 16384, "temperature": 0.7},
         "category": "local",
-        "note": "Requires unloading Qwen 72B first — 80GB model"
+        "note": "Requires unloading Qwen 3.5 122B MoE first — 80GB model"
     },
 
     # ---- CLOUD MODELS ----

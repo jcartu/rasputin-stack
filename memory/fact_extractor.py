@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Auto Fact Extraction — Mines session transcripts for personal knowledge about the user.
-Runs every 4 hours via cron. Uses local Qwen 72B (free).
+Runs every 4 hours via cron. Uses local Qwen 3.5 122B MoE (free).
 Extracts structured facts and stores them in Qdrant + memory/facts.jsonl
 
 Usage:
@@ -106,7 +106,7 @@ def chunk_messages(messages, chunk_size=20):
     return chunks
 
 def extract_facts_from_chunk(chunk_text):
-    """Use local Qwen 72B to extract personal facts"""
+    """Use local Qwen 3.5 122B MoE to extract personal facts"""
     prompt = f"""You are analyzing a conversation between the user and his AI assistant. Extract ONLY personal facts about the user — things that would be useful for a personal assistant to remember long-term.
 
 Focus on:
@@ -136,7 +136,7 @@ JSON facts:"""
     
     try:
         resp = requests.post(OLLAMA_URL, json={
-            "model": "qwen2.5:72b",
+            "model": "qwen3.5-122b-a10b",
             "prompt": prompt,
             "stream": False,
             "options": {"temperature": 0.1, "num_predict": 2000}

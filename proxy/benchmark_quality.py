@@ -49,7 +49,7 @@ Memory: 184.6GB / 251GB used (73.5%), 42GB cached, 2.1GB swap used
 Disk /: 78% used (1.2TB / 1.5TB)
 Disk /data: 92% used (3.7TB / 4.0TB)
 GPU0 (RTX PRO 6000): 76.2GB/96GB VRAM, temp 71°C, utilization 45%
-GPU1 (RTX 5090): 28.1GB/32GB VRAM, temp 63°C, utilization 12%
+GPU1 (RTX PRO 6000 Blackwell 96GB): 82.3GB/96GB VRAM, temp 63°C, utilization 12%
 Network: 142Mbps in, 23Mbps out
 Ollama: 3 models loaded, 2 pending requests
 PM2: 14 online, 0 errored, 2 stopped
@@ -177,7 +177,7 @@ Our metrics:
         "category": "instruction-following",
         "description": "Give clear, executable technical instructions",
         "system": "You are a Linux sysadmin. Give exact commands, no hand-waving. Each step must be copy-pasteable.",
-        "messages": [{"role": "user", "content": "How do I set up a new llama-server instance on GPU1 (RTX 5090, 32GB VRAM) for Qwen3-Coder 30B with 4 concurrent slots, 16K context each, on port 11437? The model GGUF is at /data/models/qwen3-coder-30b-Q4_K_M.gguf. I want it managed by PM2 and auto-restart on crash."}],
+        "messages": [{"role": "user", "content": "How do I set up a new llama-server instance on GPU1 (RTX PRO 6000 Blackwell, 96GB VRAM) for Qwen3-Coder 30B with 4 concurrent slots, 16K context each, on port 11437? The model GGUF is at /data/models/qwen3-coder-30b-Q4_K_M.gguf. I want it managed by PM2 and auto-restart on crash."}],
     },
     {
         "id": "Q11",

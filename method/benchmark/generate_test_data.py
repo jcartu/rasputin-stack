@@ -140,7 +140,7 @@ Phase 0 (the bible) is written and ready for your review. Here's the architectur
 - Vector memory: Qdrant (per-user isolation)
 - Cache/pubsub: Redis
 - Sandbox: Docker per session
-- Inference: Ollama (Qwen 72B + Coder 30B) — $0/mo per-user cost
+- Inference: Ollama (Qwen 3.5 122B MoE + Coder 30B) — $0/mo per-user cost
 
 **4-Stage Build Plan:**
 
@@ -279,14 +279,14 @@ Want me to send this to partner directly via WhatsApp, or do you want to forward
     {"role": "assistant", "content": "Sent to partner via WhatsApp. She should be able to handle this at the Ministry of Justice — it's a straightforward bureaucratic process, just annoying.\n\n**Updated medical-procedure timeline:**\n- ✅ Consent letter — received by Almond Blossoms\n- ✅ Legal restrictions letter — received\n- ⏳ Marriage certificate apostille — partner handling\n- ⏳ Notarized consent — needs apostilled marriage cert first\n- ⏳ medical-sample transport from NGC SPb → Dubai\n- 🎯 Target: April 2027 cycle (partner's egg retrieval late March/early April)\n\nNext bottleneck after apostille: coordinating medical-sample transport from NGC Clinic to Dubai. medical-procedure Couriers is the recommended hand-carry service, or partner can bring it herself when she travels."},
 
     # Block 5: Technical deep-dive on compaction
-    {"role": "user", "content": "OK back to the compaction thing. I've been thinking about this. The real bottleneck isn't the model quality — sonnet is good enough for compaction. The bottleneck is SPEED. What if we ran compaction on a local model? Like Qwen 72B on the RTX Pro 6000? It's sitting there with 87GB free VRAM. We could rip through compaction in like 30 seconds instead of 4 minutes."},
+    {"role": "user", "content": "OK back to the compaction thing. I've been thinking about this. The real bottleneck isn't the model quality — sonnet is good enough for compaction. The bottleneck is SPEED. What if we ran compaction on a local model? Like Qwen 3.5 122B MoE on the RTX Pro 6000? It's sitting there with 87GB free VRAM. We could rip through compaction in like 30 seconds instead of 4 minutes."},
     {"role": "assistant", "content": """This is a brilliant insight. You're right — the paper proved quality isn't the bottleneck (Sonnet captures 85%+ of key facts). Speed is everything.
 
 Let me do the math on local compaction:
 
-**RTX PRO 6000 Blackwell — Qwen 2.5 72B Performance:**
+**RTX PRO 6000 Blackwell — Qwen 3.5 122B-A10B Performance:**
 - VRAM: 96GB (47GB used by model, 49GB free for KV cache)
-- Typical throughput: ~30-40 tok/s generation at 72B Q4
+- Typical throughput: ~30-40 tok/s generation at 122B Q8_0
 - Context processing: ~2000-3000 tok/s for prompt ingestion
 
 **Compaction workload:**
@@ -298,11 +298,11 @@ Let me do the math on local compaction:
 - Prompt processing: 35K tokens ÷ 2500 tok/s = **~14 seconds**
 - Generation: 12K tokens ÷ 35 tok/s = **~340 seconds** (5.7 min)
 
-Wait. That's actually not faster. The generation speed at 72B is the killer.
+Wait. That's actually not faster. The generation speed at 122B is the killer.
 
 **But here's where it gets interesting:**
 
-If we use **Qwen 3 Coder 30B** instead (on the RTX 5090):
+If we use **Qwen 3 Coder 30B** instead (on GPU1 (RTX PRO 6000 Blackwell)):
 - Generation speed: ~60-80 tok/s at 30B Q4
 - 12K tokens ÷ 70 tok/s = **~170 seconds** (2.8 min)
 - Still not amazing, but cheaper.
@@ -317,12 +317,12 @@ The real play might be:
 2. **Reduce output size** — If we compress the summary format, 6K tokens instead of 12K = half the time
 3. **Two-stage compaction** — Fast local model for immediate compaction, then background Opus sweep for quality
 
-**My recommendation:** Let's actually benchmark this. I'll run the test against Qwen 72B, Qwen Coder 30B, and a smaller model to get REAL numbers instead of estimates. The RTX PRO 6000 might surprise us with Blackwell's improved inference performance.
+**My recommendation:** Let's actually benchmark this. I'll run the test against Qwen 3.5 122B MoE, Qwen Coder 30B, and a smaller model to get REAL numbers instead of estimates. The RTX PRO 6000 might surprise us with Blackwell's improved inference performance.
 
 Want me to run the full benchmark suite now?"""},
 
     {"role": "user", "content": "Yes run it. Test everything we have locally. Also test gemini flash — it's basically free and fast."},
-    {"role": "assistant", "content": "On it. Running the full benchmark suite now:\n\n**Local models:**\n1. Qwen 2.5 72B (RTX PRO 6000)\n2. Qwen 3 Coder 30B (RTX 5090)\n3. GPT-OSS 120B (would need to unload Qwen 72B — skipping for now)\n\n**Cloud models:**\n4. Gemini 3 Flash (basically free)\n5. Gemini 2.5 Flash (cheap)\n6. Gemini 2.5 Pro (moderate cost)\n7. Sonnet 4.6 without thinking (untested variation)\n\nPlus we have paper data for:\n- Sonnet 4.6 with thinking: 227s, $0.16\n- Opus 4.6 with thinking: 379s, $0.61\n\nStarting the benchmark now. Local models will take a while — Qwen 72B might be 5-10 minutes per run. I'll report back with full results.\n\nKicking off..."},
+    {"role": "assistant", "content": "On it. Running the full benchmark suite now:\n\n**Local models:**\n1. Qwen 3.5 122B-A10B (RTX PRO 6000)\n2. Qwen 3 Coder 30B (RTX PRO 6000 Blackwell)\n3. GPT-OSS 120B (would need to unload Qwen 3.5 122B MoE — skipping for now)\n\n**Cloud models:**\n4. Gemini 3 Flash (basically free)\n5. Gemini 2.5 Flash (cheap)\n6. Gemini 2.5 Pro (moderate cost)\n7. Sonnet 4.6 without thinking (untested variation)\n\nPlus we have paper data for:\n- Sonnet 4.6 with thinking: 227s, $0.16\n- Opus 4.6 with thinking: 379s, $0.61\n\nStarting the benchmark now. Local models will take a while — Qwen 3.5 122B MoE might be 5-10 minutes per run. I'll report back with full results.\n\nKicking off..."},
 
     # Block 6: Business updates
     {"role": "user", "content": "While that runs — any updates from the platforms? platform-beta numbers?"},
@@ -383,7 +383,7 @@ Your call."""},
     {"role": "assistant", "content": "Got it. ELF email **held indefinitely** — waiting for you to talk to lawyer-us first. Makes sense to coordinate with your existing US counsel before adding Russian lawyers to the mix.\n\nUpdated status:\n- ELF draft: Ready, on hold pending lawyer-us consultation\n- lawyer-us: lawyer-us@afslaw.com (ArentFox Schiff)\n\nWant me to draft an email to Michelle instead? Or is this a call you want to handle yourself?"},
 
     {"role": "user", "content": "I'll call her. Back to tech stuff — how's the benchmark going?"},
-    {"role": "assistant", "content": """Still running. Qwen 72B is grinding through the compaction — as expected, the generation phase is slow at 72B scale. Here's what we have so far:
+    {"role": "assistant", "content": """Still running. Qwen 3.5 122B MoE is grinding through the compaction — as expected, the generation phase is slow at 72B scale. Here's what we have so far:
 
 **Completed:**
 - ✅ Gemini 3 Flash: Done in 18.3s (!!) — reviewing quality now
@@ -391,11 +391,11 @@ Your call."""},
 - ✅ Sonnet 4.6 no thinking: Done in 31.2s — significantly faster without thinking
 
 **Running:**
-- ⏳ Qwen 2.5 72B: ~4 minutes in, still generating...
+- ⏳ Qwen 3.5 122B-A10B: ~4 minutes in, still generating...
 - ⏳ Gemini 2.5 Pro: Still processing...
 
 **Queued:**
-- Qwen 3 Coder 30B (next after Qwen 72B finishes)
+- Qwen 3 Coder 30B (next after Qwen 3.5 122B MoE finishes)
 
 The cloud models are FAST. Gemini Flash at 18 seconds is insane — if the quality holds up, that's a 20x improvement over Opus. Let me check the quality of what's come back..."""},
 

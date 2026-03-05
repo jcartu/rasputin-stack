@@ -62,11 +62,11 @@ RASPUTIN is a self-hosted AI agent infrastructure running on a single server wit
 ## Hardware Allocation
 
 ```
-GPU 0 (L40S 48GB):
+GPU 0 (RTX PRO 6000 Blackwell 96GB):
   - Qwen 3.5 122B-A10B (IQ3_XXS, 131K context)
   - Primary inference for all agent conversations
 
-GPU 1 (RTX 5090 32GB):
+GPU 1 (RTX PRO 6000 Blackwell 96GB):
   - Qwen3-Coder 30B (dedicated coding model)
   - Qwen3-TTS (text-to-speech)
   - faster-whisper (speech-to-text)

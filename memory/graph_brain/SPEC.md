@@ -33,7 +33,7 @@ This enables multi-hop traversal, explicit relationships, and structured entity 
 ## Architecture
 
 ### Entity Extraction (NER)
-Use LOCAL Ollama Qwen 72B (localhost:11434, model `qwen2.5:72b`) for entity extraction.
+Use LOCAL Ollama Qwen 3.5 122B MoE (localhost:11434, model `qwen3.5-122b-a10b`) for entity extraction.
 Send each memory chunk with a structured prompt asking for JSON output:
 ```json
 {
@@ -48,12 +48,12 @@ Send each memory chunk with a structured prompt asking for JSON output:
 ### Migration Script: `migrate_to_graph.py`
 1. Connect to Qdrant (localhost:6333, collection "memories") to scroll through all points
 2. For each batch of chunks (batch_size=50):
-   a. Send to Qwen 72B for entity extraction
+   a. Send to Qwen 3.5 122B MoE for entity extraction
    b. Create/merge nodes in FalkorDB
    c. Create relationships
    d. Log progress every 100 chunks
 3. Resume support: track last processed point ID in a state file
-4. Rate limit: respect Ollama's throughput (~2-3 req/s for 72B)
+4. Rate limit: respect Ollama's throughput (~2-3 req/s for 122B)
 5. Estimated runtime: 761K chunks / ~2 chunks per second = ~105 hours
    - With batching (send 5 chunks per prompt): ~21 hours
 
@@ -85,7 +85,7 @@ All in `/path/to/workspace/tools/graph-brain/`:
 ## Technical Details
 - FalkorDB: localhost:6380 (Docker, data at /path/to/workspace/falkordb-data)
 - Qdrant: localhost:6333, collection "memories" 
-- Ollama: localhost:11434, model "qwen2.5:72b"
+- Ollama: localhost:11434, model "qwen3.5-122b-a10b"
 - Second Brain API: localhost:7777 (existing, don't modify)
 - Python 3.x, use existing system packages where possible
 

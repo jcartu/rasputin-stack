@@ -307,7 +307,7 @@ def get_council_system_prompt():
         "KEY CONTEXT:\n"
         "- OpenClaw is an open-source AI agent framework (github.com/openclaw/openclaw, 145K+ GitHub stars). "
         "It runs autonomous AI agents connected to messaging apps (Telegram, WhatsApp, Discord). "
-        "admin runs OpenClaw on a server called Rasputin with dual GPUs (RTX PRO 6000 96GB + RTX 5090 32GB).\n"
+        "admin runs OpenClaw on a server called Rasputin with dual GPUs (2x RTX PRO 6000 Blackwell 96GB (192GB total) + RTX PRO 6000 Blackwell 96GB).\n"
         "- His AI assistant Rasputin runs on Claude Opus 4.6 as the main model, with Sonnet 4.5 for sub-agents, "
         "Gemini 3 Flash for heartbeats, Grok 4.1 for real-time X/Twitter intelligence, and a local GPT-OSS 120B for uncensored content.\n"
         "- Infrastructure: Qdrant vector DB (761K memories), vLLM inference server, LiteLLM router, "
