@@ -68,6 +68,8 @@ Built over ~6 months by one person. No team, no VC, no cloud bills.
 | [`dashboard/`](dashboard/) | AI agent dashboard + API | WebSocket real-time, integration registry, RAG pipeline, OpenTelemetry |
 | [`browser/`](browser/) | Chrome extension for memory capture | Auto-captures browsing into vector DB with batching + dedup |
 | [`research/`](research/) | Automated research scanning | Multi-engine search orchestration (X + Perplexity + Brave), arXiv/Reddit/GitHub scanning |
+| [`council/`](council/) | Multi-model AI council | Fractal sub-agent spawning, tier-weighted debate, swarm protocol |
+| [`selfplay/`](selfplay/) | Self-play training pipeline | Autonomous task gen → solve → validate → trajectory collection |
 | [`crons/`](crons/) | Autonomous cron patterns | 30+ jobs: fact extraction, memory enrichment, research scanning, health checks |
 | [`config/`](config/) | Example configs and Modelfiles | Production patterns for llama.cpp, Ollama, Docker |
 | [`docs/`](docs/) | Architecture documentation | System design, memory philosophy, routing strategy |
