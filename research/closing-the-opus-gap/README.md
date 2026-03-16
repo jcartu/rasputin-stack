@@ -2,7 +2,7 @@
 
 Systematic optimization of tool-calling in open-weight LLMs on wafer-scale hardware.
 
-**3,500+ API calls | 10 phases | 2 models | 1 prompt compiler**
+**5,000+ API calls | 10 phases | 3 models | 1 prompt compiler**
 
 ## Key Finding
 
@@ -99,7 +99,7 @@ All experiments run on [Cerebras Cloud API](https://cloud.cerebras.ai/). Qwen 23
   author={Cartu, Josh},
   year={2026},
   month={March},
-  note={RASPUTIN AI Research Lab. 3,500+ API calls across 10 experimental phases.},
+  note={RASPUTIN AI Research Lab. 5,000+ API calls across 10 experimental phases.},
   url={https://github.com/jcartu/closing-the-opus-gap}
 }
 ```

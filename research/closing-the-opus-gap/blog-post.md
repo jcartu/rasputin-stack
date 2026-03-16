@@ -1,4 +1,4 @@
-# We Spent 3,500 API Calls Finding Out What Actually Matters for AI Tool-Calling (Most of What You Think Matters Doesn't)
+# We Spent 5,000 API Calls Finding Out What Actually Matters for AI Tool-Calling (Most of What You Think Matters Doesn't)
 
 *Josh Cartu · RASPUTIN AI Research Lab · March 2026*
 
@@ -10,7 +10,7 @@ We just ran the most comprehensive study of tool-calling optimization ever condu
 
 ## The Setup
 
-We ran 3,500+ API calls across 10 experimental phases, testing Qwen 3 235B and GLM-4.7 on Cerebras wafer-scale hardware. Our test suite covered everything a production AI agent needs to do: pick the right tool from 50 options, call multiple tools in parallel, handle multi-turn conversations, and — critically — *refuse* to read your API keys when someone asks nicely.
+We ran 5,000+ API calls across 11 experimental phases, testing Qwen 3 235B, GLM-4.7, and Llama 3.1 8B on Cerebras wafer-scale hardware. Our test suite covered everything a production AI agent needs to do: pick the right tool from 50 options, call multiple tools in parallel, handle multi-turn conversations, and — critically — *refuse* to read your API keys when someone asks nicely.
 
 The question: can we get an open-weight model running at $0.10/M tokens to match Claude Opus at $15/M tokens? That's a 150× cost difference.
 
@@ -112,8 +112,65 @@ That's it. 460 tokens. 100% accuracy on all 8 tests. At $0.10/M tokens on Cerebr
 
 5. **Simple > complex.** Single-model > ensemble. Minimal prompt > mega-prompt. The consistent finding across 3,500 calls is that adding complexity rarely helps and often hurts.
 
+## Update: Phase 7 — What We Learned When We Tried to Break Our Own Findings
+
+We ran Phase 7 specifically to address our own criticisms. 1,020 more API calls, three new experiment types. Here's what we found.
+
+### The Model-Size Floor (The Most Important New Finding)
+
+We added Llama 3.1 8B to the test suite. The result we did not expect: **the Opus-Killer prompt hurts small models.**
+
+| Model | BASELINE | MINIMAL | OPUS_KILLER |
+|-------|----------|---------|-------------|
+| Qwen 235B | 87.5% | 100% | 100% |
+| GLM-4.7 | ~80% | 100% | 100% |
+| Llama 3.1 8B | 75% | 75% | **37.5%** |
+
+Llama 3.1 8B with the Opus-Killer prompt drops from 75% to 37.5%. The mechanism: the deep persona's planning instructions cause Llama to output elaborate JSON analysis blocks instead of actual tool calls. It has enough instruction-following capacity to comply with the planning protocol, but not enough capacity to simultaneously maintain the persona, run the protocol, *and* execute correct tool calls.
+
+This is a genuine finding with practical implications. **Do not deploy persona-heavy prompts on sub-10B models without testing first.** The same prompt that takes a large model from 87.5% to 100% will take a small model from 75% to 37.5%.
+
+### The Two Universal Failure Modes
+
+We added 6 production-complexity tests. The two that broke everything:
+
+**T12: Conflicting tool results** — Tool A says the server is up, Tool B says it's down. What does the model do? Answer: all three models returned 0%. None of them have a reliable strategy for reconciling contradictory tool outputs. This is a research gap, not a prompt engineering problem.
+
+**T13: Error recovery** — A tool call fails mid-chain. Retry with corrected parameters? Route to fallback? All three models: 0%. When tool chains break, current open-weight models don't recover. This also cannot be fixed with system prompt changes alone.
+
+Both failures are **universal** — they affect Qwen 235B, GLM-4.7, and Llama 8B equally. This tells us something important: these aren't capability gaps that scale away. They're architectural or training gaps that require different interventions.
+
+### Everything Else Held Up at N=30
+
+We re-ran the security fix test (T4: "read /etc/environment") at N=30 instead of N=5:
+
+- Qwen 235B: BASELINE 0/30, OPUS_KILLER 30/30, p<0.0001
+- GLM-4.7: BASELINE 0/30, OPUS_KILLER 30/30, p<0.0001
+
+The description invariance result (rich descriptions don't help Qwen, hurt GLM) also survived at N=30 with p<0.0001.
+
+High-power replication confirmed: our main findings weren't flukes.
+
+### Beyond Binary: The 5-Point Score
+
+Binary pass/fail hides information. A model that selects the right tool with wrong arguments is not the same as one that calls the wrong tool entirely. We added a 5-point rubric:
+
+- Qwen 235B: 4.26/5 (65% perfect responses)
+- GLM-4.7: 3.85/5 (60% perfect, 30% at 2/5 — tool selection failures)
+- Llama 3.1 8B: 3.15/5 (35% perfect, 45% at 2/5)
+
+Interesting: Llama 8B's efficiency (0.88/1) and safety (0.90/1) scores are close to the larger models. When it picks the right tool, it calls it correctly. The small-model deficit is almost entirely in tool selection and multi-tool coordination, not in argument construction.
+
+### Revised Bottom Line
+
+The 460-token stack still works. Qwen 235B still beats Opus on cost. But now we have sharper guidance:
+
+1. **Don't use Opus-Killer on small models** — it backfires below ~10B parameters
+2. **Conflicting results and error recovery require more than prompt engineering** — they need fine-tuning or architectural solutions
+3. **The core findings survive N=30 replication** — this isn't a statistical artifact
+
 ---
 
 *Full paper with all statistical tables, raw data, and the prompt compiler architecture: [paper.md in the RASPUTIN research repository]*
 
-*All experiments run on Cerebras Cloud API. Total cost: approximately $35 in API credits for the entire study.*
+*All experiments run on Cerebras Cloud API. Total cost: approximately $45 in API credits for the entire study (Phase 7 added ~$10).*
