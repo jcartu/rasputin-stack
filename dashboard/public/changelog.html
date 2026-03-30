@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>📋 Changelog — Rasputin Nexus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --void:#050510;--base:#0a0a1a;--surface:#0e0e22;--elevated:#141432;
+  --text-1:#f0f0fa;--text-2:#9090b0;--text-3:#5a5a7a;
+  --purple:#a855f7;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;
+  --pink:#ec4899;--blue:#60a5fa;--red:#f87171;--orange:#fb923c;
+  --glass-border:rgba(120,120,180,0.12);
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Geist',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:14px;--radius-sm:8px;
+}
+html{font-size:15px}
+body{font-family:var(--font-body);background:var(--void);color:var(--text-1);min-height:100dvh;-webkit-font-smoothing:antialiased}
+a{color:var(--purple);text-decoration:none}a:hover{text-decoration:underline}
+
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 20px;
+  background:rgba(10,10,26,0.85);border-bottom:1px solid var(--glass-border);backdrop-filter:blur(24px)}
+.topbar-logo{font-family:var(--font-display);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:8px;color:var(--text-1);text-decoration:none}
+.topbar-nav{display:flex;gap:6px;margin-left:auto}
+.topbar-nav a{font-size:11px;padding:4px 10px;border:1px solid var(--glass-border);border-radius:6px;color:var(--text-3);transition:all .2s;text-decoration:none}
+.topbar-nav a:hover{border-color:var(--purple);color:var(--purple)}
+
+.container{max-width:800px;margin:0 auto;padding:40px 24px}
+.page-title{font-family:var(--font-display);font-size:28px;font-weight:700;margin-bottom:8px;
+  background:linear-gradient(135deg,var(--purple),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-subtitle{color:var(--text-3);font-size:14px;margin-bottom:40px}
+
+.release{margin-bottom:36px;position:relative;padding-left:24px}
+.release::before{content:'';position:absolute;left:6px;top:8px;bottom:-20px;width:1px;background:var(--glass-border)}
+.release:last-child::before{display:none}
+.release-dot{position:absolute;left:0;top:6px;width:13px;height:13px;border-radius:50%;border:2px solid var(--void)}
+.release-dot.major{background:var(--purple)}
+.release-dot.minor{background:var(--cyan)}
+.release-dot.patch{background:var(--green)}
+
+.release-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.release-version{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text-1)}
+.release-date{font-family:var(--font-mono);font-size:11px;color:var(--text-3)}
+.release-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-family:var(--font-mono);font-weight:600}
+.release-tag.new{background:rgba(168,85,247,0.15);color:var(--purple)}
+.release-tag.improved{background:rgba(34,211,238,0.15);color:var(--cyan)}
+.release-tag.fixed{background:rgba(52,211,153,0.15);color:var(--green)}
+
+.release-body{font-size:13px;line-height:1.7;color:var(--text-2)}
+.release-body ul{padding-left:18px;margin:6px 0}
+.release-body li{margin-bottom:4px}
+.release-body li::marker{color:var(--text-3)}
+.release-body strong{color:var(--text-1);font-weight:600}
+.release-body code{font-family:var(--font-mono);font-size:11px;background:rgba(120,120,180,0.1);
+  padding:1px 5px;border-radius:3px;color:var(--cyan)}
+
+.tag-filter{display:flex;gap:6px;margin-bottom:32px;flex-wrap:wrap}
+.tag-filter button{padding:5px 12px;background:transparent;border:1px solid var(--glass-border);
+  border-radius:14px;font-size:11px;color:var(--text-3);cursor:pointer;font-family:var(--font-body);transition:all .2s}
+.tag-filter button:hover{border-color:var(--text-2);color:var(--text-1)}
+.tag-filter button.active{border-color:var(--purple);color:var(--purple);background:rgba(168,85,247,0.06)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/" class="topbar-logo">🧠 RASPUTIN NEXUS</a>
+  <div class="topbar-nav">
+    <a href="/">📊 Dashboard</a><a href="/council.html">🏛️ Council</a><a href="/agents.html">🤖 Agents</a>
+    <a href="/knowledge.html">📚 Knowledge</a><a href="/remote.html">🖥️ Remote</a>
+  </div>
+</div>
+<div class="container">
+  <div class="page-title">📋 Changelog</div>
+  <div class="page-subtitle">What's new in Rasputin Nexus Dashboard</div>
+
+  <div class="tag-filter">
+    <button class="active" onclick="filterAll()">All</button>
+    <button onclick="filterTag('new')">✨ New</button>
+    <button onclick="filterTag('improved')">⚡ Improved</button>
+    <button onclick="filterTag('fixed')">🐛 Fixed</button>
+  </div>
+
+  <div id="releases">
+
+    <div class="release" data-tags="new improved">
+      <div class="release-dot major"></div>
+      <div class="release-header">
+        <span class="release-version">AI Council — Streaming Overhaul</span>
+        <span class="release-date">Feb 13, 2026</span>
+        <span class="release-tag new">New</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li><strong>Real-time SSE streaming</strong> — watch models think and respond live, not waiting for batch results</li>
+          <li><strong>Particle effects</strong> on thinking cards with per-model brand colors</li>
+          <li><strong>Frontier models only</strong> — Opus 4.6, GPT-5.2, Gemini 3 Pro, Grok 4.1 Reasoning, Sonnet 4.5, Gemini 3 Flash</li>
+          <li><strong>3-round council debate</strong> — Independent → Cross-examination → Judgment with animated phase transitions</li>
+          <li><strong>Consensus gauge</strong> — circular ring with animated fill + confidence/consensus/time stats</li>
+          <li><strong>Typewriter text effect</strong> on model responses and verdict</li>
+          <li>All animations stop cleanly when deliberation completes</li>
+          <li>Auto-scroll to verdict on completion</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="new">
+      <div class="release-dot major"></div>
+      <div class="release-header">
+        <span class="release-version">Grok Social Intelligence</span>
+        <span class="release-date">Feb 13, 2026</span>
+        <span class="release-tag new">New</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li><strong>Hourly X/Twitter scans</strong> via Grok 4.1 with native <code>x_search</code> — real posts, real engagement numbers</li>
+          <li>6 topic channels: Platform brazil, Platform affiliate, ai_news, ai_agents, crypto, brand_monitoring</li>
+          <li>Results committed to Qdrant second brain + daily intel files</li>
+          <li>Actionable summaries with flagged items for admin</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="improved">
+      <div class="release-dot minor"></div>
+      <div class="release-header">
+        <span class="release-version">Multi-Model Pipeline</span>
+        <span class="release-date">Feb 13, 2026</span>
+        <span class="release-tag improved">Improved</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li><strong>Main:</strong> Opus 4.6 — <strong>Sub-agents:</strong> Sonnet 4.5 (~80% cost savings)</li>
+          <li><strong>Heartbeats:</strong> Gemini 3 Flash (10-min interval, ~$2/mo)</li>
+          <li><strong>Intel:</strong> Grok 4.1 via xAI Responses API</li>
+          <li><strong>Uncensored:</strong> Local GPT-OSS 120B at 201 tok/s</li>
+          <li>RAG source prioritization — ChatGPT/Perplexity/conversations first, emails deprioritized</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="fixed">
+      <div class="release-dot patch"></div>
+      <div class="release-header">
+        <span class="release-version">Session Recovery & Stability</span>
+        <span class="release-date">Feb 13, 2026</span>
+        <span class="release-tag fixed">Fixed</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li>Recovered from corrupted session (orphaned tool_result blocks at 176K tokens)</li>
+          <li>Compaction mode set to <code>default</code> — proactive auto-compaction prevents corruption</li>
+          <li>Context pruning TTL reduced to <code>5m</code> — stale tool results cleaned faster</li>
+          <li>Council sidebar: full query text shown (removed 50-char truncation)</li>
+          <li>Fixed Anthropic API system prompt handling in council</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="new">
+      <div class="release-dot minor"></div>
+      <div class="release-header">
+        <span class="release-version">Model Leaderboard</span>
+        <span class="release-date">Feb 12, 2026</span>
+        <span class="release-tag new">New</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li>Cost-adjusted ranking of all models with speed, quality, and value metrics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="new">
+      <div class="release-dot minor"></div>
+      <div class="release-header">
+        <span class="release-version">Latency Alerting</span>
+        <span class="release-date">Feb 12, 2026</span>
+        <span class="release-tag new">New</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li>P95/P99 tracking with real-time alerts on performance degradation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="new">
+      <div class="release-dot minor"></div>
+      <div class="release-header">
+        <span class="release-version">Session Autopsy</span>
+        <span class="release-date">Feb 12, 2026</span>
+        <span class="release-tag new">New</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li>AI-powered post-session analysis with optimization suggestions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="release" data-tags="new">
+      <div class="release-dot minor"></div>
+      <div class="release-header">
+        <span class="release-version">Error Analytics + Cost Forecasting + Memory Heatmap</span>
+        <span class="release-date">Feb 12, 2026</span>
+        <span class="release-tag new">New</span>
+      </div>
+      <div class="release-body">
+        <ul>
+          <li>Smart error grouping and AI-suggested fixes for common failures</li>
+          <li>Predictive spend analysis with budget alerts and burn rate tracking</li>
+          <li>Visualize second brain usage patterns and memory access frequencies</li>
+          <li>Keyboard shortcuts: Vim-style navigation, <code>Cmd+K</code> command palette, <code>?</code> help overlay</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function filterAll(){
+  document.querySelectorAll('.release').forEach(r=>r.style.display='');
+  document.querySelectorAll('.tag-filter button').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.tag-filter button').classList.add('active');
+}
+function filterTag(tag){
+  document.querySelectorAll('.release').forEach(r=>{
+    r.style.display=r.dataset.tags?.includes(tag)?'':'none'});
+  document.querySelectorAll('.tag-filter button').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

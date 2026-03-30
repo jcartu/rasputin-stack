@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget & Forecasting — Rasputin Nexus</title>
+  <link rel="stylesheet" href="/shared-styles.css">
+  <script src="/shared-nav.js" defer></script>
+  <style>
+    .budget-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    
+    .metric-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      opacity: 0.6;
+    }
+    
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-2);
+      font-family: var(--font-mono);
+    }
+    
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    
+    .metric-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-3);
+      border-radius: 999px;
+      margin-top: var(--space-2);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease, background 0.3s ease;
+    }
+    
+    .alert-card {
+      background: var(--red-glow);
+      border: 1px solid var(--red);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .alert-card.warning {
+      background: var(--amber-glow);
+      border-color: var(--amber);
+    }
+    
+    .alert-card.info {
+      background: var(--cyan-glow);
+      border-color: var(--cyan);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    
+    .chart-container {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      height: 300px;
+      position: relative;
+    }
+    
+    .settings-panel {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    
+    .setting-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    
+    .setting-row label {
+      flex: 0 0 200px;
+      font-size: 0.875rem;
+      color: var(--text-2);
+    }
+    
+    .setting-row input {
+      flex: 1;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      color: var(--text-1);
+      font-family: var(--font-mono);
+    }
+    
+    .btn {
+      background: var(--cyan);
+      color: var(--bg-1);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-4);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: var(--purple);
+    }
+    
+    .confidence-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    
+    .confidence-high {
+      background: var(--green-glow);
+      color: var(--green);
+    }
+    
+    .confidence-medium {
+      background: var(--amber-glow);
+      color: var(--amber);
+    }
+    
+    .confidence-low {
+      background: var(--red-glow);
+      color: var(--red);
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  
+  <main class="main-content">
+    <div class="section-header">
+      <div style="display: flex; align-items: center; gap: var(--space-3);">
+        <h1>💰 Budget & Cost Forecasting</h1>
+        <span id="confidence-badge" class="confidence-badge confidence-low">🔴 LOW CONFIDENCE</span>
+      </div>
+      <p style="color: var(--text-3); margin-top: var(--space-2);">
+        Real-time spend tracking with predictive budget alerts
+      </p>
+    </div>
+    
+    <!-- Alerts -->
+    <div id="alerts-container"></div>
+    
+    <!-- Metrics Grid -->
+    <div class="budget-grid">
+      <!-- Current Spend -->
+      <div class="metric-card">
+        <div class="metric-label">Current Lifetime Cost</div>
+        <div class="metric-value" style="color: var(--cyan);" id="metric-current">$0.00</div>
+        <div class="metric-subtitle">
+          <span id="metric-mtd">$0.00</span>
+          <span>spent this month</span>
+        </div>
+      </div>
+      
+      <!-- Daily Burn Rate -->
+      <div class="metric-card">
+        <div class="metric-label">Daily Burn Rate</div>
+        <div class="metric-value" style="color: var(--amber);" id="metric-daily">$0.00</div>
+        <div class="metric-subtitle">
+          <span id="trend-indicator">⚪</span>
+          <span id="trend-text">Calculating trend...</span>
+        </div>
+      </div>
+      
+      <!-- Monthly Projection -->
+      <div class="metric-card">
+        <div class="metric-label">Projected Month-End</div>
+        <div class="metric-value" style="color: var(--purple);" id="metric-projected">$0.00</div>
+        <div class="metric-subtitle">
+          <span id="projection-delta">+$0.00</span>
+          <span>vs budget</span>
+        </div>
+      </div>
+      
+      <!-- Budget Progress -->
+      <div class="metric-card">
+        <div class="metric-label">Monthly Budget</div>
+        <div class="metric-value" style="color: var(--green);" id="metric-budget">$200.00</div>
+        <div class="metric-subtitle">
+          <span id="budget-used-pct">0%</span>
+          <span>used</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="budget-progress" style="width: 0%; background: var(--cyan);"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Spending Chart -->
+    <div class="chart-container">
+      <canvas id="spending-chart"></canvas>
+    </div>
+    
+    <!-- Model Cost Breakdown (NOVEL FEATURE) -->
+    <div style="margin-top: var(--space-4);">
+      <h2 style="margin-bottom: var(--space-3);">💎 Cost by Model</h2>
+      <div class="budget-grid">
+        <div class="chart-container" style="height: 350px;">
+          <h3 style="margin-bottom: var(--space-3); font-size: 0.875rem; color: var(--text-3);">Top Spending Models</h3>
+          <canvas id="model-pie-chart"></canvas>
+        </div>
+        <div class="metric-card" style="grid-column: span 2;">
+          <div class="metric-label">Model Cost Analysis</div>
+          <div id="model-breakdown-table"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Budget Settings -->
+    <div class="settings-panel">
+      <h3>Budget Settings</h3>
+      <div class="setting-row">
+        <label>Monthly Budget ($)</label>
+        <input type="number" id="input-budget" value="200" min="0" step="10">
+      </div>
+      <div class="setting-row">
+        <label>Alert Thresholds (%)</label>
+        <input type="text" id="input-thresholds" value="50, 75, 90, 100" placeholder="50, 75, 90, 100">
+      </div>
+      <button class="btn" onclick="saveBudgetSettings()">Save Settings</button>
+      <span id="save-feedback" style="margin-left: var(--space-3); color: var(--green); opacity: 0;">✓ Saved</span>
+    </div>
+  </main>
+  
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+    let chartInstance = null;
+    
+    // Fetch and render data
+    async function fetchData() {
+      try {
+        const [forecast, settings, modelData] = await Promise.all([
+          fetch('/api/cost-forecast').then(r => r.json()),
+          fetch('/api/budget/settings').then(r => r.json()),
+          fetch('/api/model-leaderboard?sort=cost').then(r => r.json()),
+        ]);
+        
+        renderMetrics(forecast, settings);
+        renderAlerts(forecast);
+        renderChart(forecast);
+        renderModelBreakdown(modelData);
+        updateSettings(settings);
+      } catch (e) {
+        console.error('Failed to fetch data:', e);
+      }
+    }
+    
+    // Render metrics
+    function renderMetrics(data, settings) {
+      // Current cost
+      $('#metric-current').textContent = '$' + (data.currentCost || 0).toFixed(2);
+      $('#metric-mtd').textContent = '$' + (data.monthToDateSpend || 0).toFixed(2);
+      
+      // Daily rate
+      $('#metric-daily').textContent = '$' + (data.burnRatePerDay || 0).toFixed(2);
+      
+      // Trend indicator
+      const trend = data.trend || 'stable';
+      const trendEmoji = {
+        accelerating: '🔺',
+        stable: '⚪',
+        decelerating: '🔻',
+      }[trend] || '⚪';
+      const trendText = {
+        accelerating: 'Spending accelerating',
+        stable: 'Steady spending rate',
+        decelerating: 'Spending slowing down',
+      }[trend] || 'Unknown trend';
+      $('#trend-indicator').textContent = trendEmoji;
+      $('#trend-text').textContent = trendText;
+      
+      // Monthly projection
+      $('#metric-projected').textContent = '$' + (data.projectedMonthEnd || 0).toFixed(2);
+      const delta = (data.projectedMonthEnd || 0) - (settings.monthlyBudget || 200);
+      $('#projection-delta').textContent = (delta > 0 ? '+' : '') + '$' + delta.toFixed(2);
+      $('#projection-delta').style.color = delta > 0 ? 'var(--red)' : 'var(--green)';
+      
+      // Budget
+      $('#metric-budget').textContent = '$' + (settings.monthlyBudget || 200).toFixed(2);
+      const usedPct = ((data.budgetUsedPercent || 0) * 100).toFixed(1);
+      $('#budget-used-pct').textContent = usedPct + '%';
+      
+      // Progress bar
+      const progressEl = $('#budget-progress');
+      const pct = Math.min(100, usedPct);
+      progressEl.style.width = pct + '%';
+      progressEl.style.background = pct >= 100 ? 'var(--red)' : 
+                                     pct >= 75 ? 'var(--amber)' : 
+                                     'var(--cyan)';
+      
+      // Confidence badge
+      const conf = data.confidence || 'low';
+      const confBadge = $('#confidence-badge');
+      confBadge.className = 'confidence-badge confidence-' + conf;
+      confBadge.textContent = {
+        high: '🟢 HIGH CONFIDENCE',
+        medium: '🟡 MEDIUM CONFIDENCE',
+        low: '🔴 LOW CONFIDENCE',
+      }[conf] || '⚪ UNKNOWN';
+    }
+    
+    // Render alerts
+    function renderAlerts(data) {
+      const container = $('#alerts-container');
+      container.innerHTML = '';
+      
+      if (!data.hasAlerts) return;
+      
+      // Sort by severity
+      const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+      const alerts = (data.alerts || []).sort((a, b) => 
+        severityOrder[a.severity] - severityOrder[b.severity]
+      );
+      
+      alerts.forEach(alert => {
+        const div = document.createElement('div');
+        div.className = 'alert-card ' + (
+          alert.severity === 'critical' ? '' : 
+          alert.severity === 'high' ? '' : 
+          alert.severity === 'medium' ? 'warning' : 'info'
+        );
+        
+        const emoji = {
+          critical: '🚨',
+          high: '⚠️',
+          medium: '⚡',
+          low: 'ℹ️',
+        }[alert.severity] || 'ℹ️';
+        
+        div.innerHTML = `
+          <div style="display: flex; align-items: center; gap: var(--space-2);">
+            <span style="font-size: 1.5rem;">${emoji}</span>
+            <div style="flex: 1;">
+              <div style="font-weight: 600; margin-bottom: var(--space-1);">
+                ${alert.type.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+              </div>
+              <div style="font-size: 0.875rem; color: var(--text-2);">
+                ${alert.message}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(div);
+      });
+    }
+    
+    // Render chart
+    function renderChart(data) {
+      const canvas = $('#spending-chart');
+      const ctx = canvas.getContext('2d');
+      const spending = data.dailySpending || [];
+      
+      // Clear canvas
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (spending.length === 0) return;
+      
+      const w = canvas.width;
+      const h = canvas.height;
+      const padding = 40;
+      const chartW = w - padding * 2;
+      const chartH = h - padding * 2;
+      
+      // Find max spend
+      const maxSpend = Math.max(...spending.map(d => d.spend), 0.01);
+      
+      // Draw axes
+      ctx.strokeStyle = '#444';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, h - padding);
+      ctx.lineTo(w - padding, h - padding);
+      ctx.stroke();
+      
+      // Draw bars
+      const barWidth = chartW / spending.length;
+      spending.forEach((d, i) => {
+        const x = padding + i * barWidth + barWidth * 0.1;
+        const barH = (d.spend / maxSpend) * chartH;
+        const y = h - padding - barH;
+        
+        // Gradient
+        const gradient = ctx.createLinearGradient(0, y, 0, h - padding);
+        gradient.addColorStop(0, '#00d4ff');
+        gradient.addColorStop(1, '#7c3aed');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, y, barWidth * 0.8, barH);
+      });
+      
+      // Draw labels
+      ctx.fillStyle = '#999';
+      ctx.font = '10px monospace';
+      ctx.textAlign = 'right';
+      
+      // Y-axis labels
+      for (let i = 0; i <= 5; i++) {
+        const val = (maxSpend / 5) * i;
+        const y = h - padding - (chartH / 5) * i;
+        ctx.fillText('$' + val.toFixed(2), padding - 5, y + 3);
+      }
+      
+      // X-axis labels (every 5 days)
+      ctx.textAlign = 'center';
+      spending.forEach((d, i) => {
+        if (i % 5 === 0 || i === spending.length - 1) {
+          const x = padding + i * barWidth + barWidth / 2;
+          const date = new Date(d.date);
+          const label = (date.getMonth() + 1) + '/' + date.getDate();
+          ctx.fillText(label, x, h - padding + 15);
+        }
+      });
+    }
+    
+    // Render model cost breakdown (NOVEL FEATURE)
+    function renderModelBreakdown(data) {
+      const models = data.leaderboard || [];
+      const totalCost = data.summary?.totalCost || 0;
+      
+      // Sort by cost descending
+      const modelsByCost = [...models].sort((a, b) => b.totalCost - a.totalCost);
+      const top10 = modelsByCost.slice(0, 10);
+      
+      // Render pie chart
+      const canvas = $('#model-pie-chart');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (top10.length === 0) {
+        ctx.fillStyle = '#666';
+        ctx.font = '14px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('No model data yet', canvas.width / 2, canvas.height / 2);
+        return;
+      }
+      
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = Math.min(centerX, centerY) - 60;
+      
+      // Calculate angles
+      let startAngle = -Math.PI / 2;
+      const colors = ['#00d4ff', '#7c3aed', '#f59e0b', '#10b981', '#ef4444', '#ec4899', '#6366f1', '#8b5cf6', '#14b8a6', '#f97316'];
+      
+      top10.forEach((model, i) => {
+        const sliceAngle = (model.totalCost / totalCost) * 2 * Math.PI;
+        const endAngle = startAngle + sliceAngle;
+        
+        // Draw slice
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Draw label line
+        const midAngle = startAngle + sliceAngle / 2;
+        const lineStartX = centerX + Math.cos(midAngle) * (radius - 10);
+        const lineStartY = centerY + Math.sin(midAngle) * (radius - 10);
+        const lineEndX = centerX + Math.cos(midAngle) * (radius + 20);
+        const lineEndY = centerY + Math.sin(midAngle) * (radius + 20);
+        
+        ctx.strokeStyle = colors[i % colors.length];
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(lineStartX, lineStartY);
+        ctx.lineTo(lineEndX, lineEndY);
+        ctx.stroke();
+        
+        // Draw label text
+        const pct = ((model.totalCost / totalCost) * 100).toFixed(1);
+        const modelLabel = model.name.split('/').pop().slice(0, 15);
+        const labelX = centerX + Math.cos(midAngle) * (radius + 30);
+        const labelY = centerY + Math.sin(midAngle) * (radius + 30);
+        
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px monospace';
+        ctx.textAlign = midAngle > Math.PI / 2 && midAngle < 3 * Math.PI / 2 ? 'right' : 'left';
+        ctx.fillText(`${modelLabel} (${pct}%)`, labelX, labelY);
+        
+        startAngle = endAngle;
+      });
+      
+      // Render table
+      const table = $('#model-breakdown-table');
+      let html = `
+        <table style="width: 100%; font-size: 0.875rem; font-family: var(--font-mono);">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border); color: var(--text-3);">
+              <th style="text-align: left; padding: var(--space-2);">Model</th>
+              <th style="text-align: right; padding: var(--space-2);">Calls</th>
+              <th style="text-align: right; padding: var(--space-2);">Total Cost</th>
+              <th style="text-align: right; padding: var(--space-2);">Avg Cost</th>
+              <th style="text-align: right; padding: var(--space-2);">% of Total</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      top10.forEach((model, i) => {
+        const pct = ((model.totalCost / totalCost) * 100).toFixed(1);
+        const color = colors[i % colors.length];
+        html += `
+          <tr style="border-bottom: 1px solid var(--bg-3);">
+            <td style="padding: var(--space-2);">
+              <span style="display: inline-block; width: 8px; height: 8px; background: ${color}; border-radius: 50%; margin-right: var(--space-2);"></span>
+              ${model.name.split('/').pop()}
+            </td>
+            <td style="text-align: right; padding: var(--space-2); color: var(--text-2);">${model.totalCalls.toLocaleString()}</td>
+            <td style="text-align: right; padding: var(--space-2); color: var(--cyan); font-weight: 600;">$${model.totalCost.toFixed(2)}</td>
+            <td style="text-align: right; padding: var(--space-2); color: var(--text-2);">$${model.avgCost.toFixed(4)}</td>
+            <td style="text-align: right; padding: var(--space-2); color: var(--purple); font-weight: 600;">${pct}%</td>
+          </tr>
+        `;
+      });
+      
+      html += `
+          </tbody>
+        </table>
+      `;
+      
+      table.innerHTML = html;
+    }
+    
+    // Update settings form
+    function updateSettings(settings) {
+      $('#input-budget').value = settings.monthlyBudget || 200;
+      $('#input-thresholds').value = (settings.alertThresholds || [0.5, 0.75, 0.9, 1.0])
+        .map(t => (t * 100).toFixed(0))
+        .join(', ');
+    }
+    
+    // Save settings
+    async function saveBudgetSettings() {
+      const budget = parseFloat($('#input-budget').value) || 200;
+      const thresholdsStr = $('#input-thresholds').value;
+      const thresholds = thresholdsStr.split(',').map(t => parseFloat(t.trim()) / 100).filter(t => !isNaN(t));
+      
+      try {
+        const res = await fetch('/api/budget/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            monthlyBudget: budget,
+            alertThresholds: thresholds,
+          }),
+        });
+        
+        if (!res.ok) throw new Error('Save failed');
+        
+        // Show feedback
+        const feedback = $('#save-feedback');
+        feedback.style.opacity = '1';
+        setTimeout(() => {
+          feedback.style.opacity = '0';
+        }, 2000);
+        
+        // Refresh data
+        fetchData();
+      } catch (e) {
+        alert('Failed to save settings: ' + e.message);
+      }
+    }
+    
+    // Auto-refresh every 30s
+    fetchData();
+    setInterval(fetchData, 30000);
+  </script>
+</body>
+</html>

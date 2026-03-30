@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Analytics — Rasputin Nexus</title>
+  <link rel="stylesheet" href="/shared.css">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 2rem 2rem 2rem;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+      background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .metric-trend {
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+
+    .trend-up { color: #ef4444; }
+    .trend-down { color: #10b981; }
+    .trend-neutral { color: #94a3b8; }
+
+    .chart-container {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .chart-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #f1f5f9;
+    }
+
+    #errorChart {
+      width: 100%;
+      height: 300px;
+    }
+
+    .distribution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .distribution-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .distribution-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .distribution-item:last-child {
+      border-bottom: none;
+    }
+
+    .distribution-label {
+      font-weight: 500;
+      color: #f1f5f9;
+    }
+
+    .distribution-count {
+      color: #94a3b8;
+      font-size: 0.875rem;
+    }
+
+    .error-list {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .error-item {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .error-item:hover {
+      border-color: rgba(6, 182, 212, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .error-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+    }
+
+    .error-message {
+      font-weight: 500;
+      color: #f1f5f9;
+      flex: 1;
+      margin-right: 1rem;
+    }
+
+    .error-badges {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .severity-critical {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .severity-high {
+      background: rgba(249, 115, 22, 0.2);
+      color: #f97316;
+    }
+
+    .severity-medium {
+      background: rgba(234, 179, 8, 0.2);
+      color: #eab308;
+    }
+
+    .severity-low {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .error-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .error-detail {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .error-detail.active {
+      display: block;
+    }
+
+    .detail-section {
+      margin-bottom: 1rem;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+      color: #94a3b8;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.875rem;
+    }
+
+    .stack-trace {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: #ef4444;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(30, 41, 59, 0.5);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(6, 182, 212, 0.5);
+      color: #06b6d4;
+    }
+
+    .filter-btn.active {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: #06b6d4;
+      color: #06b6d4;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #94a3b8;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Include shared navigation -->
+  <div id="shared-nav"></div>
+
+  <div class="content">
+    <div class="header">
+      <h1>🚨 Error Analytics Dashboard</h1>
+      <p>Real-time error monitoring, aggregation, and insights</p>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+      Loading error analytics...
+    </div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard" style="display: none;">
+      <!-- Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Errors (All Time)</div>
+          <div class="metric-value" id="totalAllTime">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Recent Errors (24h)</div>
+          <div class="metric-value" id="totalRecent">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Errors Per Hour</div>
+          <div class="metric-value" id="errorRate">0.00</div>
+          <div class="metric-trend" id="rateTrend"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Unresolved</div>
+          <div class="metric-value" id="unresolved">0</div>
+        </div>
+      </div>
+
+      <!-- Error Rate Chart -->
+      <div class="chart-container">
+        <div class="chart-title">Error Rate (Last 24 Hours)</div>
+        <canvas id="errorChart"></canvas>
+      </div>
+
+      <!-- Distribution Grid -->
+      <div class="distribution-grid">
+        <div class="distribution-card">
+          <div class="chart-title">By Type</div>
+          <div id="typeDistribution"></div>
+        </div>
+        <div class="distribution-card">
+          <div class="chart-title">By Severity</div>
+          <div id="severityDistribution"></div>
+        </div>
+        <div class="distribution-card">
+          <div class="chart-title">By Model</div>
+          <div id="modelDistribution"></div>
+        </div>
+      </div>
+
+      <!-- Top Errors -->
+      <div class="error-list">
+        <div class="chart-title">Top Errors</div>
+        <div class="filter-bar">
+          <button class="filter-btn active" data-severity="all">All</button>
+          <button class="filter-btn" data-severity="critical">Critical</button>
+          <button class="filter-btn" data-severity="high">High</button>
+          <button class="filter-btn" data-severity="medium">Medium</button>
+          <button class="filter-btn" data-severity="low">Low</button>
+        </div>
+        <div id="errorsList"></div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-state-icon">✅</div>
+      <h2>No Errors Recorded</h2>
+      <p>System is running smoothly. Errors will appear here when they occur.</p>
+    </div>
+  </div>
+
+  <script src="/shared-nav.js"></script>
+  <script>
+    let currentFilter = 'all';
+    let stats = null;
+
+    async function loadStats() {
+      try {
+        const response = await fetch('/api/errors/stats');
+        stats = await response.json();
+
+        if (stats.total.allTime === 0) {
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('emptyState').style.display = 'block';
+          return;
+        }
+
+        renderMetrics();
+        renderChart();
+        renderDistributions();
+        renderTopErrors();
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+      } catch (error) {
+        console.error('Failed to load error stats:', error);
+        document.getElementById('loadingState').innerHTML = 
+          `<div style="color: #ef4444;">Failed to load error analytics: ${error.message}</div>`;
+      }
+    }
+
+    function renderMetrics() {
+      document.getElementById('totalAllTime').textContent = stats.total.allTime.toLocaleString();
+      document.getElementById('totalRecent').textContent = stats.total.recent.toLocaleString();
+      document.getElementById('errorRate').textContent = stats.rate.errorsPerHour;
+      document.getElementById('unresolved').textContent = stats.total.unresolved.toLocaleString();
+
+      const trend = document.getElementById('rateTrend');
+      if (stats.rate.spike) {
+        trend.className = 'metric-trend trend-up';
+        trend.textContent = `🔺 Spike detected (${stats.rate.lastHour} in last hour)`;
+      } else {
+        trend.className = 'metric-trend trend-neutral';
+        trend.textContent = `Average: ${stats.rate.avgHourly}/hr`;
+      }
+    }
+
+    function renderChart() {
+      const canvas = document.getElementById('errorChart');
+      const ctx = canvas.getContext('2d');
+      
+      const data = stats.hourlyBuckets;
+      const maxCount = Math.max(...data.map(b => b.count), 1);
+      
+      // Set canvas size
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 300;
+      
+      const barWidth = canvas.width / data.length;
+      const maxBarHeight = canvas.height - 40;
+      
+      // Draw bars
+      data.forEach((bucket, i) => {
+        const barHeight = (bucket.count / maxCount) * maxBarHeight;
+        const x = i * barWidth;
+        const y = canvas.height - barHeight - 20;
+        
+        // Gradient
+        const gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
+        gradient.addColorStop(0, '#06b6d4');
+        gradient.addColorStop(1, '#8b5cf6');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x + 2, y, barWidth - 4, barHeight);
+        
+        // Label
+        if (i % 4 === 0) {
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(bucket.hour + 'h', x + barWidth / 2, canvas.height - 5);
+        }
+        
+        // Count on hover (simplified - show all for now)
+        if (bucket.count > 0) {
+          ctx.fillStyle = '#f1f5f9';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(bucket.count, x + barWidth / 2, y - 5);
+        }
+      });
+    }
+
+    function renderDistributions() {
+      renderDistribution('typeDistribution', stats.distribution.byType);
+      renderDistribution('severityDistribution', stats.distribution.bySeverity);
+      renderDistribution('modelDistribution', stats.distribution.byModel);
+    }
+
+    function renderDistribution(elementId, data) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = '';
+      
+      if (data.length === 0) {
+        container.innerHTML = '<div style="color: #94a3b8; padding: 1rem;">No data</div>';
+        return;
+      }
+      
+      data.slice(0, 5).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'distribution-item';
+        div.innerHTML = `
+          <span class="distribution-label">${item.key}</span>
+          <span class="distribution-count">${item.count} (${item.percentage}%)</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderTopErrors() {
+      const container = document.getElementById('errorsList');
+      container.innerHTML = '';
+      
+      let errors = stats.topErrors;
+      if (currentFilter !== 'all') {
+        errors = errors.filter(e => e.severity === currentFilter);
+      }
+      
+      if (errors.length === 0) {
+        container.innerHTML = '<div style="color: #94a3b8; padding: 1rem;">No errors match filter</div>';
+        return;
+      }
+      
+      errors.forEach(error => {
+        const div = document.createElement('div');
+        div.className = 'error-item';
+        div.innerHTML = `
+          <div class="error-header">
+            <div class="error-message">${error.message}</div>
+            <div class="error-badges">
+              <span class="badge severity-${error.severity}">${error.severity.toUpperCase()}</span>
+              <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;">${error.type}</span>
+            </div>
+          </div>
+          <div class="error-meta">
+            <span>Count: ${error.count}</span>
+            <span>First: ${new Date(error.firstSeen).toLocaleString()}</span>
+            <span>Last: ${new Date(error.lastSeen).toLocaleString()}</span>
+          </div>
+          <div class="error-detail">
+            <div class="detail-section">
+              <div class="detail-label">Examples</div>
+              ${error.examples.map(ex => `
+                <div class="detail-value">
+                  ${new Date(ex.timestamp).toLocaleString()} - Model: ${ex.context.model || 'unknown'}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        div.addEventListener('click', () => {
+          const detail = div.querySelector('.error-detail');
+          detail.classList.toggle('active');
+        });
+        
+        container.appendChild(div);
+      });
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.severity;
+        renderTopErrors();
+      });
+    });
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadStats, 30000);
+
+    // Initial load
+    loadStats();
+  </script>
+</body>
+</html>

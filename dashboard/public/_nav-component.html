@@ -1,0 +1,72 @@
+<!-- UNIFIED NAVIGATION COMPONENT FOR ALL RASPUTIN NEXUS PAGES -->
+<!-- Copy this topbar HTML and CSS to every subpage -->
+
+<!-- CSS (add to <style> section) -->
+<style>
+.alfie-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: oklch(0.08 0.015 265 / 0.35);
+  backdrop-filter: blur(10px) saturate(150%);
+  border-bottom: 1px solid oklch(0.38 0.04 270 / 0.15);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.alfie-topbar-logo {
+  font-size: 16px;
+  font-weight: 700;
+  background: linear-gradient(135deg, oklch(0.68 0.30 290), oklch(0.78 0.22 195));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.alfie-topbar-logo:hover { opacity: 0.85; }
+.alfie-topbar-divider {
+  width: 1px;
+  height: 20px;
+  background: oklch(0.38 0.04 270 / 0.2);
+}
+.alfie-nav-link {
+  color: oklch(0.70 0.18 280);
+  font-size: 12px;
+  text-decoration: none;
+  padding: 5px 12px;
+  border: 1px solid oklch(0.30 0.02 280);
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.alfie-nav-link:hover {
+  border-color: oklch(0.70 0.18 280);
+  background: oklch(0.70 0.18 280 / 0.1);
+}
+.alfie-nav-link.active {
+  background: oklch(0.70 0.18 280 / 0.15);
+  border-color: oklch(0.70 0.18 280);
+  color: oklch(0.78 0.22 195);
+}
+</style>
+
+<!-- HTML (place at top of <body>) -->
+<div class="alfie-topbar">
+  <a href="/" class="alfie-topbar-logo">🧠 RASPUTIN NEXUS</a>
+  <div class="alfie-topbar-divider"></div>
+  <a href="/" class="alfie-nav-link">📊 Dashboard</a>
+  <a href="/browser.html" class="alfie-nav-link">🌐 Browser</a>
+  <a href="/execute.html" class="alfie-nav-link">⚡ Execute</a>
+  <a href="/research.html" class="alfie-nav-link">🔬 Research</a>
+  <a href="/playground.html" class="alfie-nav-link">🎯 Playground</a>
+  <a href="/replay.html" class="alfie-nav-link">🔄 Replay</a>
+  <a href="/agents.html" class="alfie-nav-link">🤖 Agents</a>
+  <a href="/knowledge.html" class="alfie-nav-link">📚 Knowledge</a>
+  <a href="/templates.html" class="alfie-nav-link">📝 Templates</a>
+</div>

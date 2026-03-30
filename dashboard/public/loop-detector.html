@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🔁 Rasputin Nexus — Loop Detector</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Topbar */
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px 20px;background:oklch(0.08 0.015 265/0.35);backdrop-filter:blur(10px) saturate(150%);border-bottom:1px solid oklch(0.38 0.04 270/0.15);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+.topbar::-webkit-scrollbar{display:none}
+.topbar-logo{font-size:16px;font-weight:700;background:linear-gradient(135deg,oklch(0.68 0.30 290),oklch(0.78 0.22 195));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;text-decoration:none;font-family:'Space Grotesk',system-ui,sans-serif}
+.topbar-nav{display:flex;gap:6px;margin-left:8px;flex-wrap:nowrap}
+.topbar-nav a{font-size:11.5px;padding:5px 11px;border:1px solid oklch(0.25 0.02 280/0.6);border-radius:20px;transition:all .2s;color:oklch(0.65 0.06 280);text-decoration:none;white-space:nowrap;background:oklch(0.12 0.01 280/0.4);font-family:'Space Grotesk',system-ui,sans-serif}
+.topbar-nav a:hover{color:oklch(0.90 0.15 195);border-color:oklch(0.60 0.15 195/0.6);background:oklch(0.18 0.04 195/0.3);box-shadow:0 0 12px oklch(0.60 0.15 195/0.15);transform:translateY(-1px)}
+.topbar-nav a.active{color:oklch(0.90 0.15 195);border-color:oklch(0.60 0.15 195/0.5);background:oklch(0.18 0.04 195/0.2)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',sans-serif;background:oklch(0.06 0.01 270);color:oklch(0.98 0.005 270);min-height:100vh;position:relative}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,oklch(0.12 0.06 290/0.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,oklch(0.10 0.04 195/0.2) 0%,transparent 50%);z-index:-1;pointer-events:none;animation:bgShift 20s ease-in-out infinite}
+@keyframes bgShift{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,10px)}}
+
+.main{display:grid;grid-template-rows:auto 1fr;height:calc(100vh - 65px);gap:16px;padding:20px 24px}
+
+.hero{display:flex;flex-direction:column;gap:8px}
+.hero h1{font-size:24px;font-weight:700;color:oklch(0.98 0.005 270);margin:0}
+.hero p{font-size:13px;color:oklch(0.72 0.012 270);line-height:1.5}
+
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;overflow-y:auto}
+
+.card{background:oklch(0.11 0.02 270/0.6);border:1px solid oklch(0.30 0.03 270/0.3);border-radius:14px;padding:20px;backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:12px}
+
+.card-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid oklch(0.25 0.02 280/0.6)}
+.card-title{font-size:14px;font-weight:600;color:oklch(0.98 0.005 270);display:flex;align-items:center;gap:8px}
+.card-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:oklch(0.11 0.02 270/0.6);border:1px solid oklch(0.30 0.03 270/0.3);color:oklch(0.72 0.012 270);font-family:'JetBrains Mono',monospace}
+
+.alert-list{display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
+.alert-item{padding:12px;border-radius:8px;border:1px solid;font-size:12px;line-height:1.6;display:flex;flex-direction:column;gap:6px}
+.alert-item.critical{background:oklch(0.35 0.15 25/0.05);border-color:oklch(0.55 0.20 25/0.4);color:oklch(0.95 0.08 25)}
+.alert-item.high{background:oklch(0.45 0.12 50/0.05);border-color:oklch(0.65 0.18 50/0.4);color:oklch(0.95 0.10 50)}
+.alert-item.medium{background:oklch(0.55 0.10 70/0.05);border-color:oklch(0.75 0.15 70/0.4);color:oklch(0.95 0.08 70)}
+.alert-item.info{background:oklch(0.55 0.10 195/0.05);border-color:oklch(0.75 0.15 195/0.4);color:oklch(0.95 0.08 195)}
+
+.alert-header{display:flex;align-items:center;gap:8px;font-weight:600}
+.alert-icon{font-size:16px}
+.alert-type{font-family:'JetBrains Mono',monospace;font-size:11px}
+.alert-message{color:oklch(0.85 0.005 270)}
+.alert-recommendation{font-size:11px;color:oklch(0.70 0.005 270);font-style:italic;margin-top:4px}
+.alert-meta{font-size:10px;color:oklch(0.65 0.005 270);margin-top:4px;font-family:'JetBrains Mono',monospace}
+
+.empty{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:60px 24px;text-align:center;color:oklch(0.72 0.012 270)}
+.empty .icon{font-size:48px;opacity:0.4}
+.empty .title{font-size:18px;font-weight:600;color:oklch(0.98 0.005 270)}
+.empty .desc{font-size:13px;line-height:1.6;max-width:400px}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:oklch(0.08 0.015 265);padding:14px;border-radius:8px;border:1px solid oklch(0.25 0.02 280/0.6)}
+.stat-label{font-size:11px;color:oklch(0.72 0.012 270);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.stat-value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-value.critical{color:oklch(0.70 0.20 25)}
+.stat-value.high{color:oklch(0.80 0.18 50)}
+.stat-value.neutral{color:oklch(0.78 0.22 195)}
+
+.history-timeline{display:flex;flex-direction:column;gap:6px;max-height:500px;overflow-y:auto}
+.history-item{padding:10px;border-left:3px solid;border-radius:4px;font-size:12px;background:oklch(0.08 0.015 265)}
+.history-item.critical{border-color:oklch(0.55 0.20 25)}
+.history-item.high{border-color:oklch(0.65 0.18 50)}
+.history-item.medium{border-color:oklch(0.75 0.15 70)}
+.history-item.info{border-color:oklch(0.75 0.15 195)}
+.history-time{font-size:10px;color:oklch(0.65 0.005 270);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.history-text{color:oklch(0.85 0.005 270)}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+</style>
+<script src="/shared-nav.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">🧠 RASPUTIN NEXUS</a>
+  <div class="topbar-nav" id="topbar-nav"></div>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <h1>🔁 Loop Detector</h1>
+    <p>Real-time detection of recursive loops, stuck agents, and runaway processes. Auto-kill enabled for critical alerts.</p>
+  </div>
+
+  <div class="dashboard">
+    <!-- Active Alerts -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🚨</span>
+          <span>Active Alerts</span>
+        </div>
+        <div class="card-badge" id="alert-count">0</div>
+      </div>
+      <div id="active-alerts" class="alert-list"></div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📊</span>
+          <span>Detection Stats</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-label">Critical</div>
+          <div class="stat-value critical" id="stat-critical">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">High</div>
+          <div class="stat-value high" id="stat-high">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Total</div>
+          <div class="stat-value neutral" id="stat-total">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert History -->
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📜</span>
+          <span>Alert History (Last 50)</span>
+        </div>
+      </div>
+      <div id="alert-history" class="history-timeline"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Fetch and display active alerts
+async function fetchAlerts() {
+  try {
+    const res = await fetch('/api/loop-detector/alerts');
+    const data = await res.json();
+    displayActiveAlerts(data.alerts || []);
+  } catch (e) {
+    console.error('Failed to fetch alerts:', e);
+  }
+}
+
+// Fetch and display alert history
+async function fetchHistory() {
+  try {
+    const res = await fetch('/api/loop-detector/history?limit=50');
+    const data = await res.json();
+    displayHistory(data.history || []);
+    updateStats(data.history || []);
+  } catch (e) {
+    console.error('Failed to fetch history:', e);
+  }
+}
+
+// Display active alerts
+function displayActiveAlerts(alerts) {
+  const container = document.getElementById('active-alerts');
+  const countBadge = document.getElementById('alert-count');
+  
+  if (alerts.length === 0) {
+    container.innerHTML = `
+      <div class="empty">
+        <div class="icon">✅</div>
+        <div class="title">All Clear</div>
+        <div class="desc">No active alerts. All sessions operating normally.</div>
+      </div>
+    `;
+    countBadge.textContent = '0';
+    return;
+  }
+
+  countBadge.textContent = alerts.length;
+  countBadge.classList.add('pulse');
+
+  const html = alerts.map(alert => {
+    const severityClass = alert.severity || 'info';
+    const icon = severityClass === 'critical' ? '🔴' : severityClass === 'high' ? '⚠️' : severityClass === 'medium' ? '⚡' : 'ℹ️';
+    const autoKillBadge = alert.autoKill ? '<span style="background:oklch(0.55 0.20 25);color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px">AUTO-KILL</span>' : '';
+    
+    return `
+      <div class="alert-item ${severityClass}">
+        <div class="alert-header">
+          <span class="alert-icon">${icon}</span>
+          <span class="alert-type">${alert.type}</span>
+          ${autoKillBadge}
+        </div>
+        <div class="alert-message">${alert.message}</div>
+        ${alert.recommendation ? `<div class="alert-recommendation">💡 ${alert.recommendation}</div>` : ''}
+        <div class="alert-meta">
+          Session: ${alert.sessionId.substring(0, 16)}... | ${new Date(alert.timestamp).toLocaleTimeString()}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+// Display alert history
+function displayHistory(history) {
+  const container = document.getElementById('alert-history');
+  
+  if (history.length === 0) {
+    container.innerHTML = `
+      <div class="empty">
+        <div class="icon">📜</div>
+        <div class="desc">No alert history yet. Loop detector is active and monitoring.</div>
+      </div>
+    `;
+    return;
+  }
+
+  const html = history.slice().reverse().map(alert => {
+    const severityClass = alert.severity || 'info';
+    const autoKillBadge = alert.action === 'SESSION_KILLED' ? '<strong style="color:oklch(0.70 0.20 25)">[SESSION KILLED]</strong> ' : '';
+    
+    return `
+      <div class="history-item ${severityClass}">
+        <div class="history-time">${new Date(alert.timestamp).toLocaleString()}</div>
+        <div class="history-text">
+          ${autoKillBadge}<strong>${alert.type}</strong>: ${alert.message}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+// Update statistics
+function updateStats(history) {
+  const last24h = history.filter(a => Date.now() - a.timestamp < 86400000);
+  const critical = last24h.filter(a => a.severity === 'critical').length;
+  const high = last24h.filter(a => a.severity === 'high').length;
+  
+  document.getElementById('stat-critical').textContent = critical;
+  document.getElementById('stat-high').textContent = high;
+  document.getElementById('stat-total').textContent = history.length;
+}
+
+// Auto-refresh
+let refreshInterval;
+function startAutoRefresh() {
+  fetchAlerts();
+  fetchHistory();
+  refreshInterval = setInterval(() => {
+    fetchAlerts();
+    fetchHistory();
+  }, 10000); // Refresh every 10s
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  startAutoRefresh();
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (refreshInterval) clearInterval(refreshInterval);
+});
+</script>
+
+</body>
+</html>

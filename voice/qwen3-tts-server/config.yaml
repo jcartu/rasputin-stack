@@ -1,0 +1,51 @@
+# Qwen3-TTS Configuration — RASPUTIN (RTX PRO 6000 96GB)
+default_model: 1.7B-Base
+
+models:
+  0.6B-Base:
+    hf_id: Qwen/Qwen3-TTS-12Hz-0.6B-Base
+    type: base
+  0.6B-CustomVoice:
+    hf_id: Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice
+    type: customvoice
+  1.7B-Base:
+    hf_id: Qwen/Qwen3-TTS-12Hz-1.7B-Base
+    type: base
+  1.7B-CustomVoice:
+    hf_id: Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice
+    type: customvoice
+
+optimization:
+  attention: sdpa
+  compile_mode: max-autotune
+  use_compile: true
+  use_cuda_graphs: false
+  use_fast_codebook: true
+  streaming:
+    decode_window_frames: 80
+    emit_every_frames: 8
+  compile_codebook_predictor: true
+
+server:
+  host: 0.0.0.0
+  port: 8880
+
+voices:
+  - language: English
+    name: Ryan
+  - language: English
+    name: Sohee
+  - language: Chinese
+    name: Vivian
+  - language: Chinese
+    name: Serena
+  - language: Chinese
+    name: Uncle_Fu
+  - language: Chinese
+    name: Dylan
+  - language: Chinese
+    name: Eric
+  - language: Japanese
+    name: Aiden
+  - language: Korean
+    name: Ono_Anna

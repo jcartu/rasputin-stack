@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🌐 Rasputin Nexus — Browser Control</title>
+<style>
+/* Topbar */
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px 20px;background:oklch(0.08 0.015 265/0.35);backdrop-filter:blur(10px) saturate(150%);border-bottom:1px solid oklch(0.38 0.04 270/0.15);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+.topbar::-webkit-scrollbar{display:none}
+.topbar-logo{font-size:16px;font-weight:700;background:linear-gradient(135deg,oklch(0.68 0.30 290),oklch(0.78 0.22 195));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;text-decoration:none;font-family:'Space Grotesk',system-ui,sans-serif}
+.topbar-nav{display:flex;gap:6px;margin-left:8px;flex-wrap:nowrap}
+.topbar-nav a{font-size:11.5px;padding:5px 11px;border:1px solid oklch(0.25 0.02 280/0.6);border-radius:20px;transition:all .2s;color:oklch(0.65 0.06 280);text-decoration:none;white-space:nowrap;background:oklch(0.12 0.01 280/0.4);font-family:'Space Grotesk',system-ui,sans-serif}
+.topbar-nav a:hover{color:oklch(0.90 0.15 195);border-color:oklch(0.60 0.15 195/0.6);background:oklch(0.18 0.04 195/0.3);box-shadow:0 0 12px oklch(0.60 0.15 195/0.15);transform:translateY(-1px)}
+.topbar-nav a.active{color:oklch(0.90 0.15 195);border-color:oklch(0.60 0.15 195/0.5);background:oklch(0.18 0.04 195/0.2)}
+
+/* Base styles */
+body{margin:0;padding:0;background:oklch(0.06 0.01 270);color:oklch(0.98 0.005 270);font-family:'Space Grotesk',system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;position:relative}
+/* Animated background - cyan/blue gradients */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,oklch(0.12 0.06 195/0.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,oklch(0.10 0.04 240/0.2) 0%,transparent 50%);z-index:-1;pointer-events:none;animation:bgShift 20s ease-in-out infinite}
+@keyframes bgShift{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,10px)}}
+
+/* Main layout */
+.main{display:flex;flex:1;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:220px;background:oklch(0.11 0.02 270);border-right:1px solid oklch(0.25 0.02 280/0.6);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar h3{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:oklch(0.72 0.012 270);padding:12px 12px 6px;font-weight:600}
+.history-timeline{padding:8px 12px}
+.history-item{padding:8px 10px;margin-bottom:6px;border-left:2px solid oklch(0.30 0.03 270/0.3);background:oklch(0.11 0.02 270/0.6);backdrop-filter:blur(8px);cursor:pointer;transition:all .3s;border-radius:0 6px 6px 0}
+.history-item:hover{border-left-color:oklch(0.78 0.22 195);background:oklch(0.11 0.02 270/0.8);transform:translateX(2px)}
+.history-item .url{font-size:10px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'JetBrains Mono',monospace;margin-bottom:3px}
+.history-item .time{font-size:9px;color:oklch(0.72 0.012 270)}
+
+/* Content */
+.content{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* URL bar */
+.url-bar{display:flex;gap:8px;padding:10px 16px;background:oklch(0.11 0.02 270);border-bottom:1px solid oklch(0.25 0.02 280/0.6)}
+.url-input{flex:1;padding:8px 14px;background:oklch(0.11 0.02 270);border:1px solid oklch(0.25 0.02 280/0.6);border-radius:8px;color:oklch(0.98 0.005 270);font-size:14px;font-family:inherit;outline:none}
+.url-input:focus{border-color:oklch(0.78 0.22 195)}
+.btn{padding:8px 16px;border:1px solid oklch(0.25 0.02 280/0.6);background:oklch(0.11 0.02 270);color:oklch(0.98 0.005 270);border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;transition:all .15s;white-space:nowrap}
+.btn:hover{background:oklch(0.11 0.02 270);border-color:oklch(0.78 0.22 195)}
+.btn.primary{background:linear-gradient(135deg,oklch(0.78 0.22 195),oklch(0.68 0.30 290));border:none;color:#fff;font-weight:600}
+.btn.primary:hover{opacity:0.9}
+.btn.danger{border-color:rgba(248,113,113,0.3);color:#f87171}
+.btn.danger:hover{background:rgba(248,113,113,0.1)}
+
+/* Action bar */
+.action-bar{display:flex;gap:6px;padding:8px 16px;background:oklch(0.08 0.015 265);border-bottom:1px solid oklch(0.25 0.02 280/0.6);align-items:center;flex-wrap:wrap}
+.action-bar .sep{width:1px;height:20px;background:oklch(0.25 0.02 280/0.6);margin:0 4px}
+
+/* Type bar */
+.type-bar{display:flex;gap:8px;padding:8px 16px;background:oklch(0.08 0.015 265);border-bottom:1px solid oklch(0.25 0.02 280/0.6)}
+.type-bar input{flex:1;padding:6px 12px;background:oklch(0.11 0.02 270);border:1px solid oklch(0.25 0.02 280/0.6);border-radius:6px;color:oklch(0.98 0.005 270);font-size:12px;font-family:inherit;outline:none}
+.type-bar input:focus{border-color:oklch(0.78 0.22 195)}
+
+/* Screenshot area */
+.screen-area{flex:1;display:flex;align-items:center;justify-content:center;overflow:auto;padding:16px;position:relative}
+.screen-area img{max-width:100%;max-height:100%;border-radius:8px;border:1px solid oklch(0.25 0.02 280/0.6);cursor:crosshair;image-rendering:auto}
+.placeholder{color:oklch(0.72 0.012 270);font-size:16px;text-align:center;max-width:600px}
+.placeholder .big{font-size:48px;margin-bottom:12px}
+.placeholder .hero-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;font-family:'Space Grotesk',sans-serif}
+.placeholder .hero-subtitle{font-size:14px;color:oklch(0.62 0.015 280);margin-bottom:20px;line-height:1.6}
+.placeholder .shortcuts{margin-top:24px;padding-top:16px;border-top:1px solid oklch(0.25 0.02 280/0.6);max-width:400px}
+.placeholder .shortcut{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px}
+.placeholder kbd{background:oklch(0.11 0.02 270);padding:3px 8px;border-radius:4px;border:1px solid oklch(0.25 0.02 280/0.6);font-family:'JetBrains Mono',monospace;font-size:11px}
+
+/* Status */
+.status-bar{display:flex;align-items:center;gap:12px;padding:6px 16px;background:oklch(0.11 0.02 270);border-top:1px solid oklch(0.25 0.02 280/0.6);font-size:11px;color:oklch(0.72 0.012 270)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:oklch(0.25 0.02 280/0.6);flex-shrink:0}
+.status-dot.active{background:oklch(0.75 0.24 145);box-shadow:0 0 6px oklch(0.75 0.24 145/0.5)}
+.status-dot.loading{background:oklch(0.85 0.20 85);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+/* Sidebar empty state */
+.sidebar-empty{padding:40px 20px;text-align:center;color:oklch(0.72 0.012 270);font-size:12px}
+.sidebar-empty .icon{font-size:32px;margin-bottom:8px;opacity:0.5}
+/* Quick access sites */
+.quick-sites{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.site-btn{background:oklch(0.11 0.02 270/0.6);border:1px solid oklch(0.30 0.03 270/0.3);border-radius:8px;padding:8px 14px;backdrop-filter:blur(8px);cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+.site-btn:hover{border-color:oklch(0.50 0.10 195/0.4);box-shadow:0 4px 16px oklch(0 0 0/0.2);transform:translateY(-1px)}
+.site-btn .favicon{width:16px;height:16px;border-radius:3px}
+.illustration{font-size:72px;margin:20px 0;opacity:0.6;line-height:1}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.5s ease-out forwards}
+.fade-in-delay-1{animation:fadeIn 0.5s ease-out 0.1s forwards;opacity:0}
+.fade-in-delay-2{animation:fadeIn 0.5s ease-out 0.2s forwards;opacity:0}
+
+/* Loading overlay */
+.loading-overlay{position:absolute;inset:0;background:rgba(10,10,15,0.7);display:flex;align-items:center;justify-content:center;z-index:10;display:none}
+.loading-overlay.show{display:flex}
+.spinner{width:32px;height:32px;border:3px solid oklch(0.25 0.02 280/0.6);border-top-color:oklch(0.78 0.22 195);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Coordinate tooltip */
+.coord-tooltip{position:fixed;background:rgba(0,0,0,0.85);color:oklch(0.78 0.22 195);padding:3px 8px;border-radius:4px;font-size:11px;pointer-events:none;z-index:100;display:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">🧠 RASPUTIN NEXUS</a>
+  <div class="topbar-nav">
+    <a href="/" title="Main control center with GPU monitoring, chat, and system metrics">📊 Dashboard</a>
+    <a href="/browser.html" class="active" title="Control a headless browser">🌐 Browser</a>
+    <a href="/execute.html" title="Run code in sandboxed Docker">⚡ Execute</a>
+    <a href="/research.html" title="Deep research via Perplexity">🔬 Research</a>
+    <a href="/playground.html" title="Test prompts against multiple models">🎯 Playground</a>
+    <a href="/council.html" title="Multi-model AI debate consensus">🏛️ Council</a>
+    <a href="/replay.html" title="Step through past sessions">🔄 Replay</a>
+    <a href="/agents.html" title="Monitor and spawn sub-agents">🤖 Agents</a>
+    <a href="/knowledge.html" title="Browse workspace files">📚 Knowledge</a>
+    <a href="/templates.html" title="One-click workflow templates">📋 Templates</a>
+    <a href="/remote.html" title="Remote device management">🖥️ Remote</a>
+  </div>
+</div>
+
+<div class="main">
+  <!-- History Sidebar -->
+  <div class="sidebar">
+    <h3>Navigation History</h3>
+    <div id="history"></div>
+  </div>
+
+  <div class="content">
+    <!-- URL Bar -->
+    <div class="url-bar">
+      <input type="text" class="url-input" id="urlInput" placeholder="Enter URL..." 
+             onkeydown="if(event.key==='Enter')navigate()">
+      <button class="btn primary" onclick="navigate()">Go</button>
+      <button class="btn" onclick="launchBrowser()" id="launchBtn">🚀 Launch</button>
+      <button class="btn danger" onclick="closeBrowser()" id="closeBtn" style="display:none">✕ Close</button>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="btn" onclick="goBack()" title="Back">◀ Back</button>
+      <button class="btn" onclick="goForward()" title="Forward">▶ Forward</button>
+      <button class="btn" onclick="refresh()" title="Refresh">🔄 Refresh</button>
+      <div class="sep"></div>
+      <button class="btn" onclick="takeScreenshot()" title="Screenshot">📸 Screenshot</button>
+      <div class="sep"></div>
+      <span style="font-size:11px;color:oklch(0.72 0.012 270)" id="sessionLabel">No session</span>
+    </div>
+
+    <!-- Type Bar -->
+    <div class="type-bar">
+      <input type="text" id="selectorInput" placeholder="CSS selector (e.g. #search, .btn-submit)" style="max-width:250px">
+      <input type="text" id="typeInput" placeholder="Text to type...">
+      <button class="btn" onclick="typeText()">⌨️ Type</button>
+    </div>
+
+    <!-- Screenshot Display -->
+    <div class="screen-area" id="screenArea">
+      <div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
+      <div class="placeholder" id="placeholder">
+        <div class="illustration">🌐</div>
+        <div class="hero-title">Headless Browser Control</div>
+        <div class="hero-subtitle">Launch a browser session, navigate to any URL, and interact with pages via screenshots. Click coordinates to trigger actions, type into fields, or automate workflows.</div>
+        
+        <div class="quick-sites">
+          <div class="site-btn" onclick="quickNav('https://github.com')">
+            <svg class="favicon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </div>
+          <div class="site-btn" onclick="quickNav('https://stackoverflow.com')">
+            <svg class="favicon" viewBox="0 0 16 16" fill="#F48024"><path d="M12.658 14.577v-4.27h1.423V16H1.23v-5.693h1.423v4.27h10.005zm-8.583-1.423h7.16V11.73h-7.16v1.424zm.173-3.235l6.987 1.46.3-1.38L4.55 8.54l-.302 1.38zm.906-3.37l6.47 3.02.602-1.3-6.47-3.02-.602 1.3zm1.81-3.19l5.478 4.57.906-1.08-5.478-4.57-.906 1.08zM10.502 0L9.338.863l4.27 5.735 1.164-.862L10.502 0z"/></svg>
+            Stack Overflow
+          </div>
+          <div class="site-btn" onclick="quickNav('https://news.ycombinator.com')">
+            <svg class="favicon" viewBox="0 0 16 16" fill="#FF6600"><path d="M0 0v16h16V0H0zm8.5 9.5L11 5h-1.3L8 7.9 6.3 5H5l2.5 4.5V12h1V9.5z"/></svg>
+            Hacker News
+          </div>
+        </div>
+
+        <div class="shortcuts">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:10px;color:oklch(0.78 0.22 195)">Quick Actions</div>
+          <div class="shortcut">
+            <span>Navigate to URL</span>
+            <kbd>Enter</kbd>
+          </div>
+          <div class="shortcut">
+            <span>Take screenshot</span>
+            <kbd>Ctrl+S</kbd>
+          </div>
+          <div class="shortcut">
+            <span>Click anywhere</span>
+            <kbd>Click screenshot</kbd>
+          </div>
+        </div>
+      </div>
+      <img id="screenshot" style="display:none" onclick="handleClick(event)">
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Disconnected</span>
+      <span style="margin-left:auto" id="coordDisplay"></span>
+    </div>
+  </div>
+</div>
+
+<div class="coord-tooltip" id="coordTooltip"></div>
+
+<script>
+let sessionId = null;
+let history = [];
+
+const $ = id => document.getElementById(id);
+
+function setLoading(on) {
+  $('loadingOverlay').classList.toggle('show', on);
+}
+
+function setStatus(active, text) {
+  $('statusDot').className = 'status-dot' + (active ? ' active' : '');
+  $('statusText').textContent = text;
+}
+
+function showScreenshot(base64) {
+  if (!base64) return;
+  const img = $('screenshot');
+  img.src = 'data:image/png;base64,' + base64;
+  img.style.display = 'block';
+  $('placeholder').style.display = 'none';
+}
+
+function addHistory(url, screenshot) {
+  const time = new Date().toLocaleTimeString();
+  history.unshift({ url, screenshot, time });
+  if (history.length > 30) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = $('history');
+  if (history.length === 0) {
+    el.innerHTML = '<div class="sidebar-empty"><div class="icon">🌐</div><div>No navigation yet</div><div style="margin-top:6px;font-size:10px">Browse pages to build history</div></div>';
+    return;
+  }
+  el.innerHTML = '<div class="history-timeline">' + history.map((h, i) => `
+    <div class="history-item" onclick="replayHistory(${i})" title="${escHtml(h.url)}">
+      <div class="url">${escHtml(h.url.replace(/^https?:\/\//, '').split('/')[0])}</div>
+      <div class="time">${h.time}</div>
+    </div>
+  `).join('') + '</div>';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function replayHistory(i) {
+  const h = history[i];
+  if (h?.screenshot) showScreenshot(h.screenshot);
+  if (h?.url) $('urlInput').value = h.url;
+}
+
+function quickNav(url) {
+  if (!sessionId) {
+    alert('Launch a browser first');
+    return;
+  }
+  $('urlInput').value = url;
+  navigate();
+}
+
+async function api(endpoint, body = {}) {
+  setLoading(true);
+  try {
+    const res = await fetch('/api/browser/' + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    return data;
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function launchBrowser() {
+  try {
+    const data = await api('launch');
+    sessionId = data.sessionId;
+    $('sessionLabel').textContent = 'Session: ' + sessionId.slice(0, 8);
+    $('launchBtn').style.display = 'none';
+    $('closeBtn').style.display = '';
+    setStatus(true, 'Browser active');
+    $('urlInput').focus();
+  } catch (e) {
+    alert('Launch failed: ' + e.message);
+  }
+}
+
+async function navigate() {
+  if (!sessionId) return alert('Launch a browser first');
+  let url = $('urlInput').value.trim();
+  if (!url) return;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  $('urlInput').value = url;
+  try {
+    setStatus(true, 'Navigating...');
+    $('statusDot').className = 'status-dot loading';
+    const data = await api('navigate', { sessionId, url });
+    showScreenshot(data.screenshot);
+    addHistory(url, data.screenshot);
+    setStatus(true, 'Page loaded');
+  } catch (e) {
+    setStatus(false, 'Error: ' + e.message);
+  }
+}
+
+async function handleClick(event) {
+  if (!sessionId) return;
+  const img = $('screenshot');
+  const rect = img.getBoundingClientRect();
+  const scaleX = img.naturalWidth / rect.width;
+  const scaleY = img.naturalHeight / rect.height;
+  const x = Math.round((event.clientX - rect.left) * scaleX);
+  const y = Math.round((event.clientY - rect.top) * scaleY);
+  try {
+    setStatus(true, `Clicking (${x}, ${y})...`);
+    $('statusDot').className = 'status-dot loading';
+    const data = await api('click', { sessionId, x, y });
+    showScreenshot(data.screenshot);
+    if (data.url) {
+      $('urlInput').value = data.url;
+      addHistory(data.url, data.screenshot);
+    }
+    setStatus(true, 'Clicked');
+  } catch (e) {
+    setStatus(false, 'Click error: ' + e.message);
+  }
+}
+
+async function typeText() {
+  if (!sessionId) return alert('Launch a browser first');
+  const selector = $('selectorInput').value.trim();
+  const text = $('typeInput').value;
+  if (!text) return;
+  try {
+    setStatus(true, 'Typing...');
+    const data = await api('type', { sessionId, selector: selector || 'input:focus, textarea:focus, [contenteditable]:focus', text });
+    showScreenshot(data.screenshot);
+    setStatus(true, 'Typed');
+    $('typeInput').value = '';
+  } catch (e) {
+    setStatus(false, 'Type error: ' + e.message);
+  }
+}
+
+async function takeScreenshot() {
+  if (!sessionId) return;
+  try {
+    const data = await api('screenshot', { sessionId });
+    showScreenshot(data.screenshot);
+    setStatus(true, 'Screenshot taken');
+  } catch (e) {
+    setStatus(false, 'Screenshot error: ' + e.message);
+  }
+}
+
+async function goBack() {
+  if (!sessionId) return;
+  try {
+    const data = await api('navigate', { sessionId, action: 'back' });
+    showScreenshot(data.screenshot);
+    if (data.url) $('urlInput').value = data.url;
+    setStatus(true, 'Back');
+  } catch (e) { setStatus(false, e.message); }
+}
+
+async function goForward() {
+  if (!sessionId) return;
+  try {
+    const data = await api('navigate', { sessionId, action: 'forward' });
+    showScreenshot(data.screenshot);
+    if (data.url) $('urlInput').value = data.url;
+    setStatus(true, 'Forward');
+  } catch (e) { setStatus(false, e.message); }
+}
+
+async function refresh() {
+  if (!sessionId) return;
+  try {
+    const data = await api('navigate', { sessionId, action: 'refresh' });
+    showScreenshot(data.screenshot);
+    setStatus(true, 'Refreshed');
+  } catch (e) { setStatus(false, e.message); }
+}
+
+async function closeBrowser() {
+  if (!sessionId) return;
+  try {
+    await api('close', { sessionId });
+  } catch (_) {}
+  sessionId = null;
+  $('sessionLabel').textContent = 'No session';
+  $('launchBtn').style.display = '';
+  $('closeBtn').style.display = 'none';
+  $('screenshot').style.display = 'none';
+  $('placeholder').style.display = '';
+  setStatus(false, 'Session closed');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 's') {
+    e.preventDefault();
+    takeScreenshot();
+  }
+});
+
+// Coordinate display on hover
+const img = $('screenshot');
+const tooltip = $('coordTooltip');
+img.addEventListener('mousemove', (e) => {
+  const rect = img.getBoundingClientRect();
+  const scaleX = img.naturalWidth / rect.width;
+  const scaleY = img.naturalHeight / rect.height;
+  const x = Math.round((e.clientX - rect.left) * scaleX);
+  const y = Math.round((e.clientY - rect.top) * scaleY);
+  $('coordDisplay').textContent = `${x}, ${y}`;
+  tooltip.style.display = 'block';
+  tooltip.style.left = (e.clientX + 12) + 'px';
+  tooltip.style.top = (e.clientY - 8) + 'px';
+  tooltip.textContent = `${x}, ${y}`;
+});
+img.addEventListener('mouseleave', () => {
+  tooltip.style.display = 'none';
+  $('coordDisplay').textContent = '';
+});
+
+renderHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Cost Heatmap - ALFIE Nexus</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    header {
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 32px;
+      color: #60a5fa;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: #999;
+      font-size: 14px;
+    }
+    
+    .input-section {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #999;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      color: #e5e5e5;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px;
+      resize: vertical;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+    
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    input, select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      color: #e5e5e5;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 10px;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    button:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(96, 165, 250, 0.3);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+    
+    .heatmap-container {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .heatmap-text {
+      line-height: 2.2;
+      font-size: 16px;
+      word-wrap: break-word;
+    }
+    
+    .token {
+      display: inline-block;
+      padding: 3px 5px;
+      margin: 2px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .token:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    
+    .tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.95);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 100;
+      margin-bottom: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: none;
+    }
+    
+    .token:hover .tooltip {
+      display: block;
+    }
+    
+    .legend {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .legend h3 {
+      margin-bottom: 15px;
+      color: #60a5fa;
+    }
+    
+    .legend-items {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .legend-color {
+      width: 30px;
+      height: 20px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .top-expensive {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .top-expensive h3 {
+      margin-bottom: 15px;
+      color: #ef4444;
+    }
+    
+    .expensive-list {
+      list-style: none;
+    }
+    
+    .expensive-list li {
+      padding: 10px;
+      margin: 5px 0;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .expensive-list li:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .examples {
+      background: rgba(96, 165, 250, 0.05);
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #999;
+    }
+    
+    .examples strong {
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔥 Token Cost Heatmap</h1>
+      <p class="subtitle">
+        Visualize per-word token costs — see which parts of responses are expensive
+      </p>
+    </header>
+
+    <div class="input-section">
+      <div class="form-group">
+        <label for="text">Response Text</label>
+        <textarea 
+          id="text" 
+          placeholder="Paste any LLM response here to see token cost breakdown...&#10;&#10;Example: The anthropomorphic visualization demonstrates sophisticated computational linguistics patterns."
+        ></textarea>
+        <div class="examples">
+          <strong>Tip:</strong> Longer words and rare terms cost more tokens. Scientific jargon, 
+          proper nouns, and compound words typically use 2-3 tokens each.
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="model">Model</label>
+          <select id="model">
+            <optgroup label="GPT (OpenAI)">
+              <option value="gpt-4">GPT-4 ($30/M tokens)</option>
+              <option value="gpt-4-turbo">GPT-4 Turbo ($30/M)</option>
+              <option value="gpt-4.5-turbo">GPT-4.5 Turbo ($22.50/M)</option>
+              <option value="gpt-3.5-turbo">GPT-3.5 Turbo ($2/M)</option>
+            </optgroup>
+            <optgroup label="Claude (Anthropic)">
+              <option value="claude-opus-4.6" selected>Claude Opus 4.6 ($75/M)</option>
+              <option value="claude-opus">Claude Opus ($75/M)</option>
+              <option value="claude-sonnet-4.5">Claude Sonnet 4.5 ($15/M)</option>
+              <option value="claude-sonnet">Claude Sonnet ($15/M)</option>
+            </optgroup>
+            <optgroup label="Gemini (Google)">
+              <option value="gemini-2.0-pro">Gemini 2.0 Pro ($10/M)</option>
+              <option value="gemini-pro">Gemini Pro ($3.75/M)</option>
+              <option value="gemini-3-flash">Gemini 3 Flash ($0.50/M)</option>
+              <option value="gemini-flash">Gemini Flash ($0.75/M)</option>
+            </optgroup>
+            <optgroup label="Local Models (Free)">
+              <option value="llama-3.3-70b">Llama 3.3 70B</option>
+              <option value="qwen-2.5-72b">Qwen 2.5 72B</option>
+              <option value="gpt-oss-120b">GPT-OSS 120B</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tokens">Actual Token Count (optional)</label>
+          <input type="number" id="tokens" placeholder="Leave blank for estimation">
+        </div>
+      </div>
+
+      <button id="generate-btn" onclick="generateHeatmap()">
+        Generate Heatmap
+      </button>
+    </div>
+
+    <div id="error" class="error hidden"></div>
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Generating heatmap...</p>
+    </div>
+
+    <div id="results" class="hidden">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Tokens</div>
+          <div class="stat-value" id="stat-tokens">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Cost</div>
+          <div class="stat-value" id="stat-cost">$0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Model</div>
+          <div class="stat-value" id="stat-model">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Cost/Token</div>
+          <div class="stat-value" id="stat-cost-per-token">$0.00</div>
+        </div>
+      </div>
+
+      <div class="heatmap-container">
+        <div class="heatmap-text" id="heatmap"></div>
+      </div>
+
+      <div class="legend">
+        <h3>Cost Tiers</h3>
+        <div class="legend-items">
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(34, 197, 94);"></div>
+            <span>Cheap (common words)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(234, 179, 8);"></div>
+            <span>Moderate</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(249, 115, 22);"></div>
+            <span>Expensive</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(239, 68, 68);"></div>
+            <span>Very Expensive (rare)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-expensive">
+        <h3>Most Expensive Words</h3>
+        <ul class="expensive-list" id="expensive-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function generateHeatmap() {
+      const text = document.getElementById('text').value.trim();
+      const model = document.getElementById('model').value;
+      const tokensInput = document.getElementById('tokens').value;
+      const actualTokens = tokensInput ? parseInt(tokensInput) : null;
+
+      // Validation
+      if (!text) {
+        showError('Please enter some text');
+        return;
+      }
+
+      // Hide error, show loading
+      hideError();
+      showLoading();
+      hideResults();
+
+      try {
+        const response = await fetch('/api/token-heatmap/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, model, actualTokens })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to generate heatmap');
+        }
+
+        const data = await response.json();
+        displayHeatmap(data.heatmap);
+        hideLoading();
+        showResults();
+      } catch (err) {
+        hideLoading();
+        showError(err.message);
+      }
+    }
+
+    function displayHeatmap(heatmap) {
+      const { tokens, stats } = heatmap;
+
+      // Update stats
+      document.getElementById('stat-tokens').textContent = stats.totalTokens.toLocaleString();
+      document.getElementById('stat-cost').textContent = stats.totalCostFormatted;
+      document.getElementById('stat-model').textContent = stats.model;
+      document.getElementById('stat-cost-per-token').textContent = stats.avgCostPerTokenFormatted;
+
+      // Render heatmap
+      const heatmapEl = document.getElementById('heatmap');
+      heatmapEl.innerHTML = tokens.map(t => {
+        return `<span class="token" style="background-color: ${t.color}20; border: 1px solid ${t.color};">
+          ${escapeHtml(t.text)}
+          <div class="tooltip">
+            ${escapeHtml(t.text)} | ${t.tokens.toFixed(2)} tokens | ${t.costFormatted}<br>
+            Cumulative: ${t.cumulativeCostFormatted}
+          </div>
+        </span>`;
+      }).join('');
+
+      // Render expensive list
+      const expensiveListEl = document.getElementById('expensive-list');
+      expensiveListEl.innerHTML = stats.topExpensive.map((item, i) => {
+        return `<li>
+          <span><strong>${i + 1}.</strong> "${escapeHtml(item.text)}"</span>
+          <span>${item.cost} (${item.tokens.toFixed(2)} tokens)</span>
+        </li>`;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('error');
+      errorEl.textContent = message;
+      errorEl.classList.remove('hidden');
+    }
+
+    function hideError() {
+      document.getElementById('error').classList.add('hidden');
+    }
+
+    function showLoading() {
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('generate-btn').disabled = true;
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('generate-btn').disabled = false;
+    }
+
+    function showResults() {
+      document.getElementById('results').classList.remove('hidden');
+    }
+
+    function hideResults() {
+      document.getElementById('results').classList.add('hidden');
+    }
+
+    // Load example on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const exampleText = `The anthropomorphic visualization demonstrates sophisticated computational linguistics patterns inherent within contemporary artificial intelligence architectures. Tokenization algorithms decompose textual representations into discrete semantic units, facilitating probabilistic inference mechanisms across multidimensional embedding spaces.`;
+      
+      // Don't auto-fill for now - let users try it themselves
+      // document.getElementById('text').value = exampleText;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Recipes • Rasputin Nexus</title>
+  <link rel="stylesheet" href="shared-styles.css">
+  <style>
+    body {
+      background: #0a0e15;
+      color: #c5d1eb;
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #1e2836;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      margin: 8px 0 0 0;
+      font-size: 14px;
+      color: #7a8ba0;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(30, 40, 54, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #7a8ba0;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #00d4ff;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      flex: 1;
+      min-width: 300px;
+      padding: 10px 15px;
+      background: rgba(30, 40, 54, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 8px;
+      color: #c5d1eb;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .sort-btn {
+      padding: 10px 18px;
+      background: rgba(30, 40, 54, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 8px;
+      color: #c5d1eb;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .sort-btn:hover {
+      border-color: #00d4ff;
+      background: rgba(0, 212, 255, 0.1);
+    }
+
+    .sort-btn.active {
+      background: #00d4ff;
+      color: #0a0e15;
+      border-color: #00d4ff;
+    }
+
+    .recipes-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .recipe-card {
+      background: linear-gradient(135deg, rgba(30, 40, 54, 0.9) 0%, rgba(20, 28, 40, 0.95) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .recipe-card:hover {
+      border-color: #00d4ff;
+      box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .recipe-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .recipe-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #00d4ff;
+      margin-bottom: 6px;
+    }
+
+    .recipe-description {
+      font-size: 13px;
+      color: #7a8ba0;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .recipe-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #5a6a80;
+    }
+
+    .recipe-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .recipe-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      background: rgba(0, 212, 255, 0.15);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      font-size: 11px;
+      color: #00d4ff;
+    }
+
+    .recipe-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .use-btn, .delete-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      border: 1px solid;
+    }
+
+    .use-btn {
+      background: #00d4ff;
+      color: #0a0e15;
+      border-color: #00d4ff;
+      font-weight: 600;
+    }
+
+    .use-btn:hover {
+      background: #00ffff;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    }
+
+    .delete-btn {
+      background: transparent;
+      color: #ff4444;
+      border-color: #ff4444;
+    }
+
+    .delete-btn:hover {
+      background: rgba(255, 68, 68, 0.1);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #7a8ba0;
+    }
+
+    .empty-state h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #c5d1eb;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #141b2d;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 20px;
+      font-weight: 600;
+      color: #00d4ff;
+      margin-bottom: 20px;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section h3 {
+      font-size: 14px;
+      color: #7a8ba0;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .modal-section .content {
+      background: rgba(10, 14, 21, 0.6);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #c5d1eb;
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .step-list li {
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: rgba(10, 14, 21, 0.4);
+      border-left: 3px solid #00d4ff;
+      border-radius: 4px;
+    }
+
+    .close-modal {
+      margin-top: 20px;
+      padding: 10px 20px;
+      width: 100%;
+      background: #00d4ff;
+      color: #0a0e15;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .close-modal:hover {
+      background: #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <div class="dashboard">
+    <div class="header">
+      <div>
+        <h1>📝 Session Recipes</h1>
+        <p>Save successful sessions as reusable templates • Novel feature - nobody else has this!</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Recipes</div>
+        <div class="stat-value" id="totalRecipes">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Uses</div>
+        <div class="stat-value" id="totalUses">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Cost</div>
+        <div class="stat-value" id="avgCost">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Most Popular</div>
+        <div class="stat-value" id="mostPopular" style="font-size: 16px;">—</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <input type="text" class="search-bar" id="searchBar" placeholder="Search recipes by name, description, or tags...">
+      <button class="sort-btn active" data-sort="recent">📅 Recent</button>
+      <button class="sort-btn" data-sort="popular">🔥 Popular</button>
+      <button class="sort-btn" data-sort="cost">💰 Cheapest</button>
+    </div>
+
+    <div class="recipes-grid" id="recipesGrid">
+      <div class="empty-state">
+        <h2>No recipes yet</h2>
+        <p>Create your first recipe by saving a successful session!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recipe Details Modal -->
+  <div class="modal" id="recipeModal">
+    <div class="modal-content">
+      <div class="modal-header" id="modalTitle">Recipe Details</div>
+      
+      <div class="modal-section">
+        <h3>Description</h3>
+        <div class="content" id="modalDescription"></div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Initial Prompt</h3>
+        <div class="content" id="modalPrompt"></div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Tools Used</h3>
+        <div class="content" id="modalTools"></div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Workflow Steps</h3>
+        <ul class="step-list" id="modalSteps"></ul>
+      </div>
+
+      <div class="modal-section">
+        <h3>Performance Metrics</h3>
+        <div class="content" id="modalMetrics"></div>
+      </div>
+
+      <button class="close-modal" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script src="shared-nav.js"></script>
+  <script>
+    let currentSort = 'recent';
+    let currentQuery = '';
+
+    async function loadRecipes() {
+      try {
+        const params = new URLSearchParams();
+        if (currentSort) params.set('sort', currentSort);
+        if (currentQuery) params.set('query', currentQuery);
+
+        const response = await fetch(`/api/recipes?${params}`);
+        const data = await response.json();
+
+        updateStats(data.stats);
+        renderRecipes(data.recipes);
+      } catch (e) {
+        console.error('Failed to load recipes:', e);
+      }
+    }
+
+    function updateStats(stats) {
+      document.getElementById('totalRecipes').textContent = stats.total || 0;
+      document.getElementById('totalUses').textContent = stats.totalUses || 0;
+      document.getElementById('avgCost').textContent = stats.avgCost 
+        ? `$${stats.avgCost.toFixed(3)}`
+        : '$0.00';
+      document.getElementById('mostPopular').textContent = stats.mostPopular 
+        ? stats.mostPopular.name 
+        : 'None yet';
+    }
+
+    function renderRecipes(recipes) {
+      const grid = document.getElementById('recipesGrid');
+      
+      if (recipes.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <h2>No recipes found</h2>
+            <p>Try a different search or create a new recipe!</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = recipes.map(recipe => `
+        <div class="recipe-card" onclick="showRecipeDetails('${recipe.id}')">
+          <div class="recipe-header">
+            <div>
+              <div class="recipe-title">${escapeHtml(recipe.name)}</div>
+              <div class="recipe-description">${escapeHtml(recipe.description || 'No description')}</div>
+            </div>
+          </div>
+
+          <div class="recipe-meta">
+            <span>⚡ ${recipe.metrics.duration ? formatDuration(recipe.metrics.duration) : 'Unknown'}</span>
+            <span>💰 $${recipe.metrics.cost.toFixed(3)}</span>
+            <span>🔧 ${recipe.template.tools.length} tools</span>
+            <span>📊 ${recipe.useCount} uses</span>
+          </div>
+
+          ${recipe.tags.length > 0 ? `
+            <div class="recipe-tags">
+              ${recipe.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+            </div>
+          ` : ''}
+
+          <div class="recipe-actions" onclick="event.stopPropagation()">
+            <button class="use-btn" onclick="useRecipe('${recipe.id}')">▶ Use Recipe</button>
+            <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">🗑 Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function showRecipeDetails(recipeId) {
+      try {
+        const response = await fetch(`/api/recipes/${recipeId}`);
+        const data = await response.json();
+        const recipe = data.recipe;
+
+        document.getElementById('modalTitle').textContent = recipe.name;
+        document.getElementById('modalDescription').textContent = recipe.description || 'No description';
+        document.getElementById('modalPrompt').textContent = recipe.template.initialPrompt || 'No initial prompt';
+        document.getElementById('modalTools').textContent = recipe.template.tools.length > 0
+          ? recipe.template.tools.join(', ')
+          : 'No tools used';
+
+        const stepsList = document.getElementById('modalSteps');
+        stepsList.innerHTML = recipe.template.steps.map(step => `
+          <li>
+            <strong>Step ${step.step}:</strong> ${escapeHtml(step.summary)}
+            ${step.tools && step.tools.length > 0 ? `<br><small>Tools: ${step.tools.join(', ')}</small>` : ''}
+          </li>
+        `).join('');
+
+        document.getElementById('modalMetrics').innerHTML = `
+          <strong>Duration:</strong> ${formatDuration(recipe.metrics.duration)}<br>
+          <strong>Cost:</strong> $${recipe.metrics.cost.toFixed(4)}<br>
+          <strong>Tool Calls:</strong> ${recipe.metrics.toolCallCount}<br>
+          <strong>Messages:</strong> ${recipe.metrics.messageCount}
+        `;
+
+        document.getElementById('recipeModal').classList.add('active');
+      } catch (e) {
+        console.error('Failed to load recipe details:', e);
+        alert('Failed to load recipe details: ' + e.message);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('recipeModal').classList.remove('active');
+    }
+
+    async function useRecipe(recipeId) {
+      try {
+        const response = await fetch(`/api/recipes/${recipeId}/use`, { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('Recipe usage recorded! Check the recipe template for workflow steps.');
+          loadRecipes(); // Refresh to show updated use count
+        }
+      } catch (e) {
+        console.error('Failed to use recipe:', e);
+        alert('Failed to use recipe: ' + e.message);
+      }
+    }
+
+    async function deleteRecipe(recipeId) {
+      if (!confirm('Are you sure you want to delete this recipe?')) return;
+
+      try {
+        const response = await fetch(`/api/recipes/${recipeId}`, { method: 'DELETE' });
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('Recipe deleted successfully!');
+          loadRecipes();
+        }
+      } catch (e) {
+        console.error('Failed to delete recipe:', e);
+        alert('Failed to delete recipe: ' + e.message);
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDuration(ms) {
+      const seconds = Math.floor(ms / 1000);
+      if (seconds < 60) return `${seconds}s`;
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `${minutes}m ${seconds % 60}s`;
+      const hours = Math.floor(minutes / 60);
+      return `${hours}h ${minutes % 60}m`;
+    }
+
+    // Event listeners
+    document.getElementById('searchBar').addEventListener('input', (e) => {
+      currentQuery = e.target.value;
+      loadRecipes();
+    });
+
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSort = btn.dataset.sort;
+        loadRecipes();
+      });
+    });
+
+    // Close modal on outside click
+    document.getElementById('recipeModal').addEventListener('click', (e) => {
+      if (e.target.id === 'recipeModal') {
+        closeModal();
+      }
+    });
+
+    // Load recipes on page load
+    window.addEventListener('load', loadRecipes);
+  </script>
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Design Trends — The Definitive Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #09090b; --surface: #18181b; --surface2: #27272a;
+    --border: #3f3f46; --text: #fafafa; --muted: #a1a1aa; --dim: #52525b;
+    --accent: #818cf8; --accent2: #c084fc; --green: #4ade80;
+    --amber: #fbbf24; --rose: #fb7185; --cyan: #22d3ee; --sky: #38bdf8;
+    --radius: 16px; --radius-sm: 10px;
+  }
+  @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @property --hue { syntax: '<number>'; initial-value: 0; inherits: false; }
+  html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::selection { background: rgba(129,140,248,0.3); }
+
+  /* ── Navigation ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 12px 32px;
+    background: rgba(9,9,11,0.75); backdrop-filter: blur(24px) saturate(1.4);
+    border-bottom: 1px solid rgba(63,63,70,0.4);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 16px; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .pills { display: flex; gap: 3px; flex-wrap: wrap; }
+  .pill {
+    padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    color: var(--muted); text-decoration: none; transition: all 0.2s;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .pill:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
+  .pill.active { color: var(--text); background: var(--surface2); border-color: var(--border); }
+
+  /* ── Sections ── */
+  section {
+    min-height: 100vh; padding: 100px 48px 80px;
+    max-width: 1400px; margin: 0 auto;
+    scroll-snap-align: start;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 500;
+    color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Space Grotesk'; font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .section-desc {
+    font-size: 16px; color: var(--muted); max-width: 640px;
+    margin-bottom: 40px; line-height: 1.7;
+  }
+  .code-hint {
+    font-family: 'JetBrains Mono'; font-size: 11px; color: var(--dim);
+    margin-top: 24px; padding: 12px 16px;
+    background: rgba(24,24,27,0.5); border: 1px solid rgba(63,63,70,0.3);
+    border-radius: 8px; white-space: pre-wrap;
+  }
+
+  /* ══════════════════════════════════════════════
+     01 — AURORA MESH GRADIENTS
+     ══════════════════════════════════════════════ */
+  .aurora-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .aurora-card {
+    border-radius: var(--radius); padding: 48px; position: relative;
+    overflow: hidden; min-height: 280px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+  }
+  .aurora-card:hover { transform: translateY(-4px); }
+  .aurora-card h3 { font-family: 'Space Grotesk'; font-size: 24px; font-weight: 700; position: relative; z-index: 1; }
+  .aurora-card p { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 6px; position: relative; z-index: 1; }
+  .aurora-indigo {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(129,140,248,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(192,132,252,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(251,113,133,0.15) 0%, transparent 60%),
+      var(--surface);
+  }
+  .aurora-emerald {
+    background:
+      radial-gradient(ellipse 70% 50% at 10% 90%, rgba(74,222,128,0.45) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 70% at 90% 10%, rgba(56,189,248,0.35) 0%, transparent 50%),
+      radial-gradient(ellipse 80% 40% at 50% 50%, rgba(251,191,36,0.12) 0%, transparent 50%),
+      var(--surface);
+  }
+  .aurora-solar {
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(251,191,36,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 60% at 20% 30%, rgba(251,113,133,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 40% at 50% 60%, rgba(129,140,248,0.2) 0%, transparent 50%),
+      var(--surface);
+  }
+  .aurora-full {
+    grid-column: span 2; min-height: 200px;
+    background:
+      radial-gradient(ellipse 40% 60% at 0% 50%, rgba(129,140,248,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse 30% 40% at 100% 30%, rgba(251,113,133,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 50% 100%, rgba(74,222,128,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 50% at 60% 0%, rgba(192,132,252,0.25) 0%, transparent 50%),
+      var(--surface);
+    animation: aurora-shift 8s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-shift { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(30deg); } }
+
+  /* ══════════════════════════════════════════════
+     02 — BENTO GRIDS
+     ══════════════════════════════════════════════ */
+  .bento-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 180px; gap: 14px;
+  }
+  .bento-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden; position: relative;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .bento-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 32px rgba(129,140,248,0.08); }
+  .bento-card.span-2 { grid-column: span 2; }
+  .bento-card.span-2r { grid-row: span 2; }
+  .bento-card.hero { grid-column: span 2; grid-row: span 2; }
+  .bento-card .label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .bento-card .value {
+    font-family: 'Space Grotesk'; font-size: 36px; font-weight: 800;
+    letter-spacing: -2px; line-height: 1;
+  }
+  .bento-card .desc { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .bento-card .orb {
+    position: absolute; bottom: -30px; right: -30px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity: 0.1; transition: opacity 0.3s;
+  }
+  .bento-card:hover .orb { opacity: 0.2; }
+
+  /* ══════════════════════════════════════════════
+     03 — SCROLL-DRIVEN ANIMATIONS
+     ══════════════════════════════════════════════ */
+  .scroll-demo { display: flex; flex-direction: column; gap: 24px; }
+  .reveal-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px;
+    display: flex; align-items: center; gap: 24px;
+    animation: reveal-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 50%;
+  }
+  @keyframes reveal-in {
+    from { opacity: 0; transform: translateY(32px) scale(0.97); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  .reveal-card .icon-box {
+    width: 56px; height: 56px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .reveal-card h3 { font-size: 18px; font-weight: 600; }
+  .reveal-card p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .scroll-progress {
+    position: fixed; top: 58px; left: 0; right: 0; height: 2px; z-index: 99;
+    background: var(--border);
+  }
+  .scroll-progress-bar {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2), var(--rose));
+    width: 0%; animation: progress-fill linear;
+    animation-timeline: scroll(root);
+  }
+  @keyframes progress-fill { to { width: 100%; } }
+
+  /* ══════════════════════════════════════════════
+     04 — GLASSMORPHISM 2.0
+     ══════════════════════════════════════════════ */
+  .glass-scene {
+    position: relative; min-height: 400px;
+    background:
+      radial-gradient(ellipse 50% 40% at 30% 60%, rgba(129,140,248,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 70% 40%, rgba(192,132,252,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 30% at 50% 80%, rgba(56,189,248,0.2) 0%, transparent 50%);
+    border-radius: var(--radius); padding: 48px;
+    display: flex; gap: 20px; align-items: center; justify-content: center;
+  }
+  .glass-card {
+    background: rgba(255,255,255,0.05); backdrop-filter: blur(24px) saturate(1.5);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius);
+    padding: 32px; width: 260px;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .glass-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.15); }
+  .glass-card:nth-child(2) {
+    background: rgba(255,255,255,0.08); transform: scale(1.05);
+    border-color: rgba(129,140,248,0.3);
+  }
+  .glass-card:nth-child(2):hover { transform: scale(1.05) translateY(-6px); }
+  .glass-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .glass-card p { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .glass-card .price { font-family: 'Space Grotesk'; font-size: 32px; font-weight: 800; margin: 16px 0; }
+  .glass-card .price span { font-size: 14px; font-weight: 400; color: var(--muted); }
+  .glass-card ul { list-style: none; margin-top: 12px; }
+  .glass-card ul li { font-size: 13px; color: rgba(255,255,255,0.7); padding: 4px 0; }
+  .glass-card ul li::before { content: '✓ '; color: var(--green); }
+
+  /* ══════════════════════════════════════════════
+     05 — ANIMATED GRADIENT BORDERS
+     ══════════════════════════════════════════════ */
+  .gradient-border-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .gb-card {
+    position: relative; padding: 2px; border-radius: var(--radius);
+    background: conic-gradient(from var(--angle), var(--accent), var(--accent2), var(--rose), var(--cyan), var(--accent));
+    animation: rotate-border 4s linear infinite;
+  }
+  @keyframes rotate-border { to { --angle: 360deg; } }
+  .gb-card-inner {
+    background: var(--surface); border-radius: calc(var(--radius) - 2px);
+    padding: 32px; height: 100%;
+  }
+  .gb-card-inner h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .gb-card-inner p { font-size: 13px; color: var(--muted); }
+  .gb-shimmer {
+    position: relative; padding: 1px; border-radius: 8px; display: inline-block;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+    background-size: 200% 100%; animation: shimmer-slide 2s linear infinite;
+  }
+  @keyframes shimmer-slide { to { background-position: -200% 0; } }
+  .gb-shimmer-inner {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); padding: 10px 24px; border-radius: 7px;
+    font-size: 14px; font-weight: 500;
+  }
+  .gb-input-wrap {
+    position: relative; padding: 2px; border-radius: 10px;
+    background: var(--border); transition: background 0.3s; margin-top: 16px;
+  }
+  .gb-input-wrap:focus-within {
+    background: conic-gradient(from var(--angle), var(--accent), var(--accent2), var(--rose), var(--accent));
+    animation: rotate-border 3s linear infinite;
+  }
+  .gb-input {
+    width: 100%; background: var(--bg); border: none; border-radius: 8px;
+    padding: 12px 16px; color: var(--text); font-size: 14px; outline: none;
+    font-family: inherit;
+  }
+  .gb-input::placeholder { color: var(--dim); }
+
+  /* ══════════════════════════════════════════════
+     06 — SPATIAL / 3D CSS
+     ══════════════════════════════════════════════ */
+  .spatial-showcase {
+    display: flex; gap: 20px; justify-content: center;
+    perspective: 1200px; padding: 48px 0;
+  }
+  .spatial-card {
+    width: 260px; padding: 36px 28px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+    transform-style: preserve-3d;
+  }
+  .spatial-card:nth-child(1) { transform: rotateY(12deg) translateZ(-30px); }
+  .spatial-card:nth-child(2) { transform: translateZ(40px) scale(1.06); z-index: 2; border-color: var(--accent); }
+  .spatial-card:nth-child(3) { transform: rotateY(-12deg) translateZ(-30px); }
+  .spatial-card:hover { transform: rotateY(0) translateZ(20px) scale(1.02); }
+  .spatial-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .spatial-card .price { font-family: 'Space Grotesk'; font-size: 28px; font-weight: 700; color: var(--accent); }
+  .spatial-card ul { list-style: none; margin-top: 16px; }
+  .spatial-card ul li { font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid rgba(63,63,70,0.3); }
+  .holo-card {
+    width: 300px; height: 200px; margin: 24px auto 0;
+    border-radius: var(--radius); position: relative; overflow: hidden;
+    background: conic-gradient(from var(--angle), #818cf8, #c084fc, #fb7185, #fbbf24, #4ade80, #22d3ee, #818cf8);
+    animation: rotate-border 6s linear infinite; padding: 2px;
+  }
+  .holo-card-inner {
+    width: 100%; height: 100%; background: var(--surface);
+    border-radius: calc(var(--radius) - 2px);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono'; font-size: 14px; color: var(--muted);
+  }
+
+  /* ══════════════════════════════════════════════
+     07 — NEOBRUTALISM
+     ══════════════════════════════════════════════ */
+  .brut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .brut-card {
+    background: #fff; color: #000; padding: 28px;
+    border: 3px solid #000; border-radius: 4px;
+    position: relative; transition: transform 0.15s;
+    box-shadow: 6px 6px 0 #000;
+  }
+  .brut-card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 #000; }
+  .brut-card h3 { font-family: 'Space Grotesk'; font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+  .brut-card p { font-size: 13px; color: #555; }
+  .brut-accent {
+    display: inline-block; padding: 4px 12px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase; margin-top: 14px; border-radius: 2px;
+  }
+  .brut-card:nth-child(2) { background: var(--amber); }
+  .brut-card:nth-child(2) .brut-accent { background: #000; color: #fff; }
+  .brut-card:nth-child(3) { background: var(--rose); color: #fff; }
+  .brut-card:nth-child(3) .brut-accent { background: #fff; color: #000; }
+  .brut-yellow { background: var(--amber); }
+  .brut-pink { background: var(--rose); color: #fff; }
+  .brut-blue { background: var(--sky); }
+  .brut-btn {
+    display: inline-block; padding: 12px 28px; margin-top: 20px;
+    background: var(--amber); color: #000; font-weight: 800; font-size: 14px;
+    border: 3px solid #000; border-radius: 0; cursor: pointer;
+    box-shadow: 4px 4px 0 #000; transition: all 0.1s;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .brut-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000; }
+
+  /* ══════════════════════════════════════════════
+     08 — TERMINAL / DATA DENSITY
+     ══════════════════════════════════════════════ */
+  .data-dense {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+    background: var(--border); border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .data-cell { background: var(--bg); padding: 20px; }
+  .data-cell .cell-label {
+    font-family: 'JetBrains Mono'; font-size: 10px; color: var(--dim);
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
+  }
+  .data-cell .cell-value { font-family: 'JetBrains Mono'; font-size: 26px; font-weight: 600; }
+  .data-cell .cell-change { font-family: 'JetBrains Mono'; font-size: 11px; margin-top: 4px; }
+  .up { color: var(--green); }
+  .down { color: var(--rose); }
+  .data-cell .sparkline {
+    margin-top: 10px; height: 28px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 10%, var(--accent) 15%, transparent 20%, var(--accent) 25%, var(--accent) 40%, transparent 45%, var(--accent) 50%, var(--accent) 70%, transparent 72%, var(--accent) 75%, var(--accent) 90%, transparent 95%);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 32'%3E%3Cpath d='M0 28 L20 20 L40 24 L60 12 L80 16 L100 8 L120 14 L140 6 L160 10 L180 4 L200 8' fill='none' stroke='white' stroke-width='2.5'/%3E%3C/svg%3E");
+    mask-size: 100% 100%; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 32'%3E%3Cpath d='M0 28 L20 20 L40 24 L60 12 L80 16 L100 8 L120 14 L140 6 L160 10 L180 4 L200 8' fill='none' stroke='white' stroke-width='2.5'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 100%; opacity: 0.5;
+  }
+  .terminal-block {
+    margin-top: 20px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px; font-family: 'JetBrains Mono'; font-size: 13px;
+    line-height: 1.8;
+  }
+  .terminal-block .prompt { color: var(--green); }
+  .terminal-block .cmd { color: var(--text); }
+  .terminal-block .out { color: var(--muted); }
+  .terminal-block .cursor {
+    display: inline-block; width: 8px; height: 16px; background: var(--text);
+    vertical-align: text-bottom; animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+  /* ══════════════════════════════════════════════
+     09 — MICRO-INTERACTIONS
+     ══════════════════════════════════════════════ */
+  .micro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .micro-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .micro-card .micro-label { font-size: 12px; color: var(--muted); font-weight: 500; text-align: center; }
+  /* Toggle */
+  .toggle { position: relative; width: 52px; height: 28px; cursor: pointer; }
+  .toggle input { display: none; }
+  .toggle-track {
+    width: 100%; height: 100%; background: var(--surface2); border-radius: 14px;
+    border: 1px solid var(--border); transition: background 0.3s;
+  }
+  .toggle-thumb {
+    position: absolute; top: 4px; left: 4px; width: 20px; height: 20px;
+    background: var(--muted); border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.68,-0.55,0.27,1.55), background 0.3s;
+  }
+  .toggle input:checked ~ .toggle-track { background: var(--accent); border-color: var(--accent); }
+  .toggle input:checked ~ .toggle-thumb { transform: translateX(24px); background: #fff; }
+  /* Ripple button */
+  .ripple-btn {
+    position: relative; overflow: hidden;
+    padding: 10px 24px; background: var(--accent); color: #fff;
+    border: none; border-radius: 8px; font-weight: 600; font-size: 14px;
+    cursor: pointer; font-family: inherit; transition: transform 0.1s;
+  }
+  .ripple-btn:active { transform: scale(0.97); }
+  .ripple-btn::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 0; height: 0; background: rgba(255,255,255,0.3);
+    border-radius: 50%; transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s, opacity 0.4s;
+    opacity: 0;
+  }
+  .ripple-btn:active::after { width: 200px; height: 200px; opacity: 1; transition: 0s; }
+  /* Flip card */
+  .flip-card { width: 120px; height: 80px; perspective: 600px; cursor: pointer; }
+  .flip-inner {
+    width: 100%; height: 100%; position: relative;
+    transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+    transform-style: preserve-3d;
+  }
+  .flip-card:hover .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute; inset: 0; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    backface-visibility: hidden; font-size: 13px; font-weight: 600;
+  }
+  .flip-front { background: var(--surface2); border: 1px solid var(--border); }
+  .flip-back { background: var(--accent); color: #fff; transform: rotateY(180deg); }
+  /* Checkbox */
+  .custom-check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .check-box {
+    width: 22px; height: 22px; border: 2px solid var(--border);
+    border-radius: 6px; position: relative; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .check-box::after {
+    content: '✓'; font-size: 14px; color: #fff; opacity: 0;
+    transform: scale(0.5); transition: all 0.2s cubic-bezier(0.68,-0.55,0.27,1.55);
+  }
+  .custom-check:hover .check-box { border-color: var(--accent); }
+  .custom-check input { display: none; }
+  .custom-check input:checked ~ .check-box {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .custom-check input:checked ~ .check-box::after { opacity: 1; transform: scale(1); }
+
+  /* ══════════════════════════════════════════════
+     10 — CSS ANCHOR POSITIONING & POPOVERS
+     ══════════════════════════════════════════════ */
+  .anchor-demo { display: flex; flex-direction: column; gap: 40px; }
+  .anchor-row { display: flex; gap: 40px; align-items: flex-start; }
+  .anchor-example {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 40px; flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    min-height: 200px; position: relative;
+  }
+  .anchor-example h4 { font-size: 14px; font-weight: 600; }
+  .anchor-btn {
+    anchor-name: --trigger; padding: 10px 20px;
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    font-weight: 600; font-size: 14px; cursor: pointer; font-family: inherit;
+    position: relative;
+  }
+  .anchor-tooltip {
+    position: absolute; position-anchor: --trigger;
+    top: anchor(bottom); left: anchor(center);
+    transform: translateX(-50%); margin-top: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 12px; color: var(--muted); white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .anchor-btn:hover + .anchor-tooltip { opacity: 1; }
+  /* Popover styling */
+  .popover-btn {
+    padding: 10px 20px; background: var(--accent2);
+    color: #fff; border: none; border-radius: 8px;
+    font-weight: 600; font-size: 14px; cursor: pointer; font-family: inherit;
+  }
+  [popover] {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; color: var(--text);
+    max-width: 320px;
+  }
+  [popover]::backdrop { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+
+  /* ══════════════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════════════ */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    scroll-snap-align: start; position: relative;
+  }
+  .hero-label {
+    font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 500;
+    color: var(--accent); letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk'; font-size: clamp(40px, 8vw, 88px);
+    font-weight: 900; letter-spacing: -3px; line-height: 1;
+    margin-bottom: 20px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--rose));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 560px; line-height: 1.7; }
+  .hero-orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    section { padding: 80px 20px 60px; }
+    .aurora-grid, .brut-grid, .gradient-border-grid { grid-template-columns: 1fr; }
+    .aurora-full { grid-column: span 1; }
+    .bento-grid { grid-template-columns: 1fr 1fr; }
+    .bento-card.hero { grid-column: span 2; }
+    .data-dense { grid-template-columns: 1fr; }
+    .spatial-showcase { flex-direction: column; align-items: center; perspective: none; }
+    .spatial-card, .spatial-card:nth-child(1), .spatial-card:nth-child(2), .spatial-card:nth-child(3) { transform: none; }
+    .glass-scene { flex-direction: column; }
+    .micro-grid { grid-template-columns: 1fr 1fr; }
+    .anchor-row { flex-direction: column; }
+    nav .pills { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress"><div class="scroll-progress-bar"></div></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">RASPUTIN<span>.</span>DESIGN</div>
+  <div class="pills">
+    <a href="#hero" class="pill">Intro</a>
+    <a href="#t1" class="pill">Aurora</a>
+    <a href="#t2" class="pill">Bento</a>
+    <a href="#t3" class="pill">Scroll</a>
+    <a href="#t4" class="pill">Glass</a>
+    <a href="#t5" class="pill">Borders</a>
+    <a href="#t6" class="pill">Spatial</a>
+    <a href="#t7" class="pill">Brutalism</a>
+    <a href="#t8" class="pill">Terminal</a>
+    <a href="#t9" class="pill">Micro</a>
+    <a href="#t10" class="pill">Anchor</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-orb" style="width: 500px; height: 500px; background: var(--accent); top: 10%; left: -10%;"></div>
+  <div class="hero-orb" style="width: 400px; height: 400px; background: var(--accent2); bottom: 10%; right: -5%;"></div>
+  <div class="hero-orb" style="width: 300px; height: 300px; background: var(--rose); top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+  <div class="hero-label">February 2026 Edition</div>
+  <h1>The Top 10<br><span>Design Trends</span></h1>
+  <p>Every technique you need to build world-class interfaces in 2026. Live demos, real CSS, zero JavaScript.</p>
+</section>
+
+<!-- 01 Aurora -->
+<section id="t1">
+  <div class="section-label">01 — Trend</div>
+  <h2 class="section-title">Aurora Mesh Gradients</h2>
+  <p class="section-desc">Multi-point radial gradients that create organic, atmospheric color fields. The successor to flat linear gradients — they breathe, shift, and feel alive.</p>
+  <div class="aurora-grid">
+    <div class="aurora-card aurora-indigo">
+      <h3>Indigo Dusk</h3>
+      <p>3-layer radial: periwinkle, lavender, rose</p>
+    </div>
+    <div class="aurora-card aurora-emerald">
+      <h3>Emerald Dawn</h3>
+      <p>3-layer radial: green, sky blue, amber</p>
+    </div>
+    <div class="aurora-card aurora-solar">
+      <h3>Solar Flare</h3>
+      <p>3-layer radial: amber, rose, indigo</p>
+    </div>
+    <div class="aurora-card aurora-indigo" style="background: radial-gradient(ellipse 50% 60% at 80% 20%, rgba(34,211,238,0.5) 0%, transparent 55%), radial-gradient(ellipse 70% 50% at 20% 80%, rgba(129,140,248,0.4) 0%, transparent 55%), radial-gradient(ellipse 40% 70% at 50% 40%, rgba(192,132,252,0.2) 0%, transparent 55%), var(--surface);">
+      <h3>Midnight Frost</h3>
+      <p>3-layer radial: cyan, indigo, lavender</p>
+    </div>
+    <div class="aurora-card aurora-full">
+      <h3>Living Aurora — animated with hue-rotate</h3>
+      <p>4-layer gradient, shifts 30° continuously. Zero JavaScript.</p>
+    </div>
+  </div>
+  <div class="code-hint">background: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(129,140,248,0.5) 0%, transparent 60%), ...;
+animation: aurora-shift 8s ease-in-out infinite alternate;  /* filter: hue-rotate(0→30deg) */</div>
+</section>
+
+<!-- 02 Bento -->
+<section id="t2">
+  <div class="section-label">02 — Trend</div>
+  <h2 class="section-title">Bento Grids</h2>
+  <p class="section-desc">Modular card layouts inspired by Japanese bento boxes. Variable spans encode content hierarchy. Apple popularized it, the world refined it.</p>
+  <div class="bento-grid">
+    <div class="bento-card hero">
+      <div class="label">Total Revenue</div>
+      <div class="value" style="color: var(--green);">$2.4M</div>
+      <div class="desc">12% growth month over month. Q4 projection on track.</div>
+      <div class="orb"></div>
+    </div>
+    <div class="bento-card">
+      <div class="label">Active Users</div>
+      <div class="value" style="color: var(--sky);">18.2K</div>
+      <div class="orb" style="background: radial-gradient(circle, var(--sky) 0%, transparent 70%);"></div>
+    </div>
+    <div class="bento-card">
+      <div class="label">Uptime</div>
+      <div class="value" style="color: var(--green);">99.97%</div>
+      <div class="orb" style="background: radial-gradient(circle, var(--green) 0%, transparent 70%);"></div>
+    </div>
+    <div class="bento-card span-2">
+      <div class="label">Infrastructure</div>
+      <div class="desc" style="margin-top: 8px;">RTX PRO 6000 96GB + RTX 5090 32GB — 251GB RAM — Arch Linux</div>
+      <div class="orb" style="background: radial-gradient(circle, var(--accent2) 0%, transparent 70%);"></div>
+    </div>
+    <div class="bento-card">
+      <div class="label">Latency</div>
+      <div class="value" style="color: var(--amber);">14ms</div>
+    </div>
+    <div class="bento-card">
+      <div class="label">Models Loaded</div>
+      <div class="value" style="color: var(--accent);">7</div>
+    </div>
+  </div>
+  <div class="code-hint">display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px;
+.hero { grid-column: span 2; grid-row: span 2; }</div>
+</section>
+
+<!-- 03 Scroll -->
+<section id="t3">
+  <div class="section-label">03 — Trend</div>
+  <h2 class="section-title">Scroll-Driven Animations</h2>
+  <p class="section-desc">Native CSS animations tied to scroll position — no JavaScript, no IntersectionObserver, no libraries. Part of Interop 2026, now shipping in all major browsers.</p>
+  <div class="scroll-demo">
+    <div class="reveal-card">
+      <div class="icon-box" style="background: rgba(129,140,248,0.15);">🎯</div>
+      <div><h3>animation-timeline: view()</h3><p>Elements animate as they enter the viewport. This card faded + slid in as you scrolled.</p></div>
+    </div>
+    <div class="reveal-card">
+      <div class="icon-box" style="background: rgba(74,222,128,0.15);">📊</div>
+      <div><h3>animation-timeline: scroll()</h3><p>The progress bar at the top of this page fills based on scroll position. Pure CSS.</p></div>
+    </div>
+    <div class="reveal-card">
+      <div class="icon-box" style="background: rgba(192,132,252,0.15);">🔮</div>
+      <div><h3>animation-range: entry 10% entry 50%</h3><p>Controls exactly when the animation starts and ends relative to the viewport crossing.</p></div>
+    </div>
+    <div class="reveal-card">
+      <div class="icon-box" style="background: rgba(251,191,36,0.15);">⚡</div>
+      <div><h3>filter: blur() in keyframes</h3><p>Elements can start blurry and sharpen as they reveal — zero performance cost on GPU-accelerated properties.</p></div>
+    </div>
+  </div>
+  <div class="code-hint">animation: reveal-in linear both;
+animation-timeline: view();
+animation-range: entry 10% entry 50%;  /* start 10% into viewport, complete at 50% */</div>
+</section>
+
+<!-- 04 Glass -->
+<section id="t4">
+  <div class="section-label">04 — Trend</div>
+  <h2 class="section-title">Glassmorphism 2.0</h2>
+  <p class="section-desc">Evolved beyond frosted blur. The 2026 version layers glass panels at different depths with ambient color behind them, creating actual dimensional hierarchy.</p>
+  <div class="glass-scene">
+    <div class="glass-card">
+      <h3>Starter</h3>
+      <div class="price">$19<span>/mo</span></div>
+      <ul><li>5 projects</li><li>10GB storage</li><li>Email support</li></ul>
+    </div>
+    <div class="glass-card">
+      <h3>Pro ✦</h3>
+      <div class="price" style="color: var(--accent);">$49<span>/mo</span></div>
+      <ul><li>Unlimited projects</li><li>100GB storage</li><li>Priority support</li><li>API access</li></ul>
+    </div>
+    <div class="glass-card">
+      <h3>Enterprise</h3>
+      <div class="price">$149<span>/mo</span></div>
+      <ul><li>Everything in Pro</li><li>Custom domain</li><li>SLA guarantee</li><li>Dedicated agent</li></ul>
+    </div>
+  </div>
+  <div class="code-hint">backdrop-filter: blur(24px) saturate(1.5);
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(255,255,255,0.08);  /* visible edge without being heavy */</div>
+</section>
+
+<!-- 05 Gradient Borders -->
+<section id="t5">
+  <div class="section-label">05 — Trend</div>
+  <h2 class="section-title">Animated Gradient Borders</h2>
+  <p class="section-desc">Using @property to animate conic-gradient angles — creating hypnotic spinning borders, shimmer effects, and focus states that feel alive.</p>
+  <div class="gradient-border-grid">
+    <div class="gb-card">
+      <div class="gb-card-inner">
+        <h3>Spinning Conic</h3>
+        <p>@property --angle animates from 0° to 360° with conic-gradient on a 2px padding wrapper.</p>
+      </div>
+    </div>
+    <div class="gb-card" style="animation-duration: 2s;">
+      <div class="gb-card-inner">
+        <h3>Fast Rotation</h3>
+        <p>Same technique, 2s cycle. The speed creates different moods — urgent, energetic, alive.</p>
+      </div>
+    </div>
+    <div class="gb-card" style="animation-duration: 8s; animation-direction: reverse;">
+      <div class="gb-card-inner">
+        <h3>Slow Reverse</h3>
+        <p>8s reverse cycle. Meditative, premium, considered. Speed = personality.</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+    <div class="gb-shimmer">
+      <div class="gb-shimmer-inner">✨ Shimmer Button</div>
+    </div>
+    <div style="flex: 1; min-width: 280px;">
+      <div class="gb-input-wrap">
+        <input class="gb-input" placeholder="Click here — the border comes alive on focus" />
+      </div>
+    </div>
+  </div>
+  <div class="code-hint">@property --angle { syntax: '&lt;angle&gt;'; initial-value: 0deg; inherits: false; }
+background: conic-gradient(from var(--angle), #818cf8, #c084fc, #fb7185, #22d3ee, #818cf8);
+animation: rotate-border 4s linear infinite;  /* --angle → 360deg */</div>
+</section>
+
+<!-- 06 Spatial -->
+<section id="t6">
+  <div class="section-label">06 — Trend</div>
+  <h2 class="section-title">Spatial / 3D CSS</h2>
+  <p class="section-desc">True depth without WebGL. Perspective, rotateY, translateZ — CSS creates convincing 3D hierarchy. Combined with holographic conic gradients for iridescence.</p>
+  <div class="spatial-showcase">
+    <div class="spatial-card">
+      <h3>Basic</h3>
+      <div class="price">$9</div>
+      <ul><li>1 workspace</li><li>5 queries/day</li><li>Community support</li></ul>
+    </div>
+    <div class="spatial-card">
+      <h3>Professional</h3>
+      <div class="price">$29</div>
+      <ul><li>5 workspaces</li><li>Unlimited queries</li><li>Priority support</li><li>API access</li></ul>
+    </div>
+    <div class="spatial-card">
+      <h3>Team</h3>
+      <div class="price">$79</div>
+      <ul><li>Unlimited everything</li><li>Custom models</li><li>SSO + RBAC</li></ul>
+    </div>
+  </div>
+  <div class="holo-card">
+    <div class="holo-card-inner">Holographic CSS — conic-gradient + @property</div>
+  </div>
+  <div class="code-hint">perspective: 1200px;
+.card:nth-child(1) { transform: rotateY(12deg) translateZ(-30px); }
+.card:nth-child(2) { transform: translateZ(40px) scale(1.06); }  /* hero card pops forward */</div>
+</section>
+
+<!-- 07 Brutalism -->
+<section id="t7">
+  <div class="section-label">07 — Trend</div>
+  <h2 class="section-title">Neobrutalism</h2>
+  <p class="section-desc">Anti-design as design. Thick borders, hard offset shadows, unapologetic color blocks. Started with Gumroad, now it's a legitimate design language for brands that refuse to blend in.</p>
+  <div class="brut-grid">
+    <div class="brut-card">
+      <h3>BOLD MOVES</h3>
+      <p>3px borders, hard shadows, no subtle gradients. What you see is what you get.</p>
+      <div class="brut-accent brut-yellow">Featured</div>
+    </div>
+    <div class="brut-card">
+      <h3>HIGH CONTRAST</h3>
+      <p>Color blocks that demand attention. Yellow on black isn't subtle — that's the point.</p>
+      <div class="brut-accent">New</div>
+    </div>
+    <div class="brut-card">
+      <h3>NO APOLOGIES</h3>
+      <p>Rose on white, thick type, zero blur effects. Every pixel earns its place.</p>
+      <div class="brut-accent">Hot</div>
+    </div>
+  </div>
+  <div style="margin-top: 20px;">
+    <button class="brut-btn">GET STARTED →</button>
+  </div>
+  <div class="code-hint">border: 3px solid #000; box-shadow: 6px 6px 0 #000;
+:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 #000; }</div>
+</section>
+
+<!-- 08 Terminal -->
+<section id="t8">
+  <div class="section-label">08 — Trend</div>
+  <h2 class="section-title">Terminal / Data Density</h2>
+  <p class="section-desc">The AI-native aesthetic. Monospace type, 1px cell borders, sparklines, color-coded values. Information-dense interfaces for people who think in data, not decorations.</p>
+  <div class="data-dense">
+    <div class="data-cell">
+      <div class="cell-label">Inference / sec</div>
+      <div class="cell-value up">847</div>
+      <div class="cell-change up">↑ 23% from avg</div>
+      <div class="sparkline"></div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">Tokens today</div>
+      <div class="cell-value" style="color: var(--sky);">2.4M</div>
+      <div class="cell-change up">↑ 12% vs yesterday</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">Error rate</div>
+      <div class="cell-value down">0.03%</div>
+      <div class="cell-change up">↓ 0.01% (good)</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">GPU utilization</div>
+      <div class="cell-value" style="color: var(--amber);">87%</div>
+      <div class="cell-change" style="color: var(--amber);">→ stable</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">VRAM used</div>
+      <div class="cell-value" style="color: var(--accent);">94GB</div>
+      <div class="cell-change" style="color: var(--muted);">/ 128GB total</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">Cost today</div>
+      <div class="cell-value up">$0.00</div>
+      <div class="cell-change up">Zen free tier ✓</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">Memory store</div>
+      <div class="cell-value" style="color: var(--accent2);">133K</div>
+      <div class="cell-change" style="color: var(--muted);">Qdrant vectors</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">Graph nodes</div>
+      <div class="cell-value" style="color: var(--cyan);">28.4K</div>
+      <div class="cell-change up">↑ migrating</div>
+    </div>
+    <div class="data-cell">
+      <div class="cell-label">Uptime</div>
+      <div class="cell-value up">7d 4h</div>
+      <div class="cell-change" style="color: var(--muted);">since last reboot</div>
+    </div>
+  </div>
+  <div class="terminal-block">
+    <span class="prompt">rasputin ~</span> <span class="cmd">ollama ps</span><br>
+    <span class="out">qwen2.5:72b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;47GB&nbsp;&nbsp;GPU0&nbsp;&nbsp;100%&nbsp;&nbsp;running</span><br>
+    <span class="out">qwen3-coder:30b&nbsp;&nbsp;18GB&nbsp;&nbsp;GPU1&nbsp;&nbsp;100%&nbsp;&nbsp;running</span><br>
+    <span class="prompt">rasputin ~</span> <span class="cursor"></span>
+  </div>
+  <div class="code-hint">display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border);
+/* 1px gap + border bg = cell dividers with no actual border property */</div>
+</section>
+
+<!-- 09 Micro-interactions -->
+<section id="t9">
+  <div class="section-label">09 — Trend</div>
+  <h2 class="section-title">Micro-interactions</h2>
+  <p class="section-desc">Tiny animations that make interfaces feel alive. Toggle springs, ripple clicks, card flips, checkbox bounces — all pure CSS, all tactile, all zero-dependency.</p>
+  <div class="micro-grid">
+    <div class="micro-card">
+      <label class="toggle">
+        <input type="checkbox">
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+      <div class="micro-label">Spring Toggle<br><span style="font-size: 11px; color: var(--dim);">cubic-bezier(0.68, -0.55, 0.27, 1.55)</span></div>
+    </div>
+    <div class="micro-card">
+      <button class="ripple-btn">Click Me</button>
+      <div class="micro-label">Ripple Effect<br><span style="font-size: 11px; color: var(--dim);">::after with width transition</span></div>
+    </div>
+    <div class="micro-card">
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front">Hover me</div>
+          <div class="flip-back">🎉 Back!</div>
+        </div>
+      </div>
+      <div class="micro-label">Card Flip<br><span style="font-size: 11px; color: var(--dim);">rotateY(180deg) + backface</span></div>
+    </div>
+    <div class="micro-card">
+      <label class="custom-check">
+        <input type="checkbox">
+        <div class="check-box"></div>
+        <span style="font-size: 14px;">Agree</span>
+      </label>
+      <div class="micro-label">Bouncy Checkbox<br><span style="font-size: 11px; color: var(--dim);">spring easing on scale</span></div>
+    </div>
+  </div>
+  <div class="code-hint">/* Spring easing — overshoots then settles */
+transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+/* Ripple: ::after scales from 0 to 200px on :active */</div>
+</section>
+
+<!-- 10 Anchor -->
+<section id="t10">
+  <div class="section-label">10 — Trend</div>
+  <h2 class="section-title">CSS Anchor Positioning & Popovers</h2>
+  <p class="section-desc">Position elements relative to other elements — natively. No JavaScript positioning libraries, no getBoundingClientRect(). Part of Interop 2026, shipping in Chrome 144+ and Firefox 147+.</p>
+  <div class="anchor-demo">
+    <div class="anchor-row">
+      <div class="anchor-example">
+        <h4>Anchor Tooltip</h4>
+        <p style="font-size: 13px; color: var(--muted); text-align: center;">Hover the button — tooltip positions itself using CSS anchor()</p>
+        <div style="position: relative;">
+          <button class="anchor-btn">Hover Me</button>
+          <div class="anchor-tooltip">Positioned with anchor(bottom) + anchor(center) 🎯</div>
+        </div>
+      </div>
+      <div class="anchor-example">
+        <h4>Native Popover API</h4>
+        <p style="font-size: 13px; color: var(--muted); text-align: center;">::backdrop + blur. Click to open.</p>
+        <button class="popover-btn" popovertarget="demo-pop">Open Popover</button>
+        <div id="demo-pop" popover>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Native Popover</h3>
+          <p style="font-size: 14px; color: var(--muted);">This uses the Popover API — no JavaScript event listeners, no z-index wars, no portal hacks. The ::backdrop gets blur(4px) styling.</p>
+          <button onclick="document.getElementById('demo-pop').hidePopover()" style="margin-top: 16px; padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-family: inherit;">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="code-hint">/* Anchor Positioning — CSS-only tooltips */
+.trigger { anchor-name: --trigger; }
+.tooltip { position-anchor: --trigger; top: anchor(bottom); left: anchor(center); }
+
+/* Popover — native HTML, styled with CSS */
+[popover]::backdrop { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }</div>
+</section>
+
+<!-- Footer -->
+<footer style="text-align: center; padding: 60px 20px; border-top: 1px solid var(--border); color: var(--dim); font-size: 13px;">
+  <p style="font-family: 'Space Grotesk'; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px;">Built by RASPUTIN</p>
+  <p>10 trends • 30+ live demos • Zero JavaScript* • February 2026</p>
+  <p style="margin-top: 4px; font-size: 11px;">*except one popover close button, because semantics matter</p>
+</footer>
+
+</body>
+</html>

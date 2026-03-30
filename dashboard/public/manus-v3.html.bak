@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RASPUTIN NEXUS // Manus Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   RASPUTIN NEXUS — Manus-Style Agent Workspace
+   Watch the agent think, code, browse, and execute in real-time
+   ═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #000000;
+  --surface: #0a0a0f;
+  --panel: #0d0d14;
+  --border: #1a1a2e;
+  --border-active: #2a2a4e;
+  --yellow: #FFE261;
+  --yellow-dim: rgba(255,226,97,0.15);
+  --yellow-glow: rgba(255,226,97,0.08);
+  --cyan: #00F0FF;
+  --cyan-dim: rgba(0,240,255,0.15);
+  --cyan-glow: rgba(0,240,255,0.08);
+  --green: #05FFA1;
+  --green-dim: rgba(5,255,161,0.15);
+  --red: #FF3333;
+  --red-dim: rgba(255,51,51,0.15);
+  --purple: #BF5AF2;
+  --purple-dim: rgba(191,90,242,0.15);
+  --text-1: #E8E8F0;
+  --text-2: #8888AA;
+  --text-3: #555570;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-display: 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text-1);
+  overflow: hidden;
+  height: 100dvh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-active); }
+
+/* ═══ LAYOUT ═══ */
+.app {
+  display: grid;
+  grid-template-rows: 48px 1fr;
+  grid-template-columns: 280px 1fr 280px;
+  height: 100dvh;
+  gap: 1px;
+  background: var(--border);
+}
+
+.header {
+  grid-column: 1 / -1;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--yellow);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-dot.disconnected { background: var(--red); box-shadow: 0 0 8px var(--red); }
+.status-dot.connecting { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.header-center {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+
+/* ═══ STEPS TIMELINE (Left) ═══ */
+.steps-panel {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.steps-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--cyan);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step-count {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+}
+
+.steps-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.step {
+  display: flex;
+  gap: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 2px solid transparent;
+  position: relative;
+}
+
+.step:hover { background: var(--yellow-glow); }
+.step.active { background: var(--yellow-glow); border-left-color: var(--yellow); }
+.step.error { border-left-color: var(--red); }
+
+.step-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.step-icon.exec { background: var(--yellow-dim); border-color: rgba(255,226,97,0.25); }
+.step-icon.file { background: var(--cyan-dim); border-color: rgba(0,240,255,0.25); }
+.step-icon.web { background: var(--purple-dim); border-color: rgba(191,90,242,0.25); }
+.step-icon.think { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+.step-icon.output { background: var(--green-dim); border-color: rgba(5,255,161,0.25); }
+.step-icon.error { background: var(--red-dim); border-color: rgba(255,51,51,0.25); }
+
+.step-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-desc {
+  font-size: 0.8rem;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.step-time {
+  font-size: 0.65rem;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+
+.step-status {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  align-self: center;
+}
+
+.step-status .spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--yellow);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ MAIN VIEWPORT (Center) ═══ */
+.viewport {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  padding: 0 8px;
+}
+
+.tab {
+  padding: 10px 16px;
+  font-size: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.tab:hover { color: var(--text-2); }
+.tab.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+.tab-badge {
+  font-size: 0.6rem;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: var(--yellow-dim);
+  color: var(--yellow);
+  font-family: var(--font-mono);
+}
+
+.tab-panels {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.tab-panel {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 0;
+  display: none;
+}
+
+.tab-panel.active { display: block; }
+
+/* Terminal Tab */
+.terminal {
+  background: #0a0a0a;
+  min-height: 100%;
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.term-block {
+  margin-bottom: 16px;
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+}
+
+.term-block.running { border-left-color: var(--yellow); }
+.term-block.done { border-left-color: var(--green); }
+.term-block.error { border-left-color: var(--red); }
+
+.term-cmd {
+  color: var(--green);
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.term-cmd::before {
+  content: '$ ';
+  color: var(--text-3);
+}
+
+.term-output {
+  color: var(--text-2);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.term-error { color: var(--red); }
+.term-ts {
+  font-size: 0.65rem;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+
+/* Code Tab */
+.code-viewer {
+  min-height: 100%;
+  padding: 0;
+}
+
+.code-block {
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--border);
+}
+
+.code-header {
+  padding: 8px 16px;
+  background: var(--panel);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.code-action {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.code-action.read { background: var(--cyan-dim); color: var(--cyan); }
+.code-action.write { background: var(--green-dim); color: var(--green); }
+.code-action.edit { background: var(--yellow-dim); color: var(--yellow); }
+
+.code-content {
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  word-break: break-all;
+  background: #050508;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.code-content .line-add { color: var(--green); }
+.code-content .line-del { color: var(--red); text-decoration: line-through; opacity: 0.7; }
+
+/* Browser Tab */
+.browser-viewer {
+  min-height: 100%;
+  padding: 16px;
+}
+
+.browser-block {
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.browser-bar {
+  padding: 8px 12px;
+  background: var(--panel);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--purple);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.browser-content {
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-2);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.browser-content img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+/* Output Tab */
+.output-viewer {
+  min-height: 100%;
+  padding: 16px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.output-block {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.output-block.user {
+  background: var(--cyan-dim);
+  border-left: 3px solid var(--cyan);
+}
+
+.output-block.assistant {
+  background: transparent;
+}
+
+.output-block.thinking {
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid var(--text-3);
+  color: var(--text-3);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.output-user-prefix {
+  font-weight: 600;
+  color: var(--cyan);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.output-streaming {
+  position: relative;
+}
+
+.output-streaming::after {
+  content: '▊';
+  animation: blink 1s step-end infinite;
+  color: var(--yellow);
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ═══ DETAILS PANEL (Right) ═══ */
+.details-panel {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.details-panel.collapsed { display: none; }
+
+.details-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--cyan);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.details-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+}
+
+.detail-section {
+  margin-bottom: 16px;
+}
+
+.detail-section-title {
+  font-size: 0.7rem;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+/* Metric bars */
+.metric {
+  margin-bottom: 10px;
+}
+
+.metric-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  margin-bottom: 3px;
+}
+
+.metric-name { color: var(--text-2); }
+.metric-value { color: var(--text-1); font-family: var(--font-mono); }
+
+.metric-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.metric-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  background: var(--cyan);
+}
+
+.metric-bar-fill.warn { background: var(--yellow); }
+.metric-bar-fill.danger { background: var(--red); }
+
+/* GPU cards */
+.gpu-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  font-size: 0.7rem;
+}
+
+.gpu-name {
+  color: var(--yellow);
+  font-weight: 600;
+  font-size: 0.65rem;
+  margin-bottom: 4px;
+}
+
+/* Files list */
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--text-2);
+}
+
+.file-item .action {
+  font-size: 0.6rem;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.file-item .action.write { background: var(--green-dim); color: var(--green); }
+.file-item .action.edit { background: var(--yellow-dim); color: var(--yellow); }
+.file-item .action.read { background: var(--cyan-dim); color: var(--cyan); }
+
+/* Connection status */
+.conn-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  padding: 6px 0;
+}
+
+.conn-status .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* Sub-agents */
+.agent-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.75rem;
+}
+
+.agent-badge {
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.agent-badge.running { background: var(--yellow-dim); color: var(--yellow); }
+.agent-badge.done { background: var(--green-dim); color: var(--green); }
+
+/* ═══ EMPTY STATES ═══ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-3);
+  font-size: 0.85rem;
+  gap: 8px;
+}
+
+.empty-state .icon { font-size: 2rem; opacity: 0.3; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 1024px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: 48px auto 1fr auto;
+  }
+  .steps-panel { max-height: 200px; }
+  .details-panel { max-height: 250px; }
+}
+
+/* ═══ ANIMATIONS ═══ */
+.step-enter {
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ═══ SCAN LINE (subtle) ═══ */
+.scan-line {
+  position: fixed;
+  left: 0; right: 0;
+  height: 1px;
+  z-index: 100;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--cyan-glow), var(--yellow-glow), transparent);
+  animation: scanSweep 6s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes scanSweep { 0% { top: -1px; } 100% { top: 100vh; } }
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+<div class="app">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="logo">Rasputin Nexus</span>
+      <span style="color:var(--text-3);font-size:0.75rem;font-family:var(--font-mono)" id="sessionInfo">—</span>
+    </div>
+    <div class="header-center" id="currentAction">Waiting for agent activity...</div>
+    <div class="header-right">
+      <span id="modelInfo">—</span>
+      <span id="clockDisplay"></span>
+    </div>
+  </header>
+
+  <!-- STEPS TIMELINE -->
+  <aside class="steps-panel">
+    <div class="steps-header">
+      <span>⚡ Steps</span>
+      <span class="step-count" id="stepCount">0</span>
+    </div>
+    <div class="steps-list" id="stepsList"></div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="viewport">
+    <div class="tabs">
+      <div class="tab active" data-tab="terminal" onclick="switchTab('terminal')">
+        🖥️ Terminal <span class="tab-badge" id="termBadge" style="display:none">0</span>
+      </div>
+      <div class="tab" data-tab="code" onclick="switchTab('code')">
+        📄 Code <span class="tab-badge" id="codeBadge" style="display:none">0</span>
+      </div>
+      <div class="tab" data-tab="browser" onclick="switchTab('browser')">
+        🌐 Browser <span class="tab-badge" id="browserBadge" style="display:none">0</span>
+      </div>
+      <div class="tab" data-tab="output" onclick="switchTab('output')">
+        💬 Output <span class="tab-badge" id="outputBadge" style="display:none">0</span>
+      </div>
+    </div>
+    <div class="tab-panels">
+      <div class="tab-panel active" id="panel-terminal">
+        <div class="terminal" id="terminalContent">
+          <div class="empty-state"><div class="icon">🖥️</div>Shell output will appear here</div>
+        </div>
+      </div>
+      <div class="tab-panel" id="panel-code">
+        <div class="code-viewer" id="codeContent">
+          <div class="empty-state"><div class="icon">📄</div>File operations will appear here</div>
+        </div>
+      </div>
+      <div class="tab-panel" id="panel-browser">
+        <div class="browser-viewer" id="browserContent">
+          <div class="empty-state"><div class="icon">🌐</div>Web activity will appear here</div>
+        </div>
+      </div>
+      <div class="tab-panel" id="panel-output">
+        <div class="output-viewer" id="outputContent">
+          <div class="empty-state"><div class="icon">💬</div>Agent output will appear here</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- DETAILS PANEL -->
+  <aside class="details-panel" id="detailsPanel">
+    <div class="details-header">📊 Details</div>
+    <div class="details-body">
+      <!-- Connection -->
+      <div class="detail-section">
+        <div class="detail-section-title">Connection</div>
+        <div class="conn-status">
+          <div class="dot" id="connDot" style="background:var(--yellow)"></div>
+          <span id="connText" style="color:var(--text-2)">Connecting...</span>
+        </div>
+      </div>
+
+      <!-- System Metrics -->
+      <div class="detail-section">
+        <div class="detail-section-title">System</div>
+        <div class="metric">
+          <div class="metric-label"><span class="metric-name">CPU</span><span class="metric-value" id="cpuVal">—</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill" id="cpuBar" style="width:0"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label"><span class="metric-name">RAM</span><span class="metric-value" id="ramVal">—</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill" id="ramBar" style="width:0"></div></div>
+        </div>
+      </div>
+
+      <!-- GPUs -->
+      <div class="detail-section">
+        <div class="detail-section-title">GPUs</div>
+        <div id="gpuList"><span style="color:var(--text-3);font-size:0.7rem">Loading...</span></div>
+      </div>
+
+      <!-- Files Modified -->
+      <div class="detail-section">
+        <div class="detail-section-title">Files Modified</div>
+        <div id="filesList"><span style="color:var(--text-3);font-size:0.7rem">None yet</span></div>
+      </div>
+
+      <!-- Sub-Agents -->
+      <div class="detail-section">
+        <div class="detail-section-title">Sub-Agents</div>
+        <div id="agentsList"><span style="color:var(--text-3);font-size:0.7rem">None active</span></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   RASPUTIN NEXUS — Manus Interface JavaScript
+   ═══════════════════════════════════════════════════════════ */
+
+// ─── Config ────────────────────────────────────────────────
+const WS_URL = location.protocol === 'https:' ? `wss://${location.host}` : `ws://${location.host}`;
+const _urlToken = new URLSearchParams(location.search).get('token');
+if (_urlToken) localStorage.setItem('nexus_token', _urlToken);
+const SECRET = localStorage.getItem('nexus_token') || '';
+
+// ─── State ─────────────────────────────────────────────────
+const state = {
+  steps: [],           // { id, tool, desc, icon, iconClass, tab, status, ts, content }
+  activeTab: 'terminal',
+  connected: false,
+  ws: null,
+  streaming: false,
+  streamingText: '',
+  toolMap: new Map(),  // toolCallId → step index
+  termCount: 0,
+  codeCount: 0,
+  browserCount: 0,
+  outputCount: 0,
+  files: [],
+  agents: [],
+};
+
+// ─── Helpers ───────────────────────────────────────────────
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function timeStr(ts) {
+  const d = new Date(ts || Date.now());
+  return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function shortPath(p) {
+  if (!p) return '?';
+  const parts = p.split('/');
+  return parts.length > 3 ? '.../' + parts.slice(-2).join('/') : p;
+}
+
+function ansiToHtml(text) {
+  // Simple ANSI → HTML (handles common codes)
+  return esc(text)
+    .replace(/\x1b\[0m/g, '</span>')
+    .replace(/\x1b\[1m/g, '<span style="font-weight:600">')
+    .replace(/\x1b\[31m/g, '<span style="color:var(--red)">')
+    .replace(/\x1b\[32m/g, '<span style="color:var(--green)">')
+    .replace(/\x1b\[33m/g, '<span style="color:var(--yellow)">')
+    .replace(/\x1b\[34m/g, '<span style="color:#5599ff">')
+    .replace(/\x1b\[35m/g, '<span style="color:var(--purple)">')
+    .replace(/\x1b\[36m/g, '<span style="color:var(--cyan)">')
+    .replace(/\x1b\[90m/g, '<span style="color:var(--text-3)">')
+    .replace(/\x1b\[\d+m/g, '');  // strip remaining
+}
+
+function toolToTab(name) {
+  if (!name) return 'output';
+  if (name === 'exec' || name === 'process') return 'terminal';
+  if (['read', 'write', 'edit'].includes(name)) return 'code';
+  if (['browser', 'web_search', 'web_fetch', 'image'].includes(name)) return 'browser';
+  return 'output';
+}
+
+function toolToIcon(name) {
+  if (!name) return ['💬', 'output'];
+  if (name === 'exec' || name === 'process') return ['🖥️', 'exec'];
+  if (name === 'read') return ['📖', 'file'];
+  if (name === 'write') return ['✏️', 'file'];
+  if (name === 'edit') return ['🔧', 'file'];
+  if (name === 'browser') return ['🌐', 'web'];
+  if (name === 'web_search') return ['🔍', 'web'];
+  if (name === 'web_fetch') return ['📥', 'web'];
+  if (name === 'memory_search' || name === 'memory_get') return ['🧠', 'think'];
+  if (name === 'sessions_spawn') return ['🚀', 'output'];
+  if (name === 'message') return ['📨', 'output'];
+  if (name === 'cron') return ['⏰', 'output'];
+  return ['⚡', 'output'];
+}
+
+// ─── Tab Switching ─────────────────────────────────────────
+function switchTab(tab) {
+  state.activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${tab}`));
+}
+
+function autoSwitchTab(tab) {
+  // Only auto-switch if user hasn't manually selected a different tab recently
+  switchTab(tab);
+  // Scroll the appropriate panel to bottom
+  const panel = document.getElementById(`panel-${tab}`);
+  if (panel) setTimeout(() => panel.scrollTop = panel.scrollHeight, 50);
+}
+
+// ─── Step Management ───────────────────────────────────────
+function addStep(id, tool, desc, iconInfo, tab) {
+  const step = {
+    id: id || `step-${Date.now()}`,
+    tool,
+    desc: desc || tool || '...',
+    icon: iconInfo[0],
+    iconClass: iconInfo[1],
+    tab,
+    status: 'running',  // running | done | error
+    ts: Date.now(),
+  };
+  state.steps.push(step);
+  if (id) state.toolMap.set(id, state.steps.length - 1);
+  renderStep(step, state.steps.length - 1);
+  updateStepCount();
+  return step;
+}
+
+function updateStepStatus(id, status) {
+  const idx = state.toolMap.get(id);
+  if (idx === undefined) return;
+  const step = state.steps[idx];
+  if (!step) return;
+  step.status = status;
+  const el = document.querySelector(`[data-step-idx="${idx}"] .step-status`);
+  if (el) {
+    if (status === 'done') el.innerHTML = '<span style="color:var(--green)">✓</span>';
+    else if (status === 'error') el.innerHTML = '<span style="color:var(--red)">✗</span>';
+  }
+  const stepEl = document.querySelector(`[data-step-idx="${idx}"]`);
+  if (stepEl && status === 'error') stepEl.classList.add('error');
+}
+
+function renderStep(step, idx) {
+  const list = document.getElementById('stepsList');
+  const div = document.createElement('div');
+  div.className = 'step step-enter';
+  div.dataset.stepIdx = idx;
+  div.onclick = () => {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    div.classList.add('active');
+    if (step.tab) switchTab(step.tab);
+  };
+  div.innerHTML = `
+    <div class="step-icon ${step.iconClass}">${step.icon}</div>
+    <div class="step-body">
+      <div class="step-desc" title="${esc(step.desc)}">${esc(step.desc)}</div>
+      <div class="step-time">${timeStr(step.ts)}</div>
+    </div>
+    <div class="step-status">${step.status === 'running' ? '<div class="spinner"></div>' : step.status === 'done' ? '<span style="color:var(--green)">✓</span>' : '<span style="color:var(--red)">✗</span>'}</div>
+  `;
+  list.appendChild(div);
+  list.scrollTop = list.scrollHeight;
+}
+
+function updateStepCount() {
+  document.getElementById('stepCount').textContent = state.steps.length;
+}
+
+// ─── Terminal Panel ────────────────────────────────────────
+function clearTerminalEmpty() {
+  const el = document.getElementById('terminalContent');
+  if (el.querySelector('.empty-state')) el.innerHTML = '';
+}
+
+function addTerminalBlock(cmd, id) {
+  clearTerminalEmpty();
+  const el = document.getElementById('terminalContent');
+  const block = document.createElement('div');
+  block.className = 'term-block running';
+  block.id = `term-${id || Date.now()}`;
+  block.innerHTML = `<div class="term-ts">${timeStr()}</div><div class="term-cmd">${esc(cmd)}</div><div class="term-output"></div>`;
+  el.appendChild(block);
+  state.termCount++;
+  updateBadge('term', state.termCount);
+  const panel = document.getElementById('panel-terminal');
+  panel.scrollTop = panel.scrollHeight;
+  return block;
+}
+
+function appendTerminalOutput(id, text, isError) {
+  const block = document.getElementById(`term-${id}`);
+  if (!block) return;
+  const output = block.querySelector('.term-output');
+  if (!output) return;
+  const span = document.createElement('span');
+  span.className = isError ? 'term-error' : '';
+  span.innerHTML = ansiToHtml(text);
+  output.appendChild(span);
+  const panel = document.getElementById('panel-terminal');
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function finishTerminalBlock(id, isError) {
+  const block = document.getElementById(`term-${id}`);
+  if (!block) return;
+  block.classList.remove('running');
+  block.classList.add(isError ? 'error' : 'done');
+}
+
+// ─── Code Panel ────────────────────────────────────────────
+function clearCodeEmpty() {
+  const el = document.getElementById('codeContent');
+  if (el.querySelector('.empty-state')) el.innerHTML = '';
+}
+
+function addCodeBlock(action, filePath, content) {
+  clearCodeEmpty();
+  const el = document.getElementById('codeContent');
+  const block = document.createElement('div');
+  block.className = 'code-block';
+  const truncated = content && content.length > 5000 ? content.slice(0, 5000) + '\n... (truncated)' : content;
+  block.innerHTML = `
+    <div class="code-header">
+      <span class="code-action ${action}">${action.toUpperCase()}</span>
+      <span>${esc(shortPath(filePath))}</span>
+    </div>
+    ${truncated ? `<pre class="code-content">${esc(truncated)}</pre>` : ''}
+  `;
+  el.appendChild(block);
+  state.codeCount++;
+  updateBadge('code', state.codeCount);
+  const panel = document.getElementById('panel-code');
+  panel.scrollTop = panel.scrollHeight;
+}
+
+// ─── Browser Panel ─────────────────────────────────────────
+function clearBrowserEmpty() {
+  const el = document.getElementById('browserContent');
+  if (el.querySelector('.empty-state')) el.innerHTML = '';
+}
+
+function addBrowserBlock(type, url, content) {
+  clearBrowserEmpty();
+  const el = document.getElementById('browserContent');
+  const block = document.createElement('div');
+  block.className = 'browser-block';
+  const truncated = content && content.length > 3000 ? content.slice(0, 3000) + '\n... (truncated)' : content;
+  block.innerHTML = `
+    <div class="browser-bar">
+      <span>${type === 'search' ? '🔍' : type === 'fetch' ? '📥' : '🌐'}</span>
+      <span>${esc(url || '...')}</span>
+    </div>
+    <div class="browser-content">${truncated ? esc(truncated) : 'Loading...'}</div>
+  `;
+  el.appendChild(block);
+  state.browserCount++;
+  updateBadge('browser', state.browserCount);
+  const panel = document.getElementById('panel-browser');
+  panel.scrollTop = panel.scrollHeight;
+}
+
+// ─── Output Panel ──────────────────────────────────────────
+function clearOutputEmpty() {
+  const el = document.getElementById('outputContent');
+  if (el.querySelector('.empty-state')) el.innerHTML = '';
+}
+
+function addOutputBlock(type, text) {
+  clearOutputEmpty();
+  const el = document.getElementById('outputContent');
+  const block = document.createElement('div');
+  block.className = `output-block ${type}`;
+  
+  if (type === 'user') {
+    block.innerHTML = `<div class="output-user-prefix">User</div><div>${esc(text)}</div>`;
+  } else if (type === 'thinking') {
+    block.innerHTML = esc(text);
+  } else if (type === 'assistant') {
+    block.id = 'streaming-output';
+    block.className = 'output-block assistant output-streaming';
+    block.textContent = text;
+  }
+  
+  el.appendChild(block);
+  state.outputCount++;
+  updateBadge('output', state.outputCount);
+  const panel = document.getElementById('panel-output');
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function appendStreamingText(text) {
+  let el = document.getElementById('streaming-output');
+  if (!el) {
+    clearOutputEmpty();
+    const container = document.getElementById('outputContent');
+    el = document.createElement('div');
+    el.id = 'streaming-output';
+    el.className = 'output-block assistant output-streaming';
+    container.appendChild(el);
+  }
+  el.textContent += text;
+  const panel = document.getElementById('panel-output');
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function finishStreaming() {
+  const el = document.getElementById('streaming-output');
+  if (el) {
+    el.classList.remove('output-streaming');
+    el.removeAttribute('id');
+  }
+  state.streaming = false;
+}
+
+function updateBadge(tab, count) {
+  const badge = document.getElementById(`${tab}Badge`);
+  if (badge) {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'inline' : 'none';
+  }
+}
+
+// ─── Details Panel Updates ─────────────────────────────────
+function updateMetrics(data) {
+  if (!data) return;
+  const sys = data.system || data;
+  
+  if (sys.cpu !== undefined) {
+    const cpu = Math.round(sys.cpu);
+    document.getElementById('cpuVal').textContent = cpu + '%';
+    const bar = document.getElementById('cpuBar');
+    bar.style.width = cpu + '%';
+    bar.className = 'metric-bar-fill' + (cpu > 80 ? ' danger' : cpu > 60 ? ' warn' : '');
+  }
+  
+  if (sys.ram !== undefined || sys.memUsed !== undefined) {
+    const ram = Math.round(sys.ram || 0);
+    document.getElementById('ramVal').textContent = (sys.memUsed ? (sys.memUsed / 1024).toFixed(1) + 'GB' : ram + '%');
+    const bar = document.getElementById('ramBar');
+    bar.style.width = ram + '%';
+    bar.className = 'metric-bar-fill' + (ram > 85 ? ' danger' : ram > 70 ? ' warn' : '');
+  }
+  
+  if (data.gpu && Array.isArray(data.gpu)) {
+    const el = document.getElementById('gpuList');
+    el.innerHTML = data.gpu.map(g => `
+      <div class="gpu-card">
+        <div class="gpu-name">GPU${g.id}: ${g.name || '?'}</div>
+        <div class="metric">
+          <div class="metric-label"><span class="metric-name">Util</span><span class="metric-value">${g.utilization || 0}%</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill${g.utilization > 80 ? ' warn' : ''}" style="width:${g.utilization || 0}%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label"><span class="metric-name">VRAM</span><span class="metric-value">${g.memoryUsed || 0}/${g.memoryTotal || 0} MB</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="width:${g.memoryTotal ? Math.round(g.memoryUsed / g.memoryTotal * 100) : 0}%"></div></div>
+        </div>
+        <div style="font-size:0.6rem;color:var(--text-3);margin-top:2px">${g.temperature || '?'}°C · ${g.powerDraw || '?'}W</div>
+      </div>
+    `).join('');
+  }
+}
+
+function addFileModified(path, action) {
+  // Dedupe
+  const existing = state.files.find(f => f.path === path);
+  if (existing) { existing.action = action; existing.count++; }
+  else state.files.push({ path, action, count: 1 });
+  
+  const el = document.getElementById('filesList');
+  el.innerHTML = state.files.map(f => `
+    <div class="file-item">
+      <span class="action ${f.action}">${f.action}</span>
+      <span title="${esc(f.path)}">${esc(shortPath(f.path))}</span>
+      ${f.count > 1 ? `<span style="color:var(--text-3)">×${f.count}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+// ─── WebSocket Connection ──────────────────────────────────
+function connect() {
+  const dot = document.getElementById('statusDot');
+  const connDot = document.getElementById('connDot');
+  const connText = document.getElementById('connText');
+  
+  dot.className = 'status-dot connecting';
+  connDot.style.background = 'var(--yellow)';
+  connText.textContent = 'Connecting...';
+  
+  const ws = new WebSocket(WS_URL);
+  state.ws = ws;
+  
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ type: 'auth', secret: SECRET }));
+  };
+  
+  ws.onmessage = (evt) => {
+    try {
+      const msg = JSON.parse(evt.data);
+      handleMessage(msg);
+    } catch(e) {}
+  };
+  
+  ws.onclose = () => {
+    state.connected = false;
+    dot.className = 'status-dot disconnected';
+    connDot.style.background = 'var(--red)';
+    connText.textContent = 'Disconnected';
+    setTimeout(connect, 3000);
+  };
+  
+  ws.onerror = () => {};
+}
+
+// ─── Message Handler ───────────────────────────────────────
+function handleMessage(msg) {
+  const dot = document.getElementById('statusDot');
+  const connDot = document.getElementById('connDot');
+  const connText = document.getElementById('connText');
+  
+  // Auth response
+  if (msg.type === 'auth') {
+    if (msg.status === 'ok') {
+      state.connected = true;
+      dot.className = 'status-dot';
+      connDot.style.background = 'var(--green)';
+      connText.textContent = 'Connected';
+    }
+    return;
+  }
+  
+  // Tool Start
+  if (msg.type === 'tool_start') {
+    const tab = toolToTab(msg.tool);
+    const iconInfo = toolToIcon(msg.tool);
+    const desc = msg.description || msg.tool || '...';
+    addStep(msg.id, msg.tool, desc, iconInfo, tab);
+    
+    document.getElementById('currentAction').textContent = desc;
+    
+    // Auto-switch tab and add content
+    autoSwitchTab(tab);
+    
+    if (tab === 'terminal' && msg.tool === 'exec') {
+      const cmd = msg.input?.command || '...';
+      addTerminalBlock(cmd, msg.id);
+    }
+    
+    if (tab === 'code') {
+      const fp = msg.input?.file_path || msg.input?.path || '?';
+      if (msg.tool === 'read') {
+        addCodeBlock('read', fp, null);
+      } else if (msg.tool === 'write') {
+        addCodeBlock('write', fp, msg.input?.content ? msg.input.content.slice(0, 500) + '...' : null);
+      } else if (msg.tool === 'edit') {
+        addCodeBlock('edit', fp, null);
+      }
+    }
+    
+    if (tab === 'browser') {
+      if (msg.tool === 'web_search') {
+        addBrowserBlock('search', msg.input?.query, null);
+      } else if (msg.tool === 'web_fetch') {
+        addBrowserBlock('fetch', msg.input?.url, null);
+      } else if (msg.tool === 'browser') {
+        addBrowserBlock('browser', msg.input?.targetUrl || msg.input?.action, null);
+      }
+    }
+    return;
+  }
+  
+  // Tool Output (partial streaming)
+  if (msg.type === 'tool_output') {
+    const idx = state.toolMap.get(msg.id);
+    if (idx !== undefined) {
+      const step = state.steps[idx];
+      if (step && step.tab === 'terminal') {
+        appendTerminalOutput(msg.id, msg.text || '', false);
+      }
+    }
+    return;
+  }
+  
+  // Tool Result (final)
+  if (msg.type === 'tool_result') {
+    const idx = state.toolMap.get(msg.id);
+    if (idx !== undefined) {
+      const step = state.steps[idx];
+      if (step) {
+        if (step.tab === 'terminal') {
+          appendTerminalOutput(msg.id, msg.text || '', false);
+        } else if (step.tab === 'code') {
+          // Append result content to the last code block
+          const blocks = document.querySelectorAll('.code-block');
+          const lastBlock = blocks[blocks.length - 1];
+          if (lastBlock && msg.text) {
+            let pre = lastBlock.querySelector('.code-content');
+            if (!pre) {
+              pre = document.createElement('pre');
+              pre.className = 'code-content';
+              lastBlock.appendChild(pre);
+            }
+            pre.textContent = msg.text.slice(0, 5000);
+          }
+        } else if (step.tab === 'browser') {
+          // Append result to the last browser block
+          const blocks = document.querySelectorAll('.browser-block');
+          const lastBlock = blocks[blocks.length - 1];
+          if (lastBlock && msg.text) {
+            const content = lastBlock.querySelector('.browser-content');
+            if (content) content.textContent = msg.text.slice(0, 3000);
+          }
+        }
+      }
+    }
+    return;
+  }
+  
+  // Tool End
+  if (msg.type === 'tool_end') {
+    updateStepStatus(msg.id, 'done');
+    finishTerminalBlock(msg.id, false);
+    return;
+  }
+  
+  // Tool Error
+  if (msg.type === 'tool_error') {
+    updateStepStatus(msg.id, 'error');
+    finishTerminalBlock(msg.id, true);
+    if (msg.text) appendTerminalOutput(msg.id, msg.text, true);
+    return;
+  }
+  
+  // Legacy tool_call (backward compat)
+  if (msg.type === 'tool_call') {
+    const tab = toolToTab(msg.tool);
+    const iconInfo = toolToIcon(msg.tool);
+    const desc = msg.description || msg.tool || '...';
+    addStep(msg.id, msg.tool, desc, iconInfo, tab);
+    document.getElementById('currentAction').textContent = desc;
+    autoSwitchTab(tab);
+    
+    if (tab === 'terminal' && msg.tool === 'exec') {
+      addTerminalBlock(msg.input?.command || '...', msg.id);
+    }
+    return;
+  }
+  
+  // Token Stream (assistant output)
+  if (msg.type === 'token_stream' && msg.role === 'assistant') {
+    if (!state.streaming) {
+      state.streaming = true;
+      // Don't auto-switch if user is watching terminal/code
+    }
+    const text = msg.delta || msg.text || '';
+    if (text) appendStreamingText(text);
+    return;
+  }
+  
+  // Thinking
+  if (msg.type === 'thinking' || msg.type === 'thinking_start') {
+    if (msg.text) {
+      addStep(null, null, 'Thinking...', ['🧠', 'think'], null);
+      addOutputBlock('thinking', msg.text.slice(0, 500));
+    }
+    return;
+  }
+  
+  // User Message
+  if (msg.type === 'user_message' || (msg.type === 'token_stream' && msg.role === 'user')) {
+    const text = msg.text || msg.content || '';
+    if (text) {
+      addStep(null, null, 'User: ' + text.slice(0, 50), ['👤', 'output'], 'output');
+      addOutputBlock('user', text);
+      autoSwitchTab('output');
+    }
+    return;
+  }
+  
+  // Streaming End
+  if (msg.type === 'streaming_end' || msg.type === 'streaming_start') {
+    if (msg.type === 'streaming_end') {
+      finishStreaming();
+      document.getElementById('currentAction').textContent = 'Idle';
+    }
+    return;
+  }
+  
+  // Telemetry
+  if (msg.type === 'telemetry' && msg.data) {
+    updateMetrics(msg.data);
+    return;
+  }
+  
+  // File Modified
+  if (msg.type === 'file_modified') {
+    addFileModified(msg.path, msg.action);
+    return;
+  }
+  
+  // Sub-agent updates
+  if (msg.type === 'agent_update' || msg.type === 'manus:agents') {
+    // Handle sub-agent updates
+    return;
+  }
+  
+  // Chat final
+  if (msg.type === 'chat_final') {
+    finishStreaming();
+    if (msg.text) addOutputBlock('assistant', msg.text);
+    return;
+  }
+}
+
+// ─── Clock ─────────────────────────────────────────────────
+function updateClock() {
+  const el = document.getElementById('clockDisplay');
+  el.textContent = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Europe/Moscow' }) + ' MSK';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── Auth Token Prompt ─────────────────────────────────────
+if (!SECRET) {
+  const token = prompt('Enter Nexus auth token:');
+  if (token) {
+    localStorage.setItem('nexus_token', token);
+    location.reload();
+  }
+}
+
+// ─── Init ──────────────────────────────────────────────────
+connect();
+</script>
+</body>
+</html>

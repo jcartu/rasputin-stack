@@ -1,0 +1,10 @@
+faster-whisper
+silero-vad
+elevenlabs
+websockets
+numpy
+soundfile
+qdrant-client
+httpx
+torch
+torchaudio
